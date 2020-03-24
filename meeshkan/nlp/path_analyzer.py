@@ -5,19 +5,30 @@ import re
 from dataclasses import dataclass
 from meeshkan.nlp.entity_extractor import EntityExtractor
 from  meeshkan.nlp.gib_detect import GibDetector
+#from entity_extractor import EntityExtractor
+#from gib_detect import GibDetector
+from meeshkan.nlp.id_detector import IdClassifier
+
+
+#id_type=Enum('int', 'hex', 'uuid', 'random')
 
 @dataclass(frozen=True)
+
 class PathItems:
     entity: Optional[str]
     action: Optional[str]
     id: Optional[str]
+    id_type: Optional[str]
     group_id: Optional[str]
+
 
 
 class PathAnalyzer:
     def __init__(self):
         self._entity_extractor = EntityExtractor()
         self._gib_detector = GibDetector()
+        self._id_classifier = IdClassifier()
+
 
     def extract_values(self, path):
         path_list=path.split('/')[1:]
@@ -36,13 +47,13 @@ class PathAnalyzer:
                      nopunc_string.append(word)
         pos= {value:index for index,value in enumerate(nopunc_string)}
         maybe_entity = self._entity_extractor._split_pathes(path_list)[-1]
-        maybe_id = self._gib_detector.gib_detector(path_list)
+        maybe_id = self._id_classifier.id_detector(path_list)
        # print(type(maybe_id))
         if maybe_id is not None:
             if pos[maybe_id]==pos[maybe_entity]+1:
-                    return PathItems(entity=self._entity_extractor.get_entity_from_url(path_list), id=maybe_id, action=None, group_id=None)
+                    return PathItems(entity=self._entity_extractor.get_entity_from_url(path_list), id=maybe_id, id_type=self._id_classifier.id_classif(maybe_id) , action=None, group_id=None)
             else:
-                    return PathItems(entity=self._entity_extractor.get_entity_from_url(path_list), id=None, action=None, group_id=None)
+                    return PathItems(entity=self._entity_extractor.get_entity_from_url(path_list), id=None, id_type= None , action=None, group_id=None)
         else:
-             return PathItems(entity=self._entity_extractor.get_entity_from_url(path_list), id=None, action=None, group_id=None)
+             return PathItems(entity=self._entity_extractor.get_entity_from_url(path_list), id=None, id_type= None , action=None, group_id=None)
  #       return PathItems(entity=self._entity_extractor.get_entity_from_url(path_list), id=id_classifier(path_list), action=None, group_id=None)

@@ -21,26 +21,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 #!/usr/bin/python
-import os
+
 import pickle
 import meeshkan.nlp.gib_detect_train as gib_detect_train
+#import gib_detect_train
 
 
 class GibDetector:
 
     def __init__(self):
-        with open(os.path.join(os.path.dirname(__file__), 'gib_model.pki'), 'rb') as f:
-            self.model_data = pickle.load(f)
 
-    def gib_detector(self, path_list):
-         id=[]
-         for item in path_list:
-             l =item
-             model_mat = self.model_data['mat']
-             threshold = self.model_data['thresh']
-             if not (gib_detect_train.avg_transition_prob(l, model_mat) > threshold):
-                  id.append(item)
-                  if len(id)!=0:
-                       return id[-1]
-                  else:
-                       return None
+         self.model_data = pickle.load(open('../../../meeshkan/nlp/gib_model.pki', 'rb'))
+
+
+
+    def gib_detector(self, item):
+
+         l =item
+         model_mat = self.model_data['mat']
+         threshold = self.model_data['thresh']
+         if not (gib_detect_train.avg_transition_prob(l, model_mat) > threshold):
+             return True
+         else:
+            return False
+
+
+'''              id.append(l)
+              if len(id)!=0:
+                   return id[-1]
+              else:
+                   return None
+'''
