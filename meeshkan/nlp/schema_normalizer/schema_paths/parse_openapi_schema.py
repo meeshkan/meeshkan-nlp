@@ -1,5 +1,3 @@
-#import sys
-
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import schema_remove_types
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import split_level, _object, _array, generate_schema_vectors
 
