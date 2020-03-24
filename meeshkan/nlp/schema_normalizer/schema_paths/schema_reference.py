@@ -1,5 +1,3 @@
-#import sys
-#sys.path.append('..')
 from meeshkan.nlp.schema_normalizer.schema_paths.parse_openapi_schema import parse_schema
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_compare import compare_nested_schema
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import generate_nested_object, create_object_structure

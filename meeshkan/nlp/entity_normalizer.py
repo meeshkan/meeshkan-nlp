@@ -1,7 +1,7 @@
 from typing import Tuple
 from openapi_typed_2 import OpenAPIObject, convert_to_openapi, convert_from_openapi
 from openapi_typed_2 import OpenAPIObject, convert_to_openapi, convert_from_openapi
-from meeshkan.build.nlp.schema_normalizer.schema_paths.schema_reference import check_and_create_ref
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_reference import check_and_create_ref
 
 
 class EntityNormalizer:

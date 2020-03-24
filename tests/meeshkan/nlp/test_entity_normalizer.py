@@ -1,27 +1,24 @@
 import os
-import sys
+from meeshkan.nlp.entity_normalizer import EntityNormalizer
+from openapi_typed_2 import convert_to_openapi, convert_from_openapi
 import json
 
-#sys.path.append('..')
-from meeshkan.nlp.schema_normalizer.schema_paths.schema_reference import check_and_create_ref
+
+def test_entity_normalizer():
+    opbank_original_filepath = os.path.abspath('../../resources/op_spec.json')
+    opbank_components_filepath = os.path.abspath('../../resources/op_component_spec.json')
+    with open(opbank_original_filepath, encoding='utf8') as f:
+        data = json.load(f)
+        org_specs = convert_to_openapi(data)
+
+    with open(opbank_components_filepath, encoding='utf8') as f:
+        comp_specs = json.load(f)
 
 
-def test_normalizer():
-    openapi_filepath = 'tests/resources/op_spec.json'
-    openapi_relpath = os.path.relpath(openapi_filepath)
-    with open(openapi_relpath, 'r') as f:
-        specs = json.load(f)
+    path_tuple = (
+        '/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw',
+        '/accounts/v3/accounts')
 
-    if not isinstance(specs, dict):
-        raise TypeError('OpenApi file is not a valid object type')
-
-    path_tuple = ('/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw',
-                  '/accounts/v3/accounts')
-
-    updated, specs = check_and_create_ref(specs, path_tuple)
-    print(specs)
-    print(updated)
-
-    if updated:
-        with open('changed.json', 'w') as f:
-            f.write(json.dumps(specs))
+    entity_normalizer = EntityNormalizer()
+    updated_specs = entity_normalizer.normalize(org_specs, path_tuple)
+    # assert convert_from_openapi((updated_specs)) == comp_specs
