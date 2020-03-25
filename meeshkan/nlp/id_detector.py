@@ -26,10 +26,10 @@ class IdClassifier():
             except ValueError:
                 if is_valid_uuid(item):
                     return 'uuid'
-                elif self.gib_detector.gib_detector(item):
-                    return 'gib'
                 elif self.hex_det.hex_detector(item):
                     return 'hex'
+                elif self.gib_detector.gib_detector(item):
+                    return 'gib'
                 else:
                     return None
 
