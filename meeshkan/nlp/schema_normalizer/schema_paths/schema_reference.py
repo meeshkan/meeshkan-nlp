@@ -4,7 +4,7 @@ from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import generat
 
 
 
-def check_and_create_ref(specs, path_tuple):
+def check_and_create_ref(specs, path_tuple, entity_name):
     all_paths_dict = {key : [] for key in path_tuple}
     nested_paths_dict = all_paths_dict.copy()
     methods = ['get', 'post']
@@ -25,9 +25,9 @@ def check_and_create_ref(specs, path_tuple):
     best_tuple = compare_nested_schema(nested_paths_dict[path_tuple[0]], nested_paths_dict[path_tuple[1]])
                                     
     if isinstance(best_tuple, list) and len(best_tuple) > 0:
-        ref_component = create_ref_path(best_tuple[0])
-        ref_component_obj = create_ref_obj(all_paths_dict, path_tuple, best_tuple[0], ref_component[0])
-        ref_replaced_dict = create_replaced_ref(all_paths_dict, path_tuple, best_tuple[0], ref_component[1])
+        ref_component = create_ref_path(entity_name)
+        ref_component_obj = create_ref_obj(all_paths_dict, path_tuple, best_tuple[0], entity_name)
+        ref_replaced_dict = create_replaced_ref(all_paths_dict, path_tuple, best_tuple[0], ref_component)
         if len(ref_replaced_dict) != 2:
             return (False, specs)
         # Now update the original specs by replacing the ref components
@@ -115,17 +115,5 @@ def generate_component_dict(schema, component_name):
 
 
 
-def create_ref_path(tuple1):
-    schema_name = None
-    schema_comp = '#/components/schemas/'
-    for item in tuple1:
-        if item != '$schema':
-            item = item.split('#')
-            for levels in item:
-                schema_name = levels.split('@')[0]
-    
-
-    if schema_name is None:
-        return ('schema1' ,schema_comp + 'schema1')
-    else:
-        return (schema_name, schema_comp + schema_name)
+def create_ref_path(                entity_name):
+    return f'#/components/schemas/{entity_name}'
