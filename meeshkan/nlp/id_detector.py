@@ -7,29 +7,22 @@ from meeshkan.nlp.detect_uuid import is_valid_uuid
 import uuid
 from enum import Enum
 
-hex_det=HexDetector()
-gib_detector=GibDetector()
-
-#Examples
-good_list_uuid=[]
-for i in range(5):
-    good_list_uuid.append(str(uuid.uuid4()))
-#print(good_list_uuid)
-
-string = ['14', 'E015', 'jhgjhg', 'house', 'f030c4c11e-41c1-a7eb-3425c53f06d3', '181d4a62-df3e-4e9d-91d8-959b3cf3b' ]+ good_list_uuid
+class IdType(Enum):
+    integer=0
+    uuid=1
 
 
 class IdClassifier():
 
     def __init__(self):
-        self.hex_det = HexDetector()
-        self.gib_detector = GibDetector()
+        self._hex_d = HexDetector()
+        self._gib_detector = GibDetector()
 
 
     def id_classif(self, item):
             try:
                 int(item)
-                return 'integer'
+                return IdType.integer
             except ValueError:
                 if is_valid_uuid(item):
                     return 'uuid'
@@ -52,6 +45,17 @@ class IdClassifier():
             return id[-1]
         else:
             return None
+
+    def _detect_hex(self, item):
+         if all(c in self.hex_digits for c in item):
+             try:
+                 int(item, 16)
+                 return True
+
+             except ValueError:
+                 return False
+         else:
+             return False
 ##print(id_cl.id_classif('khih'))
 
 #print(id_cl.id_detector(string))

@@ -13,13 +13,17 @@ from meeshkan.nlp.id_detector import IdClassifier
 #id_type=Enum('int', 'hex', 'uuid', 'random')
 
 @dataclass(frozen=True)
+class IdDesc:
+    value: Optional[str]
+    type: Optional[IdType]
 
+
+@dataclass(frozen=True)
 class PathItems:
     entity: Optional[str]
     action: Optional[str]
-    id: Optional[str]
-    id_type: Optional[str]
-    group_id: Optional[str]
+    id: Optional[IdDesc]
+    group_id: Optional[IdDesc]
 
 
 
@@ -51,7 +55,7 @@ class PathAnalyzer:
        # print(type(maybe_id))
         if maybe_id is not None:
             if pos[maybe_id]==pos[maybe_entity]+1:
-                    return PathItems(entity=self._entity_extractor.get_entity_from_url(path_list), id=maybe_id, id_type=self._id_classifier.id_classif(maybe_id) , action=None, group_id=None)
+                    return PathItems(entity=self._entity_extractor.get_entity_from_url(path_list), id=IdDesc(value=maybe_id, type=self._id_classifier.id_classif(maybe_id)) , action=None, group_id=None)
             else:
                     return PathItems(entity=self._entity_extractor.get_entity_from_url(path_list), id=None, id_type= None , action=None, group_id=None)
         else:
