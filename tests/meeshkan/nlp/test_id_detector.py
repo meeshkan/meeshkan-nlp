@@ -1,51 +1,23 @@
+import uuid
+from meeshkan.nlp.id_detector import IdClassifier
 
 
 def test_id_detector():
-    hex_det = HexDetector()
-    gib_detector = GibDetector()
-
-    # Examples
     good_list_uuid = []
     for i in range(5):
         good_list_uuid.append(str(uuid.uuid4()))
-    # print(good_list_uuid)
 
-    string = ['14', 'E015', 'jhgjhg', 'house', 'f030c4c11e-41c1-a7eb-3425c53f06d3',
-              '181d4a62-df3e-4e9d-91d8-959b3cf3b'] + good_list_uuid
+    string1 = ['14', 'E015', 'jhgjhg', 'house', 'f030c4c11e-41c1-a7eb-3425c53f06d3',
+               '181d4a62-df3e-4e9d-91d8-959b3cf3b'] + good_list_uuid
+    ids = ['integer', 'hex', 'gib', None, 'gib', 'gib', 'uuid', 'uuid', 'uuid', 'uuid', 'uuid']
 
-def test_hes_detector():
-'''id_cl=IdClassifier()
-
-str1=['E015', 'jhlkgkg']
-for  i in str1:
-    print(id_cl.id_classif(i).name)'''
-
-
-import uuid
-
-good_list_uuid=[]
-for i in range(5):
-    good_list_uuid.append(str(uuid.uuid4()))
-#print(good_list_uuid)
-
-bad_list_uuid=['f030c4c11e-41c1-a7eb-3425c53f06d3', '181d4a62-df3e-4e9d-91d8-959b3cf3b', '134479a9-ba45-9d6bfb68051e', 'e2ce9aec-12f6-49f2-a655']
+    id_cl = IdClassifier()
+    id = []
+    for i in string1:
+        if id_cl.id_classif(i):
+            id.append(id_cl.id_classif(i).name)
+        else:
+            id.append(None)
+    assert id==ids
 
 
-'''while True:
-    val = input()
-'''
-def is_valid_uuid(id):
-    try:
-        uuid.UUID(str(id))
-        return True
-    except ValueError:
-        return False
-
-'''for good in good_list_uuid:
-    print('uuid examples')
-    print(good, is_valid_uuid(good))
-
-for bad in bad_list_uuid:
-    print('not UUID examples')
-    print(bad, is_valid_uuid(bad))
-'''
