@@ -24,14 +24,15 @@ THE SOFTWARE.
 
 import pickle
 import meeshkan.nlp.gib_detect_train as gib_detect_train
+import os
 #import gib_detect_train
 
 
 class GibDetector:
 
     def __init__(self):
-
-         self.model_data = pickle.load(open('../../../meeshkan/nlp/gib_model.pki', 'rb'))
+        with open(os.path.join(os.path.dirname(__file__), 'gib_model.pki'), 'rb') as f:
+            self.model_data = pickle.load(f)
 
 
 
