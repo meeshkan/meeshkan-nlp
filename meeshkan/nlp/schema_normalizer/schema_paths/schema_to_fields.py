@@ -51,19 +51,6 @@ def parse_schema_features(obj, order=None, only=False):
         fields_list += create_split_level(schema_string, order=order, only=only)
     return fields_list
     
-def keep_only_alpha(obj, min_length=None, keep_words=None, stop_words=None):
-    if not isinstance(obj, list):
-        raise TypeError("The input object is not a list")
-    list_of_words = []
-    for word in obj:
-        word = re.sub(r'[^a-zA-Z]', ' ',word)
-        word = word.split()
-        list_of_words += word
-    if min_length > 0:
-        return [word for word in list_of_words if len(word) > min_length]
-    else:
-        return list_of_words
-
 
 def camel_case(example):
     #for i in string.punctuation:
