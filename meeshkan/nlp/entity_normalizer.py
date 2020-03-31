@@ -11,6 +11,10 @@ class EntityNormalizer:
         '/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw',
         '/accounts/v3/accounts')
 
+    def nearest_path(self, specs: OpenAPIObject):
+        specs_dict = convert_from_openapi(specs)
+
+
     def normalize(self, specs: OpenAPIObject, path_tuple: Tuple, entity_name: str) -> OpenAPIObject:
         specs_dict = convert_from_openapi(specs)
         is_updated, updated_specs = check_and_create_ref(specs_dict, path_tuple, entity_name)

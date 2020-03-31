@@ -1,11 +1,47 @@
-import numpy as np
-from sklearn.metrics.pairwise import pairwise_distances
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import generate_schema_vectors
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import parse_schema_features
+from meeshkan.nlp.schema_normalizer.schema_relations.feature_extraction import FeatureExtraction
 
 
-def calc_dist_self(matrix, metrics='cosine'):
-    return pairwise_distances(matrix, metric=metrics )
+def get_all_paths(specs_dict):
+    if specs_dict.get('paths') is None:
+        raise KeyError("The key 'paths' is not present in specs  ")
 
-def calc_dist_pair(matrix1, matrix2, metrics='cosine'):
-    return pairwise_distances(matrix1, matrix2, metric=metrics)
+    return [path for path in specs_dict['paths'].keys()]
+
+def get_all_properties(specs_dict):
+    all_paths = get_all_paths(specs_dict)
+    if len(all_paths) > 1:
+        all_paths_dict = {key: [] for key in all_paths}
+        methods = ['get', 'post']
+        for path in all_paths:
+            for method in specs_dict['paths'][path].keys():
+                if method in methods:
+                    schema = specs['paths'][path][method]['responses']['200']['content']['application/json']['schema']
+                    schema['$schema'] = 'root'
+                    schema_feats = generate_schema_vectors(schema)
+                    parsed_feats = parse_schema_features(schema_feats)
+                    all_paths_dict[path].append({method: parsed_feats})
+                    break  # To ensure that only single method is picked for any endpoint
+
+        return all_paths, all_paths_dict
+    return all_paths, None
+
+
+def calc_distance(spes_dict):
+    all_paths, all_paths_dict = get_all_properties(spes_dict)
+    all_distances = list()
+    methods = ['get', 'post']
+    if all_paths_dict is not None:
+        embedding_dict = {key : [] for key in all_paths}
+        fe = FeatureExtraction()
+        for keys, values in all_paths_dict.items():
+            for method in values[0].keys():
+                embedding_dict[keys] = fe.generate_nlp_vector(values[0][method])
+        embedding_list = list()
+        for path in all_paths:
+            embedding_list.append(embedding_dict[path])
+
+        
 
 
