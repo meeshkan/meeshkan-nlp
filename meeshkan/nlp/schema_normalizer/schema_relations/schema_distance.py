@@ -2,6 +2,8 @@ import numpy as np
 from sklearn.metrics.pairwise import pairwise_distances
 
 from meeshkan.nlp.schema_normalizer.schema_relations.feature_extraction import FeatureExtraction
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import generate_schema_vectors
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import parse_schema_features
 
 
 def get_all_paths(specs_dict):
@@ -18,7 +20,7 @@ def get_all_properties(specs_dict):
         for path in all_paths:
             for method in specs_dict['paths'][path].keys():
                 if method in methods:
-                    schema = specs['paths'][path][method]['responses']['200']['content']['application/json']['schema']
+                    schema = specs_dict['paths'][path][method]['responses']['200']['content']['application/json']['schema']
                     schema['$schema'] = 'root'
                     schema_feats = generate_schema_vectors(schema)
                     parsed_feats = parse_schema_features(schema_feats)
@@ -52,7 +54,7 @@ def calc_distance(spes_dict):
         paths_nearest_value = list()
         for index, path in enumerate(all_paths):
             nearest_index = distance_matrix[index,].argsort()[1]
-            paths_nearest_value.append(distances[index, nearest_index])
+            paths_nearest_value.append(distance_matrix[index, nearest_index])
             api_nearest_dict[path] = all_paths[nearest_index]
 
         threshold = 0.1
