@@ -131,6 +131,14 @@ def generate_child_vectors(obj, parent=None):
 
 
 def generate_schema_vectors(obj, vectors=None, tagged_vectors=None):
+    """Creates the schema features for jsonschema sructure in a form of list.
+
+    Arguments:
+        obj {dict} -- jsonschema structure as an input
+
+    Returns:
+         list -- list of schema properties represented in strings
+    """
     if vectors is None:
         vectors = generate_child_vectors(obj)
         if vectors is None:
