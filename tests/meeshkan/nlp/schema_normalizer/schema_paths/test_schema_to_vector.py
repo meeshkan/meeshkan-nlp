@@ -20,16 +20,18 @@ def test_create_object_structure():
 
 
 # Let us fetch some data from openapi specs for opbank
-opbank_filepath = os.path.abspath('../../../../resources/op_spec.json')
-with open(opbank_filepath, encoding='utf8') as f:
-    openapi_specs = json.load(f)
-path_tuple = (
-        '/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw',
-        '/accounts/v3/accounts')
-specs1 = openapi_specs['paths'][path_tuple[0]]['get']['responses']['200']['content']['application/json']['schema']
+def get_spec():
+    opbank_filepath = os.path.abspath('tests/resources/op_spec.json')
+    with open(opbank_filepath, encoding='utf8') as f:
+        openapi_specs = json.load(f)
+    path_tuple = (
+            '/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw',
+            '/accounts/v3/accounts')
+    specs1 = openapi_specs['paths'][path_tuple[0]]['get']['responses']['200']['content']['application/json']['schema']
 
-# we need to have a key '$schema' with any value in the root for functions to work
-specs1['$schema'] = 'root'
+    # we need to have a key '$schema' with any value in the root for functions to work
+    specs1['$schema'] = 'root'
+    return specs1
 
 def test_generate_child_vectors():
     result = ['accountId@string',
@@ -43,7 +45,7 @@ def test_generate_child_vectors():
  'servicerIdentifier@string',
  '_links@object']
 
-    assert generate_child_vectors(specs1) == result
+    assert generate_child_vectors(get_spec()) == result
 
 def test_generate_schema_vectors():
     result = ['accountId@string',
@@ -61,4 +63,4 @@ def test_generate_schema_vectors():
  '_links@object#self@object#href@string',
  '_links@object#transactions@object#href@string']
 
-    assert generate_schema_vectors(specs1) == result
+    assert generate_schema_vectors(get_spec()) == result
