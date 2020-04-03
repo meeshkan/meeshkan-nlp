@@ -54,6 +54,14 @@ def create_schema_levels(obj):
     
 
 def parse_schema(obj):
+    """Parses and create the nested structure list for comparison
+
+    Arguments:
+        obj {dict} -- jsonschema structure
+
+    Return:
+         list -- list of all levels of parsed structures in a schema
+    """
     if not isinstance(obj, dict):
         raise TypeError('The input object passed is not a type dict')
 

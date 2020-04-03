@@ -5,6 +5,17 @@ from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import generat
 
 
 def check_and_create_ref(specs, path_tuple, entity_name):
+    """Returns the modified open api specs with #ref component for
+    similar paths entity.
+
+    Arguments:
+        specs {dict} -- Open API specs dict
+        path_tuple {tuple} -- similar paths to be analysed
+        entity_name {str} -- entity name to be used for #ref component
+
+    Returns:
+         Tuple[bool, dict] -- old or modified specs, bool is True if modified
+    """
     all_paths_dict = {key : [] for key in path_tuple}
     nested_paths_dict = all_paths_dict.copy()
     methods = ['get', 'post']

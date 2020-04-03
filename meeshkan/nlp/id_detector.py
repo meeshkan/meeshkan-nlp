@@ -4,6 +4,7 @@ from enum import Enum
 import string
 from typing import Optional
 
+
 class IdType(Enum):
     #this is the class for id's
     integer = 0
@@ -43,7 +44,9 @@ class IdClassifier():
             return None
 
 
-    def id_detector(self, string_id)-> Optional[str]:
+   
+
+    def id_detector(self, string_id):
         #This function take all the id's from the path list and return the last element if it is exist
         id=[]
         for i in string_id:

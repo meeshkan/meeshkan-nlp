@@ -7,12 +7,29 @@ from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import parse_s
 
 
 def get_all_paths(specs_dict):
+    """Fetches all the path names out of open api specs
+
+    Arguments:
+        specs_dict {dict} -- Open api specs dict
+
+    Returns:
+         list -- list of path names
+    """
     if specs_dict.get('paths') is None:
         raise KeyError("The key 'paths' is not present in specs  ")
 
     return [path for path in specs_dict['paths'].keys()]
 
 def get_all_properties(specs_dict):
+    """Extracts all the properties out of respective schema paths.
+
+    Arguments:
+        specs_dict {dict} -- Open Api specs
+
+    Returns:
+        list -- List of all paths
+        dict -- key , value pair of path names and their schema props
+    """
     all_paths = get_all_paths(specs_dict)
     if len(all_paths) > 1:
         all_paths_dict = {key: [] for key in all_paths}
@@ -32,6 +49,15 @@ def get_all_properties(specs_dict):
 
 
 def calc_distance(spes_dict):
+    """Creates the path tuples of similar schema within threshold = 0.1.
+
+    Arguments:
+        specs_dict {dict} -- OpenAPI specs dict
+
+    Returns:
+        list -- list of similar paths tuple
+
+    """
     all_paths, all_paths_dict = get_all_properties(spes_dict)
     all_distances = list()
     methods = ['get', 'post']

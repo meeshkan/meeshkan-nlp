@@ -43,4 +43,3 @@ class GibDetector:
          threshold = self.model_data['thresh']
          return gib_detect_train.avg_transition_prob(l, model_mat) <= threshold
 
-
