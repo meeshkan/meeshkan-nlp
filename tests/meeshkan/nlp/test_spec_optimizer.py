@@ -1,7 +1,7 @@
 from meeshkan.nlp.spec_optimizer import SpecOptimizer
 
 
-def test_optimizer(optimizer, opbank_spec):
+def test_optimizer(optimizer, opbank_spec, opbank_recordings):
     res = optimizer.optimize_spec(opbank_spec)
 
     assert "accountId" == res.components.schemas["account"]._x["x-meeshkan-id-path"]
