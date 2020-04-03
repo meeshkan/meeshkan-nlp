@@ -22,4 +22,5 @@ def test_entity_normalizer():
     entity_name = 'account'
     entity_normalizer = EntityNormalizer()
     updated_specs = entity_normalizer.normalize(org_specs, path_tuple, entity_name)
+    print(updated_specs)
     # assert convert_from_openapi((updated_specs)) == comp_specs

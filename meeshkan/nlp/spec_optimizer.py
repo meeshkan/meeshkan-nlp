@@ -20,7 +20,7 @@ class SpecOptimizer:
         entity_paths = self._group_paths(spec_dict)
         normalized_spec = self._normalize_entities(entity_paths, spec_dict)
 
-        data_spec = self._add_data(entity_paths, normalized_spec, recordings)
+        data_spec = self._add_data(normalized_spec, recordings)
 
         return convert_to_openapi(spec_dict)
 
@@ -29,15 +29,17 @@ class SpecOptimizer:
         return spec
 
     def _group_paths(self, spec):
-        return {"account": {"/accounts/v1/accounts"}, "payment": ["/v1/payments/{trnopysd}"]}
+        return {"account": ["/accounts/v1/accounts", "/accounts/v1/accounts/{id}"], "payment": ["/v1/payments/{trnopysd}"]}
 
     def _normalize_entities(self, entity_paths, spec):
+        for entity, paths in entity_paths.items():
+            spec =  self._normalizer.normalize(spec, paths, entity)
         return spec
 
-    def _add_data(self, entity_paths, normalized_spec, recordings):
-        normalized_spec["x-meeshkan-data"] = self._extract_data(entity_paths, normalized_spec, recordings)
+    def _add_data(self, normalized_spec, recordings):
+        normalized_spec["x-meeshkan-data"] = self._extract_data(normalized_spec, recordings)
 
-    def _extract_data(self, entity_paths, normalized_spec, recordings):
+    def _extract_data(self, normalized_spec, recordings):
         return {}
 
 

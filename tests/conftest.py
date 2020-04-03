@@ -2,7 +2,7 @@ import json
 
 import pytest
 from http_types import HttpExchangeReader
-from openapi_typed_2 import convert_to_openapi
+from openapi_typed_2 import convert_to_openapi, convert_from_openapi
 
 from meeshkan.nlp.entity_extractor import EntityExtractor
 from meeshkan.nlp.entity_normalizer import EntityNormalizer
@@ -38,3 +38,15 @@ def normalizer():
 @pytest.fixture(scope='session')
 def optimizer(extractor, analyzer, normalizer):
     return SpecOptimizer(extractor, analyzer, normalizer)
+
+@pytest.fixture()
+def accounts_schema(opbank_spec):
+    spec_dict= convert_from_openapi(opbank_spec)
+    path_tuple = (
+            '/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw',
+            '/accounts/v3/accounts')
+    specs1 = spec_dict['paths'][path_tuple[0]]['get']['responses']['200']['content']['application/json']['schema']
+
+    # we need to have a key '$schema' with any value in the root for functions to work
+    specs1['$schema'] = 'root'
+    return specs1

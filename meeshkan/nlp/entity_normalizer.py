@@ -1,6 +1,7 @@
 from typing import Tuple
+
 from openapi_typed_2 import OpenAPIObject, convert_to_openapi, convert_from_openapi
-from openapi_typed_2 import OpenAPIObject, convert_to_openapi, convert_from_openapi
+
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_reference import check_and_create_ref
 from meeshkan.nlp.schema_normalizer.schema_relations.schema_distance import calc_distance
 
@@ -9,14 +10,13 @@ class EntityNormalizer:
     def __init__(self, ):
         self.entity_name = 'account'
         self.path_tuple = (
-        '/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw',
-        '/accounts/v3/accounts')
+            '/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw',
+            '/accounts/v3/accounts')
 
     def nearest_path(self, specs: OpenAPIObject):
         specs_dict = convert_from_openapi(specs)
         paths_tuple_list = calc_distance(specs_dict)
         return paths_tuple_list
-
 
     def normalize(self, specs: OpenAPIObject, path_tuple: Tuple, entity_name: str) -> OpenAPIObject:
         specs_dict = convert_from_openapi(specs)
