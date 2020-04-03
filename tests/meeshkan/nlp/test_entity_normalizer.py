@@ -5,8 +5,8 @@ import json
 
 
 def test_entity_normalizer():
-    opbank_original_filepath = os.path.abspath('../../resources/op_spec.json')
-    opbank_components_filepath = os.path.abspath('../../resources/op_component_spec.json')
+    opbank_original_filepath = os.path.abspath('tests/resources/op_spec.json')
+    opbank_components_filepath = os.path.abspath('tests/resources/op_component_spec.json')
     with open(opbank_original_filepath, encoding='utf8') as f:
         data = json.load(f)
         org_specs = convert_to_openapi(data)

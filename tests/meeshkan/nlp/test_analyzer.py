@@ -6,10 +6,6 @@ from meeshkan.nlp.path_analyzer import PathAnalyzer
 #from entity_extractor import EntityExtractor
 #from path_analyzer import PathItem
 
-@pytest.fixture(scope='session')
-def analyzer():
-    return PathAnalyzer()
-
 def test_github(analyzer):
     path_item = analyzer.extract_values('/search/users')
     assert 'user' == path_item.entity
