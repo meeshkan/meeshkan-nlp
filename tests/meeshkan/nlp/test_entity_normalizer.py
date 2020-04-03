@@ -5,8 +5,8 @@ import json
 
 
 def test_entity_normalizer():
-    opbank_original_filepath = os.path.abspath('../../resources/op_spec.json')
-    opbank_components_filepath = os.path.abspath('../../resources/op_component_spec.json')
+    opbank_original_filepath = os.path.abspath('tests/resources/op_spec.json')
+    opbank_components_filepath = os.path.abspath('tests/resources/op_component_spec.json')
     with open(opbank_original_filepath, encoding='utf8') as f:
         data = json.load(f)
         org_specs = convert_to_openapi(data)
@@ -22,4 +22,5 @@ def test_entity_normalizer():
     entity_name = 'account'
     entity_normalizer = EntityNormalizer()
     updated_specs = entity_normalizer.normalize(org_specs, path_tuple, entity_name)
+    print(updated_specs)
     # assert convert_from_openapi((updated_specs)) == comp_specs

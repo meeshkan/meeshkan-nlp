@@ -1,14 +1,15 @@
+import pytest
+
 from meeshkan.nlp.entity_extractor import EntityExtractor
 
 
-def test_github():
-    extractor = EntityExtractor()
+
+def test_github(extractor):
     #extractor.train(['/search/users', ])
     assert 'user' == extractor.get_entity_from_url('/search/users'.split('/')[1:])
 
 
-def test_opbank():
-    extractor = EntityExtractor()
+def test_opbank(extractor):
     # extractor.train(['/accounts/v3/accounts',
     #                  '/accounts/v3/accounts/GcfU8g0c_pxJXR8spP3uc4jMXRwalQyIDwj820w8-TY.8vlH6Nvrzd0fFiaSD6U4_Q.hR3Bjufb_ZzypZXU707zJg',
     #                  '/v1/payments/initiate',
@@ -18,8 +19,7 @@ def test_opbank():
     assert 'account' == extractor.get_entity_from_url('/accounts/v3/accounts/GcfU8g0c_pxJXR8spP3uc4jMXRwalQyIDwj820w8-TY.8vlH6Nvrzd0fFiaSD6U4_Q.hR3Bjufb_ZzypZXU707zJg'.split('/')[1:])
 
 
-def test_transferwise():
-    extractor = EntityExtractor()
+def test_transferwise(extractor):
     # extractor.train(['/v3/profiles/saf45gdrg4gsdf/transfers/sdfsr456ygh56ujhgf/payments',
     #                  '/v1/delivery-estimates/GcfU8g0c_pxJXR8spP3uc4jMX',
     #                  '/v1/borderless-accounts',

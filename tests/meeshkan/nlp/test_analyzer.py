@@ -1,20 +1,19 @@
 #from meeshkan.build.nlp.entity_extractor import EntityExtractor
 #from meeshkan.build.nlp.entity_extractor import EntityExtractor
+import pytest
+
 from meeshkan.nlp.path_analyzer import PathAnalyzer
 #from entity_extractor import EntityExtractor
 #from path_analyzer import PathItem
 
-
-def test_github():
-    analyzer=PathAnalyzer()
-    path_item = analyzer.extract_values('/search/users') 
+def test_github(analyzer):
+    path_item = analyzer.extract_values('/search/users')
     assert 'user' == path_item.entity
     assert  path_item.id is None
     #assert path_item.id is None
 
 
-def test_opbank():
-    analyzer=PathAnalyzer()
+def test_opbank(analyzer):
     
     path_item1 = analyzer.extract_values('/v1/payments/confirm')
     assert 'payment' == path_item1.entity
@@ -27,8 +26,7 @@ def test_opbank():
     assert 'gib'== path_item2.id.type.name
 
 
-def test_transferwise():
-    analyzer=PathAnalyzer()
+def test_transferwise(analyzer):
     
     path_item1 = analyzer.extract_values('/v3/profiles/saf45gdrg4gsdf/transfers/sdfsr456ygh56ujhgf/payments')
     assert 'payment' == path_item1.entity

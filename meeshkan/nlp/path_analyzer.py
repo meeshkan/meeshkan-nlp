@@ -27,8 +27,8 @@ class PathItems:
 
 
 class PathAnalyzer:
-    def __init__(self):
-        self._entity_extractor = EntityExtractor()
+    def __init__(self, entity_extractor: EntityExtractor):
+        self._entity_extractor = entity_extractor
         self._gib_detector = GibDetector()
         self._id_classifier = IdClassifier()
 

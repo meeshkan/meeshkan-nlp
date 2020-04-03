@@ -4,8 +4,7 @@ from meeshkan.nlp.schema_normalizer.schema_paths.schema_reference import create_
 generate_component_dict, create_ref_obj, generate_replaced_ref, \
     create_replaced_ref
 
-
-opbank_original_filepath = os.path.abspath('../../../../resources/op_spec.json')
+opbank_original_filepath = os.path.abspath('tests/resources/op_spec.json')
 with open(opbank_original_filepath, encoding='utf8') as f:
     specs = json.load(f)
 
