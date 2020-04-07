@@ -13,12 +13,12 @@ def get_specs_dict():
 
 
 def test_calc_distance():
-    result = [('/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw', '/accounts/v3/accounts')]
+    result = [('/accounts/v3/accounts/{lrikubto}', '/accounts/v3/accounts')]
 
     assert calc_distance(get_specs_dict()) == result
 
 def test_get_all_paths():
-    result = ['/v1/payments/{trnopysd}',
-              '/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw',
-              '/accounts/v3/accounts']
-    assert get_all_paths(get_specs_dict()) == result
+    result = {'/v1/payments/{luawmujp}',
+              '/accounts/v3/accounts/{lrikubto}',
+              '/accounts/v3/accounts'}
+    assert set(get_all_paths(get_specs_dict())) == result

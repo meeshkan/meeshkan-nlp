@@ -43,7 +43,7 @@ def optimizer(extractor, analyzer, normalizer):
 def accounts_schema(opbank_spec):
     spec_dict= convert_from_openapi(opbank_spec)
     path_tuple = (
-            '/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw',
+            '/accounts/v3/accounts/{lrikubto}',
             '/accounts/v3/accounts')
     specs1 = spec_dict['paths'][path_tuple[0]]['get']['responses']['200']['content']['application/json']['schema']
 

@@ -16,7 +16,7 @@ def test_entity_normalizer():
 
 
     path_tuple = (
-        '/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw',
+        '/accounts/v3/accounts/{lrikubto}',
         '/accounts/v3/accounts')
 
     entity_name = 'account'

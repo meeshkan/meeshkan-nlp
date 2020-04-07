@@ -9,7 +9,7 @@ with open(opbank_original_filepath, encoding='utf8') as f:
     specs = json.load(f)
 
 path_tuple = (
-        '/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw',
+        '/accounts/v3/accounts/{lrikubto}',
         '/accounts/v3/accounts')
 
 entity_name = 'account'
@@ -96,7 +96,7 @@ def test_generate_replaced_ref():
                                  'accounts@array',
                                  '#/components/schemas/account') == result
 def test_create_replaced_ref():
-    result = {'/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw': {'$ref': '#/components/schemas/account'},
+    result = {'/accounts/v3/accounts/{lrikubto}': {'$ref': '#/components/schemas/account'},
  '/accounts/v3/accounts': {'required': ['_links', 'accounts'],
   'properties': {'accounts': {'$ref': '#/components/schemas/account'},
    '_links': {'required': ['self'],

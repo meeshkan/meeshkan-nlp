@@ -2,6 +2,8 @@
     This module is to parse the schema features and return the list of schema fields
 '''
 import re
+import string
+
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import split_type, split_level
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import _object, _array, _string, _integer, _number, _boolean, _unknown
 
@@ -58,7 +60,32 @@ def parse_schema_features(obj, order=None, only=False):
     for schema_string in obj:
         fields_list += create_split_level(schema_string, order=order, only=only)
     return fields_list
-    
+
+
+def camel_case(example):
+    # for i in string.punctuation:
+    if any(x in example for x in string.punctuation) == True:
+        return False
+    else:
+        if any(list(map(str.isupper, example[1:-1]))) == True:
+            return True
+        else:
+            return False
+
+
+def camel_case_split(s):
+    idx = list(map(str.isupper, s))
+    # mark change of case
+    l = [0]
+    for (i, (x, y)) in enumerate(zip(idx, idx[1:])):
+        if x and not y:  # "Ul"
+            l.append(i)
+        elif not x and y:  # "lU"
+            l.append(i + 1)
+    l.append(len(s))
+    # for "lUl", index of "U" will pop twice, have to filer it
+    return [s[x:y] for x, y in zip(l, l[1:]) if x < y]
+
 
 def schema_remove_types(obj):
     """Removes the type our of schema properties

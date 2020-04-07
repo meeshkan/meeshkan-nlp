@@ -23,6 +23,7 @@ def is_valid_uuid(id):
 class IdClassifier():
 
     def __init__(self):
+        self.hex_digits = set(string.hexdigits)
         self._gib_detector = GibDetector()
 
 
