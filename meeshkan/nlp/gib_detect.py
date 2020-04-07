@@ -41,15 +41,5 @@ class GibDetector:
          l =item
          model_mat = self.model_data['mat']
          threshold = self.model_data['thresh']
-         if not (gib_detect_train.avg_transition_prob(l, model_mat) > threshold):
-             return True
-         else:
-            return False
+         return gib_detect_train.avg_transition_prob(l, model_mat) <= threshold
 
-
-'''              id.append(l)
-              if len(id)!=0:
-                   return id[-1]
-              else:
-                   return None
-'''
