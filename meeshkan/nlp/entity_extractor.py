@@ -9,6 +9,27 @@ import yaml.scanner
 from meeshkan.nlp.gib_detect import GibDetector
 from meeshkan.nlp.id_detector import IdClassifier
 
+def _make_dict_from_2_lists(list1, list2):
+    '''Make a dictionary from two lists
+
+    Example:
+    >>>list1=['a','b','c']
+    >>>list2=[1,2,3]
+    >>> _make_dict_from_2_lists(list1, list2)
+    {'a':1,'b':2,'c':3}
+
+    Arguments:
+        two lists
+    Returns:
+        Dist[str/int]
+    '''
+    dict_1 = {}
+    for key, value in zip(list1, list2):
+        if key not in dict_1:
+            dict_1[key] = [value]
+        else:
+            dict_1[key].append(value)
+    return dict_1
 
 def _camel_case(example: str) -> bool:
     """This fubction recognize camel case.
@@ -232,32 +253,37 @@ class EntityExtractorNLP:
         """
         return (path, self.get_entity_from_url(path.split("/")[1:]))
 
-    def get_entity_from_spec(self, file) -> Dict:
-        """Split long string into words.
+        def get_entity_from_spec(self, file):
+        '''Extract pathes from the yaml file and make dictionary with entity and corresponding pathes
 
         Example:
 
         >>> get_entity_from_spec('openapi.yaml')
-        {'user':'path/1354hkhg/user, 'operation':'path/id/operation'}
+        {'transfer': ['/api/rest/v1/account/transfer'], 'user': ['/api/rest/v1/account/user', '/api/rest/v1/account/user/id']}
 
         Arguments:
-            File name
-
+            name of the file ->> String
         Returns:
-            Dict-- dictionary of entity and path.
-        """
-        final_dict = {}
-        with open(file, "r") as foo:
-            pathes = yaml.safe_load(foo.read())["paths"].keys()
+            Dictionary[str]---key is an entity and value is a list of pathes corresponding to this entity
+
+        '''
+        ent=[]
+        pathes1=[]
+        with open(file, 'r') as foo:
+            pathes = yaml.safe_load(foo.read())['paths'].keys()
             for path in pathes:
-                item = path.split("/")[1:]
+                item = path.split('/')[1:]
                 count = 0
                 for i in item:
-                    if i is not "":
+                    if i is not '':
                         count += 1
                 if count > 1:
-                    final_dict[self.get_entity_from_url(path.split("/")[1:])] = path
-        return final_dict
+                    path=re.sub(r'\{.*?\}', 'id', path)
+                    ent.append(self.get_entity_from_url(path.split('/')[1:]))
+                    pathes1.append(path)
+            return _make_dict_from_2_lists(ent, pathes1)
+
+
 
 
 EntityExtractor = EntityExtractorNLP
