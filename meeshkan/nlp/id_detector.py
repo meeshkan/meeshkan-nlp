@@ -1,12 +1,13 @@
-from meeshkan.nlp.gib_detect import GibDetector
+import string
 import uuid
 from enum import Enum
-import string
 from typing import Optional
+
+from meeshkan.nlp.gib_detect import GibDetector
 
 
 class IdType(Enum):
-    #this is the class for id's
+    # this is the class for id's
     integer = 0
     uuid = 1
     hex = 2
@@ -20,15 +21,14 @@ def is_valid_uuid(id):
     except ValueError:
         return False
 
-class IdClassifier():
 
+class IdClassifier:
     def __init__(self):
         self.hex_digits = set(string.hexdigits)
         self._gib_detector = GibDetector()
 
-
     def id_classif(self, item):
-        #this finction return a type of id such as integer, hexadecimal, gibberish or None if it seems to be an english word.
+        # this finction return a type of id such as integer, hexadecimal, gibberish or None if it seems to be an english word.
         try:
             int(item)
             return IdType.integer
@@ -44,12 +44,9 @@ class IdClassifier():
         else:
             return None
 
-
-   
-
     def id_detector(self, string_id):
-        #This function take all the id's from the path list and return the last element if it is exist
-        id=[]
+        # This function take all the id's from the path list and return the last element if it is exist
+        id = []
         for i in string_id:
             if self.id_classif(i) is not None:
                 id.append(i)
@@ -59,15 +56,13 @@ class IdClassifier():
             return None
 
     def _detect_hex(self, item):
-        #This function return true if it is hexadecimal type of id and False if not.
-         if all(c in self.hex_digits for c in item):
-             try:
-                 int(item, 16)
-                 return True
+        # This function return true if it is hexadecimal type of id and False if not.
+        if all(c in self.hex_digits for c in item):
+            try:
+                int(item, 16)
+                return True
 
-             except ValueError:
-                 return False
-         else:
-             return False
-
-
+            except ValueError:
+                return False
+        else:
+            return False

@@ -1,9 +1,15 @@
 import numpy as np
 from sklearn.metrics.pairwise import pairwise_distances
 
-from meeshkan.nlp.schema_normalizer.schema_relations.feature_extraction import FeatureExtraction
-from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import generate_schema_vectors
-from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import parse_schema_features
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import (
+    parse_schema_features,
+)
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import (
+    generate_schema_vectors,
+)
+from meeshkan.nlp.schema_normalizer.schema_relations.feature_extraction import (
+    FeatureExtraction,
+)
 
 
 def get_all_paths(specs_dict):
@@ -15,10 +21,11 @@ def get_all_paths(specs_dict):
     Returns:
          list -- list of path names
     """
-    if specs_dict.get('paths') is None:
+    if specs_dict.get("paths") is None:
         raise KeyError("The key 'paths' is not present in specs  ")
 
-    return [path for path in specs_dict['paths'].keys()]
+    return [path for path in specs_dict["paths"].keys()]
+
 
 def get_all_properties(specs_dict):
     """Extracts all the properties out of respective schema paths.
@@ -33,12 +40,14 @@ def get_all_properties(specs_dict):
     all_paths = get_all_paths(specs_dict)
     if len(all_paths) > 1:
         all_paths_dict = {key: [] for key in all_paths}
-        methods = ['get', 'post']
+        methods = ["get", "post"]
         for path in all_paths:
-            for method in specs_dict['paths'][path].keys():
+            for method in specs_dict["paths"][path].keys():
                 if method in methods:
-                    schema = specs_dict['paths'][path][method]['responses']['200']['content']['application/json']['schema']
-                    schema['$schema'] = 'root'
+                    schema = specs_dict["paths"][path][method]["responses"]["200"][
+                        "content"
+                    ]["application/json"]["schema"]
+                    schema["$schema"] = "root"
                     schema_feats = generate_schema_vectors(schema)
                     parsed_feats = parse_schema_features(schema_feats)
                     all_paths_dict[path].append({method: parsed_feats})
@@ -60,11 +69,11 @@ def calc_distance(spes_dict):
     """
     all_paths, all_paths_dict = get_all_properties(spes_dict)
     all_distances = list()
-    methods = ['get', 'post']
+    methods = ["get", "post"]
     if all_paths_dict is None:
         return []
     else:
-        embedding_dict = {key : [] for key in all_paths}
+        embedding_dict = {key: [] for key in all_paths}
         fe = FeatureExtraction()
         for keys, values in all_paths_dict.items():
             for method in values[0].keys():
@@ -74,7 +83,7 @@ def calc_distance(spes_dict):
             embedding_list.append(embedding_dict[path])
 
         embedding_list = np.array(embedding_list)
-        distance_matrix = pairwise_distances(embedding_list, metric='cosine')
+        distance_matrix = pairwise_distances(embedding_list, metric="cosine")
 
         api_nearest_dict = dict()
         paths_nearest_value = list()
@@ -95,11 +104,3 @@ def calc_distance(spes_dict):
             paths_tuple_list.append((key, value))
 
         return paths_tuple_list
-
-
-
-
-
-        
-
-

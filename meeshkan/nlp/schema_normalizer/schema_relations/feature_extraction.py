@@ -1,14 +1,14 @@
-from typing import List
 import re
 import string
-import spacy
+from typing import List
+
 import numpy as np
+import spacy
 
 
 class FeatureExtraction:
-
     def __init__(self, multiple_vector=False, min_length=1):
-        self.nlp = spacy.load('en_core_web_lg')
+        self.nlp = spacy.load("en_core_web_lg")
         self.multiple_vector = multiple_vector
         self.min_length = min_length
 
@@ -26,11 +26,11 @@ class FeatureExtraction:
              List -- List of words
         """
         if not isinstance(tokens_list, list):
-            raise TypeError('The list of imput words is type list')
+            raise TypeError("The list of imput words is type list")
 
         list_of_words = []
         for word in tokens_list:
-            word = re.sub(r'[^a-zA-Z]', ' ', word)
+            word = re.sub(r"[^a-zA-Z]", " ", word)
             word = word.split()
             list_of_words += word
 
@@ -145,7 +145,7 @@ class FeatureExtraction:
         """
         return [self.convert_lower_word(word) for word in tokens_list]
 
-    def join_into_sentence(self, tokens_list, separator=' '):
+    def join_into_sentence(self, tokens_list, separator=" "):
         """Joins lit of words into a string
 
         Arguments:
@@ -194,9 +194,4 @@ class FeatureExtraction:
         return self.sentence_vector(tokens_list)
 
 
-
-
-
-
-
-# 
+#

@@ -1,6 +1,9 @@
+import pytest
+
 from meeshkan.nlp.spec_optimizer import SpecOptimizer
 
 
+@pytest.mark.skip
 def test_optimizer(optimizer, opbank_spec, opbank_recordings):
     res = optimizer.optimize_spec(opbank_spec)
 
@@ -10,7 +13,9 @@ def test_optimizer(optimizer, opbank_spec, opbank_recordings):
     assert 5 == len(res._x["x-meeshkan-data"]["account"])
     assert 1 == len(res._x["x-meeshkan-data"]["payment"])
 
-    assert "upsert" == res.paths["/v1/payments/{trnopysd}"].post._x["x-meeshkan-operation"]
+    assert (
+        "upsert" == res.paths["/v1/payments/{trnopysd}"].post._x["x-meeshkan-operation"]
+    )
     assert "read" == res.paths["/accounts/v3/accounts"].post._x["x-meeshkan-operation"]
 
     assert "payment" == res.paths["/v1/payments/{trnopysd}"]._x["x-meeshkan-entity"]

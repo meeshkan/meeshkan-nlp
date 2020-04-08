@@ -1,4 +1,4 @@
-'''The MIT License (MIT)
+"""The MIT License (MIT)
 
 Copyright (c) 2015 Rob Renaud
 
@@ -19,27 +19,25 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-'''
+"""
 #!/usr/bin/python
 
-import pickle
-import meeshkan.nlp.gib_detect_train as gib_detect_train
 import os
-#import gib_detect_train
+import pickle
+
+import meeshkan.nlp.gib_detect_train as gib_detect_train
+
+# import gib_detect_train
 
 
 class GibDetector:
-
     def __init__(self):
-        with open(os.path.join(os.path.dirname(__file__), 'gib_model.pki'), 'rb') as f:
+        with open(os.path.join(os.path.dirname(__file__), "gib_model.pki"), "rb") as f:
             self.model_data = pickle.load(f)
-
-
 
     def gib_detector(self, item):
 
-         l =item
-         model_mat = self.model_data['mat']
-         threshold = self.model_data['thresh']
-         return gib_detect_train.avg_transition_prob(l, model_mat) <= threshold
-
+        l = item
+        model_mat = self.model_data["mat"]
+        threshold = self.model_data["thresh"]
+        return gib_detect_train.avg_transition_prob(l, model_mat) <= threshold

@@ -3,9 +3,10 @@
 import math
 import pickle
 
-accepted_chars = 'abcdefghijklmnopqrstuvwxyz '
+accepted_chars = "abcdefghijklmnopqrstuvwxyz "
 
 pos = dict([(char, idx) for idx, char in enumerate(accepted_chars)])
+
 
 def normalize(line):
     """ Return only the subset of chars from accepted_chars.
@@ -13,11 +14,13 @@ def normalize(line):
     infrequenty symbols, etc. """
     return [c.lower() for c in line if c.lower() in accepted_chars]
 
+
 def ngram(n, l):
     """ Return all n grams from l after normalizing """
     filtered = normalize(l)
     for start in range(0, len(filtered) - n + 1):
-        yield ''.join(filtered[start:start + n])
+        yield "".join(filtered[start : start + n])
+
 
 def train():
     """ Write a simple model as a pickle file """
@@ -28,13 +31,13 @@ def train():
     # string has 0 probability.
     counts = [[10 for i in range(k)] for i in range(k)]
 
-    # Count transitions from big text file, taken 
+    # Count transitions from big text file, taken
     # from http://norvig.com/spell-correct.html
-    for line in open('big.txt'):
+    for line in open("big.txt"):
         for a, b in ngram(2, line):
             counts[pos[a]][pos[b]] += 1
 
-    # Normalize the counts so that they become log probabilities.  
+    # Normalize the counts so that they become log probabilities.
     # We use log probabilities rather than straight probabilities to avoid
     # numeric underflow issues with long texts.
     # This contains a justification:
@@ -46,15 +49,16 @@ def train():
 
     # Find the probability of generating a few arbitrarily choosen good and
     # bad phrases.
-    good_probs = [avg_transition_prob(l, counts) for l in open('good.txt')]
-    bad_probs = [avg_transition_prob(l, counts) for l in open('bad.txt')]
+    good_probs = [avg_transition_prob(l, counts) for l in open("good.txt")]
+    bad_probs = [avg_transition_prob(l, counts) for l in open("bad.txt")]
 
     # Assert that we actually are capable of detecting the junk.
     assert min(good_probs) > max(bad_probs)
 
     # And pick a threshold halfway between the worst good and best bad inputs.
     thresh = (min(good_probs) + max(bad_probs)) / 2
-    pickle.dump({'mat': counts, 'thresh': thresh}, open('gib_model.pki', 'wb'))
+    pickle.dump({"mat": counts, "thresh": thresh}, open("gib_model.pki", "wb"))
+
 
 def avg_transition_prob(l, log_prob_mat):
     """ Return the average transition prob from l through log_prob_mat. """
@@ -66,10 +70,6 @@ def avg_transition_prob(l, log_prob_mat):
     # The exponentiation translates from log probs to probs.
     return math.exp(log_prob / (transition_ct or 1))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     train()
-
-
-
-    
-    

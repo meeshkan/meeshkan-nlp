@@ -1,10 +1,12 @@
 import os
 import re
 import string
+from typing import Any, Dict, Sequence
+
 import spacy
 import yaml.scanner
+
 from meeshkan.nlp.gib_detect import GibDetector
-from typing import Sequence, Dict, Any
 from meeshkan.nlp.id_detector import IdClassifier
 
 
@@ -54,11 +56,11 @@ def _camel_case_split(s: str) -> Sequence[str]:
 
 
 class EntityExtractorNLP:
-    STOP_WORDS = [r'api.*', 'json', 'yaml', 'html', 'config']
-    STOP_TAGS = {'VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ'}
+    STOP_WORDS = [r"api.*", "json", "yaml", "html", "config"]
+    STOP_TAGS = {"VB", "VBD", "VBG", "VBN", "VBP", "VBZ"}
 
     def __init__(self):
-        self.nlp = spacy.load('en_core_web_lg')
+        self.nlp = spacy.load("en_core_web_lg")
         self.gib_detector = GibDetector()
         self._id_detector = IdClassifier()
 
@@ -79,10 +81,10 @@ class EntityExtractorNLP:
                 if len(item) > 3:
                     pass
             else:
-                item = re.sub('[^0-9a-z-A-Z]+', ' ', item)
-                item = re.sub('[0-9]+', '', item)
-                item = re.sub('-', ' ', item)
-                for word in item.split(' '):
+                item = re.sub("[^0-9a-z-A-Z]+", " ", item)
+                item = re.sub("[0-9]+", "", item)
+                item = re.sub("-", " ", item)
+                for word in item.split(" "):
                     if _camel_case(word):
                         camel_list = _camel_case_split(word)
                         for cam in camel_list:
@@ -116,9 +118,13 @@ class EntityExtractorNLP:
         """
         path_lists = []
         # print(self.tokenize2(p_list))
-        path_list = [item for item in self.tokenize2(p_list) if not self._is_stop_word(item)]
+        path_list = [
+            item for item in self.tokenize2(p_list) if not self._is_stop_word(item)
+        ]
         # print(path_list)
-        path_list = [word for word in path_list if self.nlp(word)[0].tag_ not in self.STOP_TAGS]
+        path_list = [
+            word for word in path_list if self.nlp(word)[0].tag_ not in self.STOP_TAGS
+        ]
         path_lists.append(path_list)
         return path_list
 
@@ -136,7 +142,7 @@ class EntityExtractorNLP:
         if len(self._split_pathes(p_list)) >= 1:
             return self.nlp(self._split_pathes(p_list)[-1])[0].lemma_
         else:
-            return 'None'
+            return "None"
         # return self._mapping.get(path)
 
     def _is_stop_word(self, path_item: str) -> bool:
@@ -171,11 +177,11 @@ class EntityExtractorNLP:
         for i in range(2, len(long_string) - 2):
             if long_string[i:] in self.nlp.vocab:
                 kl.append(i)
-        if long_string[0:kl[0]] in self.nlp.vocab:
+        if long_string[0 : kl[0]] in self.nlp.vocab:
             yield (kl[0])
         else:
             yield (kl[0])
-            yield from self.get_positions(long_string[0:kl[0]])
+            yield from self.get_positions(long_string[0 : kl[0]])
 
     # This function split long string to parts
     def split_to_words_gen(self, long_string: str):
@@ -192,7 +198,7 @@ class EntityExtractorNLP:
         final_res.append(len(long_string))
         f_res = sorted(final_res)
         for i in range(len(f_res) - 1):
-            yield (long_string[f_res[i]: f_res[i + 1]])
+            yield (long_string[f_res[i] : f_res[i + 1]])
 
     def split_to_words(self, long_string: str) -> Sequence[str]:
         """Split long string into words.
@@ -224,9 +230,9 @@ class EntityExtractorNLP:
         Returns:
             tuple
         """
-        return (path, self.get_entity_from_url(path.split('/')[1:]))
+        return (path, self.get_entity_from_url(path.split("/")[1:]))
 
-    def get_entity_from_spec(self, file)-> Dict:
+    def get_entity_from_spec(self, file) -> Dict:
         """Split long string into words.
 
         Example:
@@ -240,19 +246,18 @@ class EntityExtractorNLP:
         Returns:
             Dict-- dictionary of entity and path.
         """
-        final_dict= {}
-        with open(file, 'r') as foo:
-            pathes = yaml.safe_load(foo.read())['paths'].keys()
+        final_dict = {}
+        with open(file, "r") as foo:
+            pathes = yaml.safe_load(foo.read())["paths"].keys()
             for path in pathes:
-                item = path.split('/')[1:]
+                item = path.split("/")[1:]
                 count = 0
                 for i in item:
-                    if i is not '':
+                    if i is not "":
                         count += 1
                 if count > 1:
-                    final_dict[self.get_entity_from_url(path.split('/')[1:])]=path
-        return(final_dict)
+                    final_dict[self.get_entity_from_url(path.split("/")[1:])] = path
+        return final_dict
 
 
 EntityExtractor = EntityExtractorNLP
-

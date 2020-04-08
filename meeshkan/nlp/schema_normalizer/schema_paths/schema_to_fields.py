@@ -1,14 +1,25 @@
-'''
+"""
     This module is to parse the schema features and return the list of schema fields
-'''
+"""
 import re
 import string
 
-from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import split_type, split_level
-from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import _object, _array, _string, _integer, _number, _boolean, _unknown
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import (
+    _array,
+    _boolean,
+    _integer,
+    _number,
+    _object,
+    _string,
+    _unknown,
+    split_level,
+    split_type,
+)
+
 
 def split_by_type(obj):
     return obj.split(split_type)
+
 
 def split_by_level(obj):
     return obj.split(split_level)
@@ -20,6 +31,7 @@ def split_by_all(obj):
     for item in list1:
         list2.append(split_by_type(item))
     return list2
+
 
 def create_split_level(obj, order=None, only=False):
     if order is None or order == 0:
@@ -47,13 +59,13 @@ def parse_schema_features(obj, order=None, only=False):
         list -- list of properties parsed
     """
     if not isinstance(obj, list):
-        raise TypeError('The schema features in input argument is not a list')
+        raise TypeError("The schema features in input argument is not a list")
     if order is not None:
         if not isinstance(order, int):
-            raise TypeError('The order argument can be None or integer')
+            raise TypeError("The order argument can be None or integer")
     if not isinstance(only, bool):
         raise TypeError("The argument 'only' can be only boolean")
-    
+
     if len(obj) == 0:
         return []
     fields_list = []
@@ -97,13 +109,28 @@ def schema_remove_types(obj):
         list -- list of parsed schema properties
     """
     if not isinstance(obj, str):
-        raise TypeError('The object must be a type str')
-    sub_expression = split_type + _object + '|' + \
-                    split_type + _array + '|' + \
-                    split_type + _string + '|' + \
-                    split_type + _number + '|' + \
-                    split_type + _integer + '|' + \
-                    split_type + _boolean + '|' + \
-                    split_type + _unknown
+        raise TypeError("The object must be a type str")
+    sub_expression = (
+        split_type
+        + _object
+        + "|"
+        + split_type
+        + _array
+        + "|"
+        + split_type
+        + _string
+        + "|"
+        + split_type
+        + _number
+        + "|"
+        + split_type
+        + _integer
+        + "|"
+        + split_type
+        + _boolean
+        + "|"
+        + split_type
+        + _unknown
+    )
 
-    return re.sub(sub_expression, '', obj)
+    return re.sub(sub_expression, "", obj)

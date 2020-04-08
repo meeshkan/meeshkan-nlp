@@ -1,10 +1,9 @@
-
-
 def exact_match(list1, list2):
     if list1 == list2:
         return True
     else:
         return False
+
 
 def compare_nested_schema(list1, list2):
     """Compare two schemas for their best nesting
