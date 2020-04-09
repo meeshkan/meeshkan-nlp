@@ -65,9 +65,6 @@ def parse_schema(obj):
     Return:
          list -- list of all levels of parsed structures in a schema
     """
-    if not isinstance(obj, dict):
-        raise TypeError("The input object passed is not a type dict")
-
     obj["$schema"] = "root"
     root_features = generate_schema_vectors(obj)
     return create_schema_levels(root_features)
