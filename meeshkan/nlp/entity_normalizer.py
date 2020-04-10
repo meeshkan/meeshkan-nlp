@@ -20,12 +20,13 @@ def split_schema(schema):
 
 
 def split_schema_rec(schema, res, spec_path):
-    if schema["type"] == "object":
-        res.append((spec_path, schema, set(schema["properties"].keys())))
-        for prop_name, prop in schema["properties"].items():
-            split_schema_rec(prop, res, spec_path + ("properties", prop_name))
-    elif schema["type"] == "array":
-        split_schema_rec(schema["items"], res, spec_path + ("items",))
+    if "type" in schema:
+        if schema["type"] == "object":
+            res.append((spec_path, schema, set(schema["properties"].keys())))
+            for prop_name, prop in schema["properties"].items():
+                split_schema_rec(prop, res, spec_path + ("properties", prop_name))
+        elif schema["type"] == "array":
+            split_schema_rec(schema["items"], res, spec_path + ("items",))
 
 
 @dataclass(frozen=True, eq=True)
@@ -42,11 +43,7 @@ class EntityNormalizer:
     score_threshold = 0.7
 
     def __init__(self, ):
-        self.entity_name = "account"
-        self.path_tuple = (
-            "/accounts/v3/accounts/eg9Mno2tvmeEE039chWrHw7sk1155oy5Mha8kQp0mYs.sxajtselenSScKPZrBMYjg.SoFWGrHocw1YoNb3zw-vfw",
-            "/accounts/v3/accounts",
-        )
+        pass
 
     def nearest_path(self, specs: OpenAPIObject):
         """Using NLP word embeddings the function will check the responses of different

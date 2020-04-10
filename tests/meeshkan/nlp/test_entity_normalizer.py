@@ -41,9 +41,50 @@ def test_opbank(opbank_spec):
         ._ref
     )
 
-    path_tuple = ("/accounts/v3/accounts/{lrikubto}", "/accounts/v3/accounts")
-    entity_name = "account"
+    path_tuple = ("/v1/payments/{luawmujp}", )
+    entity_name = "payment"
     opbank_spec = entity_normalizer.normalize(opbank_spec, path_tuple, entity_name)
+
+    payment_schema = convert_from_openapi(
+        opbank_spec.components.schemas["payment"]
+    )
+    #assert "paymentId" in payment_schema["properties"]
+
+    assert (
+        "#/components/schemas/payment"
+        == opbank_spec.paths["/v1/payments/{luawmujp}"]
+        .post.requestBody
+        .content["application/json"]
+        .schema._ref
+    )
+    assert (
+        "#/components/schemas/payment"
+        == opbank_spec.paths["/v1/payments/{luawmujp}"]
+        .post.responses["200"]
+        .content["application/json"]
+        .schema
+        ._ref
+    )
+
+    assert "accountId" in account_schema["properties"]
+
+    assert (
+        "#/components/schemas/account"
+        == opbank_spec.paths["/accounts/v3/accounts"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema.properties["accounts"]
+        .items._ref
+    )
+    assert (
+        "#/components/schemas/account"
+        == opbank_spec.paths["/accounts/v3/accounts/{lrikubto}"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema
+        ._ref
+    )
+
 
 def test_responses_exact_match():
     payment_spec = {
