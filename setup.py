@@ -6,8 +6,8 @@ from setuptools import Command, errors, find_packages, setup
 
 # Package meta-data.
 NAME = "meeshkan"
-DESCRIPTION = "NLP tools for API analyzing"
-URL = "http://github.com/meeshkan/meeshkan-nl["
+DESCRIPTION = "Reverse engineer services with style"
+URL = "http://github.com/meeshkan/meeshkan"
 EMAIL = "dev@meeshkan.com"
 AUTHOR = "Meeshkan Dev Team"
 REQUIRES_PYTHON = ">=3.6.0"
@@ -17,7 +17,14 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, "README.md"), encoding="utf-8") as f:
     long_description = "\n" + f.read()
 
-REQUIRED = []
+REQUIRED = [
+    'dataclasses;python_version<"3.7"',  # for 3.6, as it ships with 3.7
+    "openapi-typed_2>=0.0.4",
+    "http-types>=0.0.15,<0.1.0",
+    "jsonpath-rw>=1.4.0",
+    'spacy',
+    'en_core_web_lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.2.5/en_core_web_lg-2.2.5.tar.gz',
+]
 
 BUNDLES = {}
 
@@ -32,10 +39,15 @@ DEV = BUNDLE_REQUIREMENTS + [
     "pyhamcrest",
     "pylint",
     "pytest",
+    "pytest-testmon",
+    "pytest-watch",
+    "requests-mock",
     "setuptools",
+    "twine",
+    "wheel",
 ]
 
-VERSION = "0.2.19"
+VERSION = "0.2.25"
 
 ENTRY_POINTS = ["meeshkan = meeshkan.__main__:cli"]
 
@@ -90,6 +102,7 @@ LINT_COMMAND = "flake8 --exclude .git,.venv,__pycache__,build,dist"
 
 BLACK_FORMAT_COMMAND = "black ."
 ISORT_FORMAT_COMMAND = "isort -y"
+
 BLACK_CHECK_COMMAND = "black --check ."
 ISORT_CHECK_COMMAND = "pipenv run isort --check-only"
 
@@ -159,9 +172,8 @@ class TestCommand(SetupCommand):
         self.status("Checking formatting...")
         check_formatting()
 
-        # FIXME
-        # self.status("Checking style...")
-        # check_style()
+        self.status("Checking style...")
+        check_style()
 
         self.status("Checking types...")
         type_check()
@@ -214,6 +226,7 @@ setup(
         "Operating System :: OS Independent",
     ],
     zip_safe=False,
+    entry_points={"console_scripts": ENTRY_POINTS},
     cmdclass={
         "dist": BuildDistCommand,
         "format": FormatCommand,

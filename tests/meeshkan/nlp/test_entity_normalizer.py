@@ -448,18 +448,15 @@ def test_entity_normalizer_request_response():
         == updated_specs.paths["/payments"]
         .post.responses["200"]
         .content["application/json"]
-        .schema.properties["results"]
-        .properties["payments"]
-        .items._ref
+        .schema.properties["result"]
+        .properties["payment"]._ref
     )
 
     assert (
         "#/components/schemas/payment"
         == updated_specs.paths["/payments"]
         .post.requestBody.content["application/json"]
-        .schema.properties["results"]
-        .properties["payments"]
-        .items._ref
+        .schema._ref
     )
 
     assert (
@@ -471,6 +468,3 @@ def test_entity_normalizer_request_response():
         .properties["payment"]
         ._ref
     )
-
-    print(updated_specs)
-    # assert convert_from_openapi((updated_specs)) == comp_specs
