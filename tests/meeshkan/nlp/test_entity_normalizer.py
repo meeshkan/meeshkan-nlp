@@ -12,28 +12,40 @@ from meeshkan.nlp.entity_normalizer import EntityNormalizer
 from tests.utils import spec_dict, add_item
 
 
-def test_entity_normalizer_opbank():
-    opbank_original_filepath = os.path.abspath("tests/resources/op_spec.json")
-    opbank_components_filepath = os.path.abspath(
-        "tests/resources/op_component_spec.json"
-    )
-    with open(opbank_original_filepath, encoding="utf8") as f:
-        data = json.load(f)
-        org_specs = convert_to_openapi(data)
-
-    with open(opbank_components_filepath, encoding="utf8") as f:
-        comp_specs = json.load(f)
+def test_opbank(opbank_spec):
+    entity_normalizer = EntityNormalizer()
 
     path_tuple = ("/accounts/v3/accounts/{lrikubto}", "/accounts/v3/accounts")
-
     entity_name = "account"
-    entity_normalizer = EntityNormalizer()
-    updated_specs = entity_normalizer.normalize(org_specs, path_tuple, entity_name)
-    print(updated_specs)
-    # assert convert_from_openapi((updated_specs)) == comp_specs
+    opbank_spec = entity_normalizer.normalize(opbank_spec, path_tuple, entity_name)
 
+    account_schema = convert_from_openapi(
+        opbank_spec.components.schemas["account"]
+    )
+    assert "accountId" in account_schema["properties"]
 
-def test_entity_normalizer_responses():
+    assert (
+        "#/components/schemas/account"
+        == opbank_spec.paths["/accounts/v3/accounts"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema.properties["accounts"]
+        .items._ref
+    )
+    assert (
+        "#/components/schemas/account"
+        == opbank_spec.paths["/accounts/v3/accounts/{lrikubto}"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema
+        ._ref
+    )
+
+    path_tuple = ("/accounts/v3/accounts/{lrikubto}", "/accounts/v3/accounts")
+    entity_name = "account"
+    opbank_spec = entity_normalizer.normalize(opbank_spec, path_tuple, entity_name)
+
+def test_responses_exact_match():
     payment_spec = {
         "type": "object",
         "required": ["valueDate", "receiverBic"],
@@ -141,7 +153,7 @@ def test_entity_normalizer_responses():
     )
 
 
-def test_entity_normalizer_responses_types():
+def test_responses_diff_types():
     payment_spec = {
         "type": "object",
         "required": ["valueDate", "receiverBic"],
@@ -239,7 +251,7 @@ def test_entity_normalizer_responses_types():
     )
 
 
-def test_entity_normalizer_responses_optional():
+def test_responses_diff_fields():
     payment_spec = {
         "type": "object",
         "required": ["valueDate", "receiverBic"],
@@ -340,7 +352,7 @@ def test_entity_normalizer_responses_optional():
     )
 
 
-def test_entity_normalizer_request_response():
+def test_request_response():
     payment_spec = {
         "type": "object",
         "required": ["valueDate", "receiverBic"],

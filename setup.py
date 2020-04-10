@@ -23,8 +23,10 @@ REQUIRED = [
     "http-types>=0.0.15,<0.1.0",
     "jsonpath-rw>=1.4.0",
     'spacy',
-    'en_core_web_lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.2.5/en_core_web_lg-2.2.5.tar.gz',
+    'en_core_web_lg',
 ]
+
+DEPENDENCY_LINKS = ['https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.2.5/en_core_web_lg-2.2.5.tar.gz']
 
 BUNDLES = {}
 
@@ -219,6 +221,7 @@ setup(
     packages=find_packages(exclude=("tests",)),
     include_package_data=True,
     install_requires=REQUIRED,
+    dependency_links=DEPENDENCY_LINKS,
     extras_require=EXTRAS,
     classifiers=[
         "Programming Language :: Python :: 3",
