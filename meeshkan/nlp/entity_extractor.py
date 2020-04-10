@@ -253,7 +253,7 @@ class EntityExtractorNLP:
         """
         return (path, self.get_entity_from_url(path.split("/")[1:]))
 
-        def get_entity_from_spec(self, file):
+    def get_entity_from_spec(self, file):
         '''Extract pathes from the yaml file and make dictionary with entity and corresponding pathes
 
         Example:
