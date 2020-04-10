@@ -5,9 +5,9 @@ from shutil import rmtree
 from setuptools import Command, errors, find_packages, setup
 
 # Package meta-data.
-NAME = "meeshkan"
-DESCRIPTION = "Reverse engineer services with style"
-URL = "http://github.com/meeshkan/meeshkan"
+NAME = "Mem NLP"
+DESCRIPTION = "Reverse engineer services with NLP"
+URL = "http://github.com/meeshkan/mem-nlp"
 EMAIL = "dev@meeshkan.com"
 AUTHOR = "Meeshkan Dev Team"
 REQUIRES_PYTHON = ">=3.6.0"
@@ -49,7 +49,7 @@ DEV = BUNDLE_REQUIREMENTS + [
     "wheel",
 ]
 
-VERSION = "0.2.25"
+VERSION = "0.0.1"
 
 ENTRY_POINTS = ["meeshkan = meeshkan.__main__:cli"]
 
