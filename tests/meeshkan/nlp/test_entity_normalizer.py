@@ -254,11 +254,10 @@ def test_responses_diff_types():
     )
     spec = convert_to_openapi(spec)
 
-    path_tuple = ("/payments/{id}", "/payments")
+    entity_config = {"payment": ["/payments/{id}", "/payments"]}
 
-    entity_name = "payment"
     entity_normalizer = EntityNormalizer()
-    datapaths, updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
+    datapaths, updated_specs = entity_normalizer.normalize(spec, entity_config)
 
     assert 2 == len(datapaths)
     assert DataPath(path="/payments", code="200", request=False, method="get",
@@ -361,11 +360,10 @@ def test_responses_diff_fields():
     )
     spec = convert_to_openapi(spec)
 
-    path_tuple = ("/payments/{id}", "/payments")
+    entity_config = {"payment": ["/payments/{id}", "/payments"]}
 
-    entity_name = "payment"
     entity_normalizer = EntityNormalizer()
-    datapaths, updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
+    datapaths, updated_specs = entity_normalizer.normalize(spec, entity_config)
 
     assert 2 == len(datapaths)
     assert DataPath(path="/payments", code="200", request=False, method="get",
@@ -480,11 +478,10 @@ def test_request_response():
 
     spec = convert_to_openapi(spec)
 
-    path_tuple = ("/payments/{id}", "/payments")
+    entity_config = {"payment": ["/payments/{id}", "/payments"]}
 
-    entity_name = "payment"
     entity_normalizer = EntityNormalizer()
-    datapaths, updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
+    datapaths, updated_specs = entity_normalizer.normalize(spec, entity_config)
 
     assert 4 == len(datapaths)
     assert DataPath(path="/payments", code="200", request=False, method="get",

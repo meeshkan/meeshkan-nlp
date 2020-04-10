@@ -124,7 +124,7 @@ class EntityNormalizer:
 
         for entity_name, paths in entity_config.items():
             entity_datapaths, spec_dict = self._replace_entity(spec_dict, entity_name, paths)
-            datapaths.append(entity_datapaths)
+            datapaths.extend(entity_datapaths)
 
         return datapaths, convert_to_openapi(spec_dict)
 

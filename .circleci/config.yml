@@ -32,10 +32,7 @@ jobs: # A basic unit of work in a run
             export PIPENV_INSTALL_TIMEOUT=9000
             echo $PIP_PROCESS_DEPENDENCY_LINKS
             sudo pip install pipenv
-            pipenv clean
-            pipenv lock --clear
-            pipenv sync
-            pipenv install -e .[dev] --verbose --skip-lock
+            PIP_PROCESS_DEPENDENCY_LINKS=1 pipenv install -e .[dev] --verbose
             pipenv update --verbose
             echo 'export VENV_HOME_DIR=$(pipenv --venv)' >> $BASH_ENV
             echo 'source $VENV_HOME_DIR/bin/activate' >> $BASH_ENV
