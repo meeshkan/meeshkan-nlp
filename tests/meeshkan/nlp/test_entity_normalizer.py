@@ -16,7 +16,7 @@ def test_opbank(opbank_spec):
 
     path_tuple = ("/accounts/v3/accounts/{lrikubto}", "/accounts/v3/accounts")
     entity_name = "account"
-    opbank_spec = entity_normalizer.normalize(opbank_spec, path_tuple, entity_name)
+    datapaths, opbank_spec = entity_normalizer.normalize(opbank_spec, path_tuple, entity_name)
 
     account_schema = convert_from_openapi(
         opbank_spec.components.schemas["account"]
@@ -42,7 +42,7 @@ def test_opbank(opbank_spec):
 
     path_tuple = ("/v1/payments/{luawmujp}",)
     entity_name = "payment"
-    opbank_spec = entity_normalizer.normalize(opbank_spec, path_tuple, entity_name)
+    datapaths, opbank_spec = entity_normalizer.normalize(opbank_spec, path_tuple, entity_name)
 
     payment_schema = convert_from_openapi(
         opbank_spec.components.schemas["payment"]
@@ -168,7 +168,7 @@ def test_responses_exact_match():
 
     entity_name = "payment"
     entity_normalizer = EntityNormalizer()
-    updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
+    datapaths, updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
 
     assert payment_spec == convert_from_openapi(
         updated_specs.components.schemas["payment"]
@@ -266,7 +266,7 @@ def test_responses_diff_types():
 
     entity_name = "payment"
     entity_normalizer = EntityNormalizer()
-    updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
+    datapaths, updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
 
     assert payment_spec == convert_from_openapi(
         updated_specs.components.schemas["payment"]
@@ -367,7 +367,7 @@ def test_responses_diff_fields():
 
     entity_name = "payment"
     entity_normalizer = EntityNormalizer()
-    updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
+    datapaths, updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
 
     assert payment_spec_single == convert_from_openapi(
         updated_specs.components.schemas["payment"]
@@ -480,7 +480,7 @@ def test_request_response():
 
     entity_name = "payment"
     entity_normalizer = EntityNormalizer()
-    updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
+    datapaths, updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
 
     assert payment_spec_single == convert_from_openapi(
         updated_specs.components.schemas["payment"]

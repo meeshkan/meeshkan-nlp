@@ -29,7 +29,7 @@ jobs: # A basic unit of work in a run
           name: Install pipenv
           command: |
             sudo pip install pipenv
-            pipenv install -e .[dev] --verbose
+            pipenv install -e .[dev] --verbose --skip-lock
             pipenv update --verbose
             echo 'export VENV_HOME_DIR=$(pipenv --venv)' >> $BASH_ENV
             echo 'source $VENV_HOME_DIR/bin/activate' >> $BASH_ENV

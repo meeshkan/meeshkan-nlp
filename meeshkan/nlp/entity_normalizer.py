@@ -2,6 +2,7 @@ import itertools
 import typing
 from typing import Tuple
 
+import jsonpath_rw
 from openapi_typed_2 import (
     OpenAPIObject,
     convert_from_openapi,
@@ -35,6 +36,24 @@ class SpecPart:
     method: str
     request: bool
     code: typing.Optional[str] = None
+
+@dataclass(frozen=True, eq=True)
+class DataPath(SpecPart):
+    path: typing.Any
+
+
+def to_path(path_tuple):
+    res = []
+    for e in path_tuple:
+        if e == "root":
+            res.append("$")
+        elif e == "properties":
+            res.append(".")
+        elif e == "items":
+            res.append("[*]")
+        else:
+            res.append(e)
+    return "".join(res)
 
 
 class EntityNormalizer:
@@ -86,7 +105,7 @@ class EntityNormalizer:
 
     def normalize(
             self, spec: OpenAPIObject, path_tuple: Tuple, entity_name: str
-    ) -> OpenAPIObject:
+    ) -> (typing.Sequence[DataPath], OpenAPIObject):
         """Builds the #ref components in an OpenAPI object by understanding similar nested
         sructures for a set of paths.
 
@@ -105,8 +124,8 @@ class EntityNormalizer:
         merged_schema = self._merge_schemas(best_match)
         spec_dict = self._add_entity(spec_dict, entity_name, merged_schema)
         spec_dict = self._replace_refs(spec_dict, best_match, entity_name)
-
-        return convert_to_openapi(spec_dict)
+        datapaths = [DataPath(**match[0].asdict(), path=to_path(match[1])) for match in best_match]
+        return datapaths, convert_to_openapi(spec_dict)
 
     def _extract_schemas(self, spec, path_tuple):
         res = {}
