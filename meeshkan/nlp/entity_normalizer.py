@@ -105,7 +105,7 @@ class EntityNormalizer:
     #         return specs
 
     def normalize(
-            self, spec: OpenAPIObject, path_tuple: Tuple, entity_name: str
+            self, spec: OpenAPIObject, entity_config: typing.Dict[str, typing.Sequence]
     ) -> (typing.Sequence[DataPath], OpenAPIObject):
         """Builds the #ref components in an OpenAPI object by understanding similar nested
         sructures for a set of paths.
@@ -119,14 +119,27 @@ class EntityNormalizer:
         Returns:
             OpenAPIObject -- Old or updated schema if #ref is created
         """
+        datapaths = []
         spec_dict = convert_from_openapi(spec)
-        schemas = self._extract_schemas(spec_dict, path_tuple)
+
+        for entity_name, paths in entity_config.items():
+            entity_datapaths, spec_dict = self._replace_entity(spec_dict, entity_name, paths)
+            datapaths.append(entity_datapaths)
+
+        return datapaths, convert_to_openapi(spec_dict)
+
+
+    def _replace_entity(
+            self, spec_dict: typing.Any, entity_name: str, paths: typing.Sequence
+    ) -> (typing.Sequence[DataPath], typing.Any):
+        schemas = self._extract_schemas(spec_dict, paths)
         best_match = self._find_best_match(schemas)
         merged_schema = self._merge_schemas(best_match)
         spec_dict = self._add_entity(spec_dict, entity_name, merged_schema)
         spec_dict = self._replace_refs(spec_dict, best_match, entity_name)
         datapaths = [DataPath(schema_path=to_path(match[1]), **asdict(match[0])) for match in best_match]
-        return datapaths, convert_to_openapi(spec_dict)
+        return datapaths, spec_dict
+
 
     def _extract_schemas(self, spec, path_tuple):
         res = {}

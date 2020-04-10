@@ -29,7 +29,7 @@ jobs: # A basic unit of work in a run
           name: Install pipenv
           command: |
             export PIP_PROCESS_DEPENDENCY_LINKS=1
-
+            export PIPENV_INSTALL_TIMEOUT=9000
             echo $PIP_PROCESS_DEPENDENCY_LINKS
             sudo pip install pipenv
             pipenv clean

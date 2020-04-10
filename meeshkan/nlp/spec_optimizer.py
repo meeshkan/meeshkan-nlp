@@ -5,9 +5,11 @@ from http_types import HttpExchange
 
 from openapi_typed_2 import OpenAPIObject, convert_from_openapi, convert_to_openapi
 
+from meeshkan.nlp.entity_normalizer import EntityNormalizer
+
 
 class SpecOptimizer:
-    def __init__(self, extractor, path_analyzer, normalizer):
+    def __init__(self, extractor, path_analyzer, normalizer: EntityNormalizer):
         self._extractor = extractor
         self._path_analyzer = path_analyzer
         self._normalizer = normalizer
