@@ -29,6 +29,10 @@ jobs: # A basic unit of work in a run
           name: Install pipenv
           command: |
             sudo pip install pipenv
+            echo $PIP_PROCESS_DEPENDENCY_LINKS
+            pipenv clean
+            pipenv lock --clear
+            pipenv sync
             pipenv install -e .[dev] --verbose --skip-lock
             pipenv update --verbose
             echo 'export VENV_HOME_DIR=$(pipenv --venv)' >> $BASH_ENV

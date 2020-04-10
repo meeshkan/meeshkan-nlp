@@ -3,6 +3,7 @@ import typing
 from typing import Tuple
 
 import jsonpath_rw
+from dataclasses import asdict
 from openapi_typed_2 import (
     OpenAPIObject,
     convert_from_openapi,
@@ -39,7 +40,7 @@ class SpecPart:
 
 @dataclass(frozen=True, eq=True)
 class DataPath(SpecPart):
-    path: typing.Any
+    schema_path: typing.Any = "$"
 
 
 def to_path(path_tuple):
@@ -124,7 +125,7 @@ class EntityNormalizer:
         merged_schema = self._merge_schemas(best_match)
         spec_dict = self._add_entity(spec_dict, entity_name, merged_schema)
         spec_dict = self._replace_refs(spec_dict, best_match, entity_name)
-        datapaths = [DataPath(**match[0].asdict(), path=to_path(match[1])) for match in best_match]
+        datapaths = [DataPath(schema_path=to_path(match[1]), **asdict(match[0])) for match in best_match]
         return datapaths, convert_to_openapi(spec_dict)
 
     def _extract_schemas(self, spec, path_tuple):
