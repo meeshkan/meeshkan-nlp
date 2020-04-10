@@ -4,7 +4,6 @@ import os
 
 from openapi_typed_2 import (
     convert_to_openapi,
-    convert_to_OpenAPIObject,
     convert_from_openapi,
 )
 
@@ -25,64 +24,64 @@ def test_opbank(opbank_spec):
     assert "accountId" in account_schema["properties"]
 
     assert (
-        "#/components/schemas/account"
-        == opbank_spec.paths["/accounts/v3/accounts"]
-        .get.responses["200"]
-        .content["application/json"]
-        .schema.properties["accounts"]
-        .items._ref
+            "#/components/schemas/account"
+            == opbank_spec.paths["/accounts/v3/accounts"]
+            .get.responses["200"]
+            .content["application/json"]
+            .schema.properties["accounts"]
+            .items._ref
     )
     assert (
-        "#/components/schemas/account"
-        == opbank_spec.paths["/accounts/v3/accounts/{lrikubto}"]
-        .get.responses["200"]
-        .content["application/json"]
-        .schema
-        ._ref
+            "#/components/schemas/account"
+            == opbank_spec.paths["/accounts/v3/accounts/{lrikubto}"]
+            .get.responses["200"]
+            .content["application/json"]
+            .schema
+            ._ref
     )
 
-    path_tuple = ("/v1/payments/{luawmujp}", )
+    path_tuple = ("/v1/payments/{luawmujp}",)
     entity_name = "payment"
     opbank_spec = entity_normalizer.normalize(opbank_spec, path_tuple, entity_name)
 
     payment_schema = convert_from_openapi(
         opbank_spec.components.schemas["payment"]
     )
-    #assert "paymentId" in payment_schema["properties"]
+    # assert "paymentId" in payment_schema["properties"]
 
     assert (
-        "#/components/schemas/payment"
-        == opbank_spec.paths["/v1/payments/{luawmujp}"]
-        .post.requestBody
-        .content["application/json"]
-        .schema._ref
+            "#/components/schemas/payment"
+            == opbank_spec.paths["/v1/payments/{luawmujp}"]
+            .post.requestBody
+            .content["application/json"]
+            .schema._ref
     )
     assert (
-        "#/components/schemas/payment"
-        == opbank_spec.paths["/v1/payments/{luawmujp}"]
-        .post.responses["200"]
-        .content["application/json"]
-        .schema
-        ._ref
+            "#/components/schemas/payment"
+            == opbank_spec.paths["/v1/payments/{luawmujp}"]
+            .post.responses["200"]
+            .content["application/json"]
+            .schema
+            ._ref
     )
 
     assert "accountId" in account_schema["properties"]
 
     assert (
-        "#/components/schemas/account"
-        == opbank_spec.paths["/accounts/v3/accounts"]
-        .get.responses["200"]
-        .content["application/json"]
-        .schema.properties["accounts"]
-        .items._ref
+            "#/components/schemas/account"
+            == opbank_spec.paths["/accounts/v3/accounts"]
+            .get.responses["200"]
+            .content["application/json"]
+            .schema.properties["accounts"]
+            .items._ref
     )
     assert (
-        "#/components/schemas/account"
-        == opbank_spec.paths["/accounts/v3/accounts/{lrikubto}"]
-        .get.responses["200"]
-        .content["application/json"]
-        .schema
-        ._ref
+            "#/components/schemas/account"
+            == opbank_spec.paths["/accounts/v3/accounts/{lrikubto}"]
+            .get.responses["200"]
+            .content["application/json"]
+            .schema
+            ._ref
     )
 
 
@@ -163,7 +162,7 @@ def test_responses_exact_match():
     add_item(
         spec, path="/payments", response_schema=schema_array, method="get",
     )
-    spec = convert_to_OpenAPIObject(spec)
+    spec = convert_to_openapi(spec)
 
     path_tuple = ("/payments/{id}", "/payments")
 
@@ -175,22 +174,22 @@ def test_responses_exact_match():
         updated_specs.components.schemas["payment"]
     )
     assert (
-        "#/components/schemas/payment"
-        == updated_specs.paths["/payments"]
-        .get.responses["200"]
-        .content["application/json"]
-        .schema.properties["results"]
-        .properties["payments"]
-        .items._ref
+            "#/components/schemas/payment"
+            == updated_specs.paths["/payments"]
+            .get.responses["200"]
+            .content["application/json"]
+            .schema.properties["results"]
+            .properties["payments"]
+            .items._ref
     )
     assert (
-        "#/components/schemas/payment"
-        == updated_specs.paths["/payments/{id}"]
-        .get.responses["200"]
-        .content["application/json"]
-        .schema.properties["result"]
-        .properties["payment"]
-        ._ref
+            "#/components/schemas/payment"
+            == updated_specs.paths["/payments/{id}"]
+            .get.responses["200"]
+            .content["application/json"]
+            .schema.properties["result"]
+            .properties["payment"]
+            ._ref
     )
 
 
@@ -261,7 +260,7 @@ def test_responses_diff_types():
     add_item(
         spec, path="/payments", response_schema=schema_array, method="get",
     )
-    spec = convert_to_OpenAPIObject(spec)
+    spec = convert_to_openapi(spec)
 
     path_tuple = ("/payments/{id}", "/payments")
 
@@ -273,22 +272,22 @@ def test_responses_diff_types():
         updated_specs.components.schemas["payment"]
     )
     assert (
-        "#/components/schemas/payment"
-        == updated_specs.paths["/payments"]
-        .get.responses["200"]
-        .content["application/json"]
-        .schema.properties["results"]
-        .properties["payments"]
-        .items._ref
+            "#/components/schemas/payment"
+            == updated_specs.paths["/payments"]
+            .get.responses["200"]
+            .content["application/json"]
+            .schema.properties["results"]
+            .properties["payments"]
+            .items._ref
     )
     assert (
-        "#/components/schemas/payment"
-        == updated_specs.paths["/payments/{id}"]
-        .get.responses["200"]
-        .content["application/json"]
-        .schema.properties["result"]
-        .properties["payment"]
-        ._ref
+            "#/components/schemas/payment"
+            == updated_specs.paths["/payments/{id}"]
+            .get.responses["200"]
+            .content["application/json"]
+            .schema.properties["result"]
+            .properties["payment"]
+            ._ref
     )
 
 
@@ -362,7 +361,7 @@ def test_responses_diff_fields():
     add_item(
         spec, path="/payments", response_schema=schema_array, method="get",
     )
-    spec = convert_to_OpenAPIObject(spec)
+    spec = convert_to_openapi(spec)
 
     path_tuple = ("/payments/{id}", "/payments")
 
@@ -374,22 +373,22 @@ def test_responses_diff_fields():
         updated_specs.components.schemas["payment"]
     )
     assert (
-        "#/components/schemas/payment"
-        == updated_specs.paths["/payments"]
-        .get.responses["200"]
-        .content["application/json"]
-        .schema.properties["results"]
-        .properties["payments"]
-        .items._ref
+            "#/components/schemas/payment"
+            == updated_specs.paths["/payments"]
+            .get.responses["200"]
+            .content["application/json"]
+            .schema.properties["results"]
+            .properties["payments"]
+            .items._ref
     )
     assert (
-        "#/components/schemas/payment"
-        == updated_specs.paths["/payments/{id}"]
-        .get.responses["200"]
-        .content["application/json"]
-        .schema.properties["result"]
-        .properties["payment"]
-        ._ref
+            "#/components/schemas/payment"
+            == updated_specs.paths["/payments/{id}"]
+            .get.responses["200"]
+            .content["application/json"]
+            .schema.properties["result"]
+            .properties["payment"]
+            ._ref
     )
 
 
@@ -475,7 +474,7 @@ def test_request_response():
         method="post",
     )
 
-    spec = convert_to_OpenAPIObject(spec)
+    spec = convert_to_openapi(spec)
 
     path_tuple = ("/payments/{id}", "/payments")
 
@@ -487,37 +486,37 @@ def test_request_response():
         updated_specs.components.schemas["payment"]
     )
     assert (
-        "#/components/schemas/payment"
-        == updated_specs.paths["/payments"]
-        .get.responses["200"]
-        .content["application/json"]
-        .schema.properties["results"]
-        .properties["payments"]
-        .items._ref
+            "#/components/schemas/payment"
+            == updated_specs.paths["/payments"]
+            .get.responses["200"]
+            .content["application/json"]
+            .schema.properties["results"]
+            .properties["payments"]
+            .items._ref
     )
 
     assert (
-        "#/components/schemas/payment"
-        == updated_specs.paths["/payments"]
-        .post.responses["200"]
-        .content["application/json"]
-        .schema.properties["result"]
-        .properties["payment"]._ref
+            "#/components/schemas/payment"
+            == updated_specs.paths["/payments"]
+            .post.responses["200"]
+            .content["application/json"]
+            .schema.properties["result"]
+            .properties["payment"]._ref
     )
 
     assert (
-        "#/components/schemas/payment"
-        == updated_specs.paths["/payments"]
-        .post.requestBody.content["application/json"]
-        .schema._ref
+            "#/components/schemas/payment"
+            == updated_specs.paths["/payments"]
+            .post.requestBody.content["application/json"]
+            .schema._ref
     )
 
     assert (
-        "#/components/schemas/payment"
-        == updated_specs.paths["/payments/{id}"]
-        .get.responses["200"]
-        .content["application/json"]
-        .schema.properties["result"]
-        .properties["payment"]
-        ._ref
+            "#/components/schemas/payment"
+            == updated_specs.paths["/payments/{id}"]
+            .get.responses["200"]
+            .content["application/json"]
+            .schema.properties["result"]
+            .properties["payment"]
+            ._ref
     )

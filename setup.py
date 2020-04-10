@@ -221,7 +221,6 @@ setup(
     packages=find_packages(exclude=("tests",)),
     include_package_data=True,
     install_requires=REQUIRED,
-    dependency_links=DEPENDENCY_LINKS,
     extras_require=EXTRAS,
     classifiers=[
         "Programming Language :: Python :: 3",
