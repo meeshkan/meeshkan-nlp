@@ -28,8 +28,10 @@ jobs: # A basic unit of work in a run
       - run:
           name: Install pipenv
           command: |
-            sudo pip install pipenv
+            export PIP_PROCESS_DEPENDENCY_LINKS=1
+
             echo $PIP_PROCESS_DEPENDENCY_LINKS
+            sudo pip install pipenv
             pipenv clean
             pipenv lock --clear
             pipenv sync

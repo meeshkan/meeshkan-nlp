@@ -7,7 +7,7 @@ from openapi_typed_2 import (
     convert_from_openapi,
 )
 
-from meeshkan.nlp.entity_normalizer import EntityNormalizer
+from meeshkan.nlp.entity_normalizer import EntityNormalizer, DataPath
 from tests.utils import spec_dict, add_item
 
 
@@ -21,6 +21,10 @@ def test_opbank(opbank_spec):
     account_schema = convert_from_openapi(
         opbank_spec.components.schemas["account"]
     )
+    assert 2 == len(datapaths)
+    assert DataPath(path="/accounts/v3/accounts/{lrikubto}", code="200", request=False, method="get", schema_path="$") in datapaths
+    assert DataPath(path="/accounts/v3/accounts", code="200", request=False, method="get", schema_path="$.accounts[*]") in datapaths
+
     assert "accountId" in account_schema["properties"]
 
     assert (
@@ -44,9 +48,15 @@ def test_opbank(opbank_spec):
     entity_name = "payment"
     datapaths, opbank_spec = entity_normalizer.normalize(opbank_spec, path_tuple, entity_name)
 
+    assert 2 == len(datapaths)
+    assert DataPath(path="/v1/payments/{luawmujp}", code="200", request=False, method="post", schema_path="$") in datapaths
+    assert DataPath(path="/v1/payments/{luawmujp}", request=True, method="post", schema_path="$") in datapaths
+
+
     payment_schema = convert_from_openapi(
         opbank_spec.components.schemas["payment"]
     )
+
     # assert "paymentId" in payment_schema["properties"]
 
     assert (
@@ -170,6 +180,10 @@ def test_responses_exact_match():
     entity_normalizer = EntityNormalizer()
     datapaths, updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
 
+    assert 2 == len(datapaths)
+    assert DataPath(path="/payments", code="200", request=False, method="get", schema_path="$.results.payments[*]") in datapaths
+    assert DataPath(path="/payments/{id}", code="200", request=False, method="get", schema_path="$.result.payment") in datapaths
+
     assert payment_spec == convert_from_openapi(
         updated_specs.components.schemas["payment"]
     )
@@ -267,6 +281,10 @@ def test_responses_diff_types():
     entity_name = "payment"
     entity_normalizer = EntityNormalizer()
     datapaths, updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
+
+    assert 2 == len(datapaths)
+    assert DataPath(path="/payments", code="200", request=False, method="get", schema_path="$.results.payments[*]") in datapaths
+    assert DataPath(path="/payments/{id}", code="200", request=False, method="get", schema_path="$.result.payment") in datapaths
 
     assert payment_spec == convert_from_openapi(
         updated_specs.components.schemas["payment"]
@@ -368,6 +386,10 @@ def test_responses_diff_fields():
     entity_name = "payment"
     entity_normalizer = EntityNormalizer()
     datapaths, updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
+
+    assert 2 == len(datapaths)
+    assert DataPath(path="/payments", code="200", request=False, method="get", schema_path="$.results.payments[*]") in datapaths
+    assert DataPath(path="/payments/{id}", code="200", request=False, method="get", schema_path="$.result.payment") in datapaths
 
     assert payment_spec_single == convert_from_openapi(
         updated_specs.components.schemas["payment"]
@@ -481,6 +503,13 @@ def test_request_response():
     entity_name = "payment"
     entity_normalizer = EntityNormalizer()
     datapaths, updated_specs = entity_normalizer.normalize(spec, path_tuple, entity_name)
+
+    assert 4 == len(datapaths)
+    assert DataPath(path="/payments", code="200", request=False, method="get", schema_path="$.results.payments[*]") in datapaths
+    assert DataPath(path="/payments/{id}", code="200", request=False, method="get", schema_path="$.result.payment") in datapaths
+    assert DataPath(path="/payments", request=True, method="post", schema_path="$") in datapaths
+    assert DataPath(path="/payments", code="200", request=False, method="post", schema_path="$.result.payment") in datapaths
+
 
     assert payment_spec_single == convert_from_openapi(
         updated_specs.components.schemas["payment"]
