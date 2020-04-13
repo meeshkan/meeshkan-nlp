@@ -101,7 +101,7 @@ BUILD_COMMAND = "{executable} setup.py sdist bdist_wheel --universal".format(
 
 TYPE_CHECK_COMMAND = "pyright --lib"
 
-TEST_COMMAND = "pytest"
+TEST_COMMAND = "pytest ./tests"
 
 LINT_COMMAND = "flake8 --exclude .git,.venv,__pycache__,build,dist"
 
