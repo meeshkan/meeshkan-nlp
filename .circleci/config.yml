@@ -28,12 +28,7 @@ jobs: # A basic unit of work in a run
       - run:
           name: Install pipenv
           command: |
-            export PIP_PROCESS_DEPENDENCY_LINKS=1
-            export PIPENV_INSTALL_TIMEOUT=9000
-            echo $PIP_PROCESS_DEPENDENCY_LINKS
-            sudo pip install pipenv
-            PIP_PROCESS_DEPENDENCY_LINKS=1 pipenv install -e .[dev] --verbose
-            pipenv update --verbose
+            pip install -e .[dev]
             echo 'export VENV_HOME_DIR=$(pipenv --venv)' >> $BASH_ENV
             echo 'source $VENV_HOME_DIR/bin/activate' >> $BASH_ENV
       - run:

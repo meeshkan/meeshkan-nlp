@@ -6,9 +6,10 @@ import spacy
 from openapi_typed_2 import OpenAPIObject
 
 from meeshkan.nlp.ids.gib_detect import GibberishDetector
-from meeshkan.nlp.ids.id_classifier import IdClassifier
+from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
 
-def _make_dict_from_2_lists(list1, list2):
+
+def _make_dict_from_2_lists(list1, list2): #TODO Maria Use dict(zip) instead of it
     '''Make a dictionary from two lists
 
     Example:
@@ -84,7 +85,7 @@ class EntityExtractorNLP:
         self.gib_detector = GibberishDetector()
         self._id_detector = IdClassifier()
 
-    def tokenize2(self, path_list: list) -> Sequence[str]:
+    def tokenize2(self, path_list: list) -> Sequence[str]: #TODO Maria Why is it tokenize<<2>>?
         """This function tokenize list of words and remove potential ids .
 
             Example:
@@ -97,7 +98,7 @@ class EntityExtractorNLP:
             """
         res = list()
         for item in path_list:
-            if self._id_detector.by_value(item) != None:
+            if self._id_detector.by_value(item) != IdType.UNKNOWN:
                 if len(item) > 3:
                     pass
             else:
@@ -148,7 +149,7 @@ class EntityExtractorNLP:
         path_lists.append(path_list)
         return path_list
 
-    def get_entity_from_url(self, p_list: list) -> str:
+    def get_entity_from_url(self, p_list: list) -> str: #TODO Maria. It's not an url. URL is http://google.com/something. It's a path.
         """This function return lemmatized entity from the path.
 
         Example:

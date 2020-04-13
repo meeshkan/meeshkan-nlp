@@ -9,14 +9,7 @@ class FieldsSimilarityBase(ABC):
 
     @abstractmethod
     def similarity(self, a: typing.Set[str], b: typing.Set[str]) -> float:
-        intersection = len(a.intersection(b))
-        if intersection == 0:
-            return 0
-
-        a_b_diff = len(a - b)
-        b_a_diff = len(a - b)
-
-        return max(0, 1 - (a_b_diff / intersection + b_a_diff / intersection) / 2)
+        pass
 
     def group_similarity(self, group: typing.Iterable[typing.Set[str]]) -> float:
         total_score = 0.0
@@ -30,25 +23,17 @@ class FieldsSimilarityBase(ABC):
         return avg
 
 
-class FieldsDiffSimilariaty(FieldsSimilarityBase):
+class FieldsIOUSimilariaty(FieldsSimilarityBase):
     def similarity(self, a: typing.Set[str], b: typing.Set[str]) -> float:
         intersection = len(a.intersection(b))
         if intersection == 0:
             return 0
 
-        a_b_diff = len(a - b)
-        b_a_diff = len(a - b)
+        union = len(a.union(b))
 
-        return max(0, 1 - (a_b_diff / intersection + b_a_diff / intersection) / 2)
+        return intersection/union
 
 
-class FieldsEmbeddingsSimilariaty(FieldsSimilarityBase):
+class FieldsEmbeddingsSimilariaty(FieldsSimilarityBase): #TODO  Nakul implement it
     def similarity(self, a: typing.Set[str], b: typing.Set[str]) -> float:
-        intersection = len(a.intersection(b))
-        if intersection == 0:
-            return 0
-
-        a_b_diff = len(a - b)
-        b_a_diff = len(a - b)
-
-        return max(0, 1 - (a_b_diff / intersection + b_a_diff / intersection) / 2)
+        raise NotImplementedError()

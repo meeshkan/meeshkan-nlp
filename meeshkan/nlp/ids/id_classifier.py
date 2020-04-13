@@ -22,11 +22,7 @@ class IdClassifier:
     def __init__(self):
         self._gib_detector = GibberishDetector()
 
-    def by_name_and_values(self, name: str, values: typing.Iterable[str]) -> IdType:
-        score = 0
-        if "id" in name.lower():
-            score += 0.3
-
+    def by_values(self, values: typing.Iterable[str]) -> IdType:
         total_values = 0.0
         unknown_values = 0.0
         max_id_type = IdType.UNKNOWN
@@ -38,9 +34,12 @@ class IdClassifier:
             else:
                 max_id_type = id_type if id_type.value > max_id_type.value else id_type
 
-        score += (total_values- unknown_values)/total_values
+        score = (total_values - unknown_values) / total_values
 
-        return max_id_type if score > 1.0 else IdType.UNKNOWN
+        return max_id_type if score > 0.7 else IdType.UNKNOWN
+
+    def by_name(self, name: str) -> bool:
+        return "id" in name.lower()
 
     def by_value(self, value: str) -> IdType:
         if self._is_int(value):

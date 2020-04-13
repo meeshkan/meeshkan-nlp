@@ -56,5 +56,5 @@ def test_extract_from_spec(opbank_spec, extractor):
 
     assert len(res) == 2
     assert set(res["account"]) == {'/accounts/v3/accounts/{lrikubto}', '/accounts/v3/accounts'}
-    assert set(res["account"]) == {'/v1/payments/{luawmujp}'}
+    assert set(res["payment"]) == {'/v1/payments/{luawmujp}'}
 

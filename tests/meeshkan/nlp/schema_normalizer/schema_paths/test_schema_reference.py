@@ -13,6 +13,9 @@ from meeshkan.nlp.schema_normalizer.schema_paths.schema_reference import (
 from openapi_typed_2 import convert_from_openapi
 
 
+pytestmark = pytest.mark.skip()
+
+
 @pytest.fixture()
 def path_tuple():
     return ("/accounts/v3/accounts/{lrikubto}", "/accounts/v3/accounts")

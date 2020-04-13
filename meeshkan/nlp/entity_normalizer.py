@@ -13,7 +13,7 @@ from openapi_typed_2 import (
 from meeshkan.nlp.schema_normalizer.schema_relations.schema_distance import (
     calc_distance,
 )
-from meeshkan.nlp.schema_similarity.schema_distance import FieldsDiffSimilariaty
+from meeshkan.nlp.schema_similarity.schema_distance import FieldsIOUSimilariaty
 
 
 def split_schema(schema):
@@ -64,7 +64,7 @@ class EntityNormalizer:
     props_threshold = 3
 
     def __init__(self, ):
-        self._schema_similarity = FieldsDiffSimilariaty()
+        self._schema_similarity = FieldsIOUSimilariaty()
 
     def nearest_path(self, specs: OpenAPIObject):
         """Using NLP word embeddings the function will check the responses of different
