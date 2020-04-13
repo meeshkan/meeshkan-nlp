@@ -133,14 +133,18 @@ class EntityNormalizer:
     ) -> (typing.Sequence[DataPath], typing.Any):
         schemas = self._extract_schemas(spec_dict, paths)
         best_match = self._find_best_match(schemas)
-        merged_schema = self._merge_schemas(best_match)
-        spec_dict = self._add_entity(spec_dict, entity_name, merged_schema)
-        spec_dict = self._replace_refs(spec_dict, best_match, entity_name)
-        datapaths = [
-            DataPath(schema_path=to_path(match[1]), **asdict(match[0]))
-            for match in best_match
-        ]
-        return datapaths, spec_dict
+        if best_match is not None:
+            merged_schema = self._merge_schemas(best_match)
+            spec_dict = self._add_entity(spec_dict, entity_name, merged_schema)
+            spec_dict = self._replace_refs(spec_dict, best_match, entity_name)
+            spec_dict = self._add_x(spec_dict, entity_name, paths)
+            datapaths = [
+                DataPath(schema_path=to_path(match[1]), **asdict(match[0]))
+                for match in best_match
+            ]
+            return datapaths, spec_dict
+        else:
+            return [], spec_dict
 
     def _extract_schemas(self, spec, path_tuple):
         res = {}
@@ -200,13 +204,16 @@ class EntityNormalizer:
                 best_match_score = score
                 best_match = match
 
-        return list(
-            zip(
-                http_parts,
-                [match[0] for match in best_match],
-                [match[1] for match in best_match],
+        if best_match is not None:
+            return list(
+                zip(
+                    http_parts,
+                    [match[0] for match in best_match],
+                    [match[1] for match in best_match],
+                )
             )
-        )
+        else:
+            return None
 
     def _merge_schemas(self, matchs):
         return self._schema_merger.merge((match[2] for match in matchs))
@@ -255,3 +262,10 @@ class EntityNormalizer:
             else:
                 schema[key] = {"$ref": ref}
             return top_schema
+
+    def _add_x(self, spec, entity_name, paths):
+        for path in paths:
+            spec["paths"][path]["x-meeshkan-entity"] = entity_name
+
+        return spec
+
