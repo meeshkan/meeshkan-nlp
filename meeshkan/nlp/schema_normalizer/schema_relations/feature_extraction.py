@@ -39,7 +39,7 @@ class FeatureExtraction:
         else:
             return list_of_words
 
-    def is_camel_case(self, word):
+    def is_camel_case(self, word): #TODO Maria #TODO Nakul two camel case detectors and splitters aren't good.
         """Check if the word has camel case structure.
 
         Arguments:

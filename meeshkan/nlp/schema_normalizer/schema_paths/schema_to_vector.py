@@ -23,6 +23,8 @@ type_mapping = {
     _unknown: "0",
 }
 
+#TODO Nakul try to avoid global code and global variables. If you need module level initialization it's better to consider packing it to a class.
+# It's not necessary to fix it here now, because this file probably will be moved to datascience_research but try to avoid this in the future.
 reverse_type_mapping = {}
 for (key, value) in type_mapping.items():
     reverse_type_mapping[value] = key
