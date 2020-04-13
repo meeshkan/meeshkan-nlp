@@ -1,8 +1,7 @@
 import string
+import typing
 import uuid
 from enum import Enum
-
-import typing
 from functools import reduce
 
 from meeshkan.nlp.ids.gib_detect import GibberishDetector

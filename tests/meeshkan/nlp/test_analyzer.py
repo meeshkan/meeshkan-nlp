@@ -30,7 +30,9 @@ def test_opbank(analyzer):
         "GcfU8g0c_pxJXR8spP3uc4jMXRwalQyIDwj820w8-TY.8vlH6Nvrzd0fFiaSD6U4_Q.hR3Bjufb_ZzypZXU707zJg"
         == path_item2.id.value
     )
-    assert "RANDOM" == path_item2.id.type.name #TODO Maria Compare enum values instead of strings
+    assert (
+        "RANDOM" == path_item2.id.type.name
+    )  # TODO Maria Compare enum values instead of strings
 
 
 def test_transferwise(analyzer):

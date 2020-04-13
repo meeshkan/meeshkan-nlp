@@ -2,7 +2,6 @@ import copy
 import typing
 
 from http_types import HttpExchange
-
 from openapi_typed_2 import OpenAPIObject, convert_from_openapi, convert_to_openapi
 
 from meeshkan.nlp.entity_extractor import EntityExtractor
@@ -10,7 +9,9 @@ from meeshkan.nlp.entity_normalizer import EntityNormalizer
 
 
 class SpecOptimizer:
-    def __init__(self, extractor: EntityExtractor, path_analyzer, normalizer: EntityNormalizer):
+    def __init__(
+        self, extractor: EntityExtractor, path_analyzer, normalizer: EntityNormalizer
+    ):
         self._extractor = extractor
         self._path_analyzer = path_analyzer
         self._normalizer = normalizer
@@ -30,11 +31,8 @@ class SpecOptimizer:
         res = dict()
         return spec
 
-
     def _add_data(self, normalized_spec, datapaths, recordings):
-        normalized_spec["x-meeshkan-data"] = self._extract_data(
-            datapaths, recordings
-        )
+        normalized_spec["x-meeshkan-data"] = self._extract_data(datapaths, recordings)
         return normalized_spec
 
     def _extract_data(self, datapaths, recordings):

@@ -1,6 +1,5 @@
 import typing
 from collections import defaultdict
-
 from dataclasses import dataclass
 
 from meeshkan.nlp.schema_normalizer.schema_paths.parse_openapi_schema import (

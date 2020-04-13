@@ -4,6 +4,7 @@ from meeshkan.nlp.entity_normalizer import split_schema
 
 pytestmark = pytest.mark.skip()
 
+
 def test_split_schema():
     payment_spec = {
         "type": "object",

@@ -2,6 +2,7 @@ import json
 import os
 
 import pytest
+from openapi_typed_2 import convert_from_openapi
 
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_reference import (
     create_ref_obj,
@@ -10,8 +11,6 @@ from meeshkan.nlp.schema_normalizer.schema_paths.schema_reference import (
     generate_component_dict,
     generate_replaced_ref,
 )
-from openapi_typed_2 import convert_from_openapi
-
 
 pytestmark = pytest.mark.skip()
 

@@ -1,7 +1,6 @@
 import itertools
-from abc import ABC, abstractmethod
-
 import typing
+from abc import ABC, abstractmethod
 
 
 class FieldsSimilarityBase(ABC):
@@ -31,9 +30,9 @@ class FieldsIOUSimilariaty(FieldsSimilarityBase):
 
         union = len(a.union(b))
 
-        return intersection/union
+        return intersection / union
 
 
-class FieldsEmbeddingsSimilariaty(FieldsSimilarityBase): #TODO  Nakul implement it
+class FieldsEmbeddingsSimilariaty(FieldsSimilarityBase):  # TODO  Nakul implement it
     def similarity(self, a: typing.Set[str], b: typing.Set[str]) -> float:
         raise NotImplementedError()

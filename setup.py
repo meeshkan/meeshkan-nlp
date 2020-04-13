@@ -22,11 +22,13 @@ REQUIRED = [
     "openapi-typed_2>=0.0.4",
     "http-types>=0.0.15,<0.1.0",
     "jsonpath-rw>=1.4.0",
-    'spacy',
-    'en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz',
+    "spacy",
+    "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz",
 ]
 
-DEPENDENCY_LINKS = ['https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz']
+DEPENDENCY_LINKS = [
+    "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz"
+]
 
 BUNDLES = {}
 
@@ -171,6 +173,9 @@ class TestCommand(SetupCommand):
     description = "Run tests, formatting, type-checks, and linting"
 
     def run(self):
+        self.status("Running pytest...")
+        run_tests()
+
         self.status("Checking formatting...")
         check_formatting()
 
@@ -179,9 +184,6 @@ class TestCommand(SetupCommand):
 
         self.status("Checking types...")
         type_check()
-
-        self.status("Running pytest...")
-        run_tests()
 
 
 class UploadCommand(SetupCommand):
@@ -221,7 +223,7 @@ setup(
     packages=find_packages(exclude=("tests",)),
     include_package_data=True,
     install_requires=REQUIRED,
-    dependency_links = DEPENDENCY_LINKS,
+    dependency_links=DEPENDENCY_LINKS,
     extras_require=EXTRAS,
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -54,7 +54,7 @@ class GibberishDetector:
         """ Return all n grams from l after normalizing """
         filtered = self._normalize(l)
         for start in range(0, len(filtered) - n + 1):
-            yield "".join(filtered[start: start + n])
+            yield "".join(filtered[start : start + n])
 
     def _normalize(self, line):
         """ Return only the subset of chars from accepted_chars.

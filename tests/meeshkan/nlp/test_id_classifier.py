@@ -3,7 +3,7 @@ import uuid
 from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
 
 
-def test_by_value(): #TODO Maria linearize it avoiding cycles
+def test_by_value():  # TODO Maria linearize it avoiding cycles
     good_list_uuid = []
     for i in range(5):
         good_list_uuid.append(str(uuid.uuid4()))
@@ -27,7 +27,7 @@ def test_by_value(): #TODO Maria linearize it avoiding cycles
         "uuid",
         "uuid",
         "uuid",
-        "uuid", #TODO Maria Make it enum values, i.e. IdType.UUID
+        "uuid",  # TODO Maria Make it enum values, i.e. IdType.UUID
     ]
 
     id_cl = IdClassifier()
@@ -38,7 +38,6 @@ def test_by_value(): #TODO Maria linearize it avoiding cycles
         else:
             id.append(None)
     assert id == ids
-
 
 
 def test_by_values():

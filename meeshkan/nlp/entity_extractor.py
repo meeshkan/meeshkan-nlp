@@ -9,8 +9,8 @@ from meeshkan.nlp.ids.gib_detect import GibberishDetector
 from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
 
 
-def _make_dict_from_2_lists(list1, list2): #TODO Maria Use dict(zip) instead of it
-    '''Make a dictionary from two lists
+def _make_dict_from_2_lists(list1, list2):  # TODO Maria Use dict(zip) instead of it
+    """Make a dictionary from two lists
 
     Example:
     >>>list1=['a','b','c']
@@ -22,7 +22,7 @@ def _make_dict_from_2_lists(list1, list2): #TODO Maria Use dict(zip) instead of 
         two lists
     Returns:
         Dist[str/int]
-    '''
+    """
     dict_1 = {}
     for key, value in zip(list1, list2):
         if key not in dict_1:
@@ -30,6 +30,7 @@ def _make_dict_from_2_lists(list1, list2): #TODO Maria Use dict(zip) instead of 
         else:
             dict_1[key].append(value)
     return dict_1
+
 
 def _camel_case(example: str) -> bool:
     """This fubction recognize camel case.
@@ -85,7 +86,9 @@ class EntityExtractorNLP:
         self.gib_detector = GibberishDetector()
         self._id_detector = IdClassifier()
 
-    def tokenize2(self, path_list: list) -> Sequence[str]: #TODO Maria Why is it tokenize<<2>>?
+    def tokenize2(
+        self, path_list: list
+    ) -> Sequence[str]:  # TODO Maria Why is it tokenize<<2>>?
         """This function tokenize list of words and remove potential ids .
 
             Example:
@@ -149,7 +152,9 @@ class EntityExtractorNLP:
         path_lists.append(path_list)
         return path_list
 
-    def get_entity_from_url(self, p_list: list) -> str: #TODO Maria. It's not an url. URL is http://google.com/something. It's a path.
+    def get_entity_from_url(
+        self, p_list: list
+    ) -> str:  # TODO Maria. It's not an url. URL is http://google.com/something. It's a path.
         """This function return lemmatized entity from the path.
 
         Example:
@@ -254,7 +259,7 @@ class EntityExtractorNLP:
         return (path, self.get_entity_from_url(path.split("/")[1:]))
 
     def get_entity_from_spec(self, spec: OpenAPIObject):
-        '''Extract pathes from the yaml file and make dictionary with entity and corresponding pathes
+        """Extract pathes from the yaml file and make dictionary with entity and corresponding pathes
 
         Example:
 
@@ -266,22 +271,20 @@ class EntityExtractorNLP:
         Returns:
             Dictionary[str]---key is an entity and value is a list of pathes corresponding to this entity
 
-        '''
-        ent=[]
-        pathes1=[]
+        """
+        ent = []
+        pathes1 = []
         for path in spec.paths.keys():
-            item = path.split('/')[1:]
+            item = path.split("/")[1:]
             count = 0
             for i in item:
-                if i is not '':
+                if i is not "":
                     count += 1
             if count > 1:
-                check_path=re.sub(r'\{.*?\}', 'id', path)
-                ent.append(self.get_entity_from_url(check_path.split('/')[1:]))
+                check_path = re.sub(r"\{.*?\}", "id", path)
+                ent.append(self.get_entity_from_url(check_path.split("/")[1:]))
                 pathes1.append(path)
         return _make_dict_from_2_lists(ent, pathes1)
-
-
 
 
 EntityExtractor = EntityExtractorNLP

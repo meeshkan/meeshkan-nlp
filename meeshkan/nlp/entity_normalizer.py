@@ -1,14 +1,15 @@
 import itertools
 import typing
+from dataclasses import asdict
 from typing import Tuple
 
 import jsonpath_rw
-from dataclasses import asdict
 from openapi_typed_2 import (
     OpenAPIObject,
     convert_from_openapi,
+    convert_to_openapi,
     dataclass,
-    convert_to_openapi)
+)
 
 from meeshkan.nlp.schema_normalizer.schema_relations.schema_distance import (
     calc_distance,
@@ -63,7 +64,7 @@ class EntityNormalizer:
     allowed_methods = ["get", "post", "put"]
     props_threshold = 3
 
-    def __init__(self, ):
+    def __init__(self,):
         self._schema_similarity = FieldsIOUSimilariaty()
 
     def nearest_path(self, specs: OpenAPIObject):
@@ -106,7 +107,7 @@ class EntityNormalizer:
     #         return specs
 
     def normalize(
-            self, spec: typing.Any, entity_config: typing.Dict[str, typing.Sequence]
+        self, spec: typing.Any, entity_config: typing.Dict[str, typing.Sequence]
     ) -> (typing.Sequence[DataPath], OpenAPIObject):
         """Builds the #ref components in an OpenAPI object by understanding similar nested
         sructures for a set of paths.
@@ -129,14 +130,17 @@ class EntityNormalizer:
         return datapaths, spec
 
     def _replace_entity(
-            self, spec_dict: typing.Any, entity_name: str, paths: typing.Sequence
+        self, spec_dict: typing.Any, entity_name: str, paths: typing.Sequence
     ) -> (typing.Sequence[DataPath], typing.Any):
         schemas = self._extract_schemas(spec_dict, paths)
         best_match = self._find_best_match(schemas)
         merged_schema = self._merge_schemas(best_match)
         spec_dict = self._add_entity(spec_dict, entity_name, merged_schema)
         spec_dict = self._replace_refs(spec_dict, best_match, entity_name)
-        datapaths = [DataPath(schema_path=to_path(match[1]), **asdict(match[0])) for match in best_match]
+        datapaths = [
+            DataPath(schema_path=to_path(match[1]), **asdict(match[0]))
+            for match in best_match
+        ]
         return datapaths, spec_dict
 
     def _extract_schemas(self, spec, path_tuple):
@@ -166,7 +170,12 @@ class EntityNormalizer:
         return res
 
     def _get_request_schema(self, method):
-        return method.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema")
+        return (
+            method.get("requestBody", {})
+            .get("content", {})
+            .get("application/json", {})
+            .get("schema")
+        )
 
     def _get_response_schema(self, response):
         return response.get("content", {}).get("application/json", {}).get("schema")
@@ -192,7 +201,13 @@ class EntityNormalizer:
                 best_match_score = score
                 best_match = match
 
-        return list(zip(http_parts, [match[0] for match in best_match], [match[1] for match in best_match]))
+        return list(
+            zip(
+                http_parts,
+                [match[0] for match in best_match],
+                [match[1] for match in best_match],
+            )
+        )
 
     def _merge_schemas(self, best_match):
         return best_match[0][2]
