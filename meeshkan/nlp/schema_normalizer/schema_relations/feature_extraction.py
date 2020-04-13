@@ -6,7 +6,7 @@ import numpy as np
 import spacy
 
 
-#TODO Nakul this class is nice!
+# TODO Nakul this class is nice!
 # It would be greate to merge it into the FieldsEmbeddingsSimilariaty
 class FeatureExtraction:
     def __init__(self, multiple_vector=False, min_length=1):
@@ -41,7 +41,9 @@ class FeatureExtraction:
         else:
             return list_of_words
 
-    def is_camel_case(self, word): #TODO Maria #TODO Nakul two camel case detectors and splitters aren't good.
+    def is_camel_case(
+        self, word
+    ):  # TODO Maria #TODO Nakul two camel case detectors and splitters aren't good.
         """Check if the word has camel case structure.
 
         Arguments:

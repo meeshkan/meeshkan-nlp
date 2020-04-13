@@ -1,5 +1,5 @@
 from meeshkan.nlp.operation_classifier import OperationClassifier
-from tests.utils import spec_dict, add_item
+from tests.utils import add_item, spec_dict
 
 
 def test_operation_classifier():
@@ -8,17 +8,13 @@ def test_operation_classifier():
     schema = {
         "type": "object",
         "required": [],
-        "properties": {
-            "result": {"type": "string"}
-        },
+        "properties": {"result": {"type": "string"}},
     }
 
-    spec = spec_dict(
-        path="/payments/{id}", response_schema=schema, method="get",
-    )
+    spec = spec_dict(path="/payments/{id}", response_schema=schema, method="get",)
 
-    add_item(spec,
-        path="/payments/{id}", response_schema=schema, method="delete",
+    add_item(
+        spec, path="/payments/{id}", response_schema=schema, method="delete",
     )
 
     add_item(
@@ -44,8 +40,6 @@ def test_operation_classifier():
         response_schema=schema,
         method="put",
     )
-
-
 
     spec = cl.fill_operations(spec)
 

@@ -2,9 +2,8 @@ import copy
 import json
 import os
 
-from openapi_typed_2 import convert_from_openapi, convert_to_openapi
-
 from meeshkan.nlp.entity_normalizer import DataPath, EntityNormalizer
+from openapi_typed_2 import convert_from_openapi, convert_to_openapi
 from tests.utils import add_item, spec_dict
 
 
@@ -63,7 +62,19 @@ def test_opbank(opbank_spec):
     )
 
     assert "accountId" in account_schema["properties"]
-    # assert "paymentId" in payment_schema["properties"]
+    # assert "paymentId" in payment_schema["properties"] #TODO Nikolay fix this
+
+    assert (
+        "account" == opbank_spec.paths["/accounts/v3/accounts"]._x["x-meeshkan-entity"]
+    )
+    assert (
+        "account"
+        == opbank_spec.paths["/accounts/v3/accounts/{lrikubto}"]._x["x-meeshkan-entity"]
+    )
+    assert (
+        "payment"
+        == opbank_spec.paths["/v1/payments/{luawmujp}"]._x["x-meeshkan-entity"]
+    )
 
     assert (
         "#/components/schemas/account"

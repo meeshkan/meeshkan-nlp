@@ -58,7 +58,7 @@ def get_all_properties(specs_dict):
 
 
 def calc_distance(spes_dict):
-    #TODO Nakul calc distance function should return a distance. This funciton returns two closest paths so it should be named "find_best_match" or something
+    # TODO Nakul calc distance function should return a distance. This funciton returns two closest paths so it should be named "find_best_match" or something
     """Creates the path tuples of similar schema within threshold = 0.1.
 
     Arguments:
@@ -75,7 +75,9 @@ def calc_distance(spes_dict):
         return []
     else:
         embedding_dict = {key: [] for key in all_paths}
-        fe = FeatureExtraction() #TODO Nakul. Each function call causes spacy initialization. FeatureExtraction object should be created once.
+        fe = (
+            FeatureExtraction()
+        )  # TODO Nakul. Each function call causes spacy initialization. FeatureExtraction object should be created once.
         for keys, values in all_paths_dict.items():
             for method in values[0].keys():
                 embedding_dict[keys] = fe.generate_nlp_vector(values[0][method])

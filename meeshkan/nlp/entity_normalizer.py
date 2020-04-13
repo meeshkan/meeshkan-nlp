@@ -1,18 +1,13 @@
 import itertools
 import typing
-
 from dataclasses import asdict
-from openapi_typed_2 import (
-    OpenAPIObject,
-    convert_from_openapi,
-    dataclass,
-)
 
 from meeshkan.nlp.schema_normalizer.schema_relations.schema_distance import (
     calc_distance,
 )
 from meeshkan.nlp.schema_similarity.schema_distance import FieldsIOUSimilariaty
 from meeshkan.schema_merger import SchemaMerger
+from openapi_typed_2 import OpenAPIObject, convert_from_openapi, dataclass
 
 
 def split_schema(schema):
@@ -62,7 +57,7 @@ class EntityNormalizer:
     allowed_methods = ["get", "post", "put"]
     props_threshold = 3
 
-    def __init__(self, ):
+    def __init__(self,):
         self._schema_similarity = FieldsIOUSimilariaty()
         self._schema_merger = SchemaMerger()
 
@@ -106,8 +101,8 @@ class EntityNormalizer:
     #         return specs
 
     def normalize(
-            self, spec: typing.Any, entity_config: typing.Dict[str, typing.Sequence]
-    ) -> (typing.Sequence[DataPath], OpenAPIObject):
+        self, spec: typing.Any, entity_config: typing.Dict[str, typing.Sequence]
+    ) -> typing.Tuple[typing.Sequence[DataPath], OpenAPIObject]:
         """Builds the #ref components in an OpenAPI object by understanding similar nested
         sructures for a set of paths.
 
@@ -120,7 +115,7 @@ class EntityNormalizer:
         Returns:
             OpenAPIObject -- Old or updated schema if #ref is created
         """
-        datapaths = []
+        datapaths: typing.List[DataPath] = []
 
         for entity_name, paths in entity_config.items():
             entity_datapaths, spec = self._replace_entity(spec, entity_name, paths)
@@ -129,8 +124,8 @@ class EntityNormalizer:
         return datapaths, spec
 
     def _replace_entity(
-            self, spec_dict: typing.Any, entity_name: str, paths: typing.Sequence
-    ) -> (typing.Sequence[DataPath], typing.Any):
+        self, spec_dict: typing.Any, entity_name: str, paths: typing.Sequence
+    ) -> typing.Tuple[typing.Sequence[DataPath], OpenAPIObject]:
         schemas = self._extract_schemas(spec_dict, paths)
         best_match = self._find_best_match(schemas)
         if best_match is not None:
@@ -175,9 +170,9 @@ class EntityNormalizer:
     def _get_request_schema(self, method):
         return (
             method.get("requestBody", {})
-                .get("content", {})
-                .get("application/json", {})
-                .get("schema")
+            .get("content", {})
+            .get("application/json", {})
+            .get("schema")
         )
 
     def _get_response_schema(self, response):
@@ -268,4 +263,3 @@ class EntityNormalizer:
             spec["paths"][path]["x-meeshkan-entity"] = entity_name
 
         return spec
-

@@ -1,12 +1,13 @@
 import re
 import string
+import typing
 from typing import Sequence
 
 import spacy
-from openapi_typed_2 import OpenAPIObject
 
 from meeshkan.nlp.ids.gib_detect import GibberishDetector
 from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
+from openapi_typed_2 import OpenAPIObject
 
 
 def _make_dict_from_2_lists(list1, list2):  # TODO Maria Use dict(zip) instead of it
@@ -188,7 +189,7 @@ class EntityExtractorNLP:
                 return True
         return False
 
-    def get_positions(self, long_string: str) -> str:
+    def get_positions(self, long_string: str) -> typing.Iterable[int]:
         """This function return position of the new word in the long string without space
 
         Example:
@@ -199,7 +200,7 @@ class EntityExtractorNLP:
         Return:
             list
         """
-        kl = []
+        kl: typing.List[int] = []
         for i in range(2, len(long_string) - 2):
             if long_string[i:] in self.nlp.vocab:
                 kl.append(i)

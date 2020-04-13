@@ -2,12 +2,12 @@ import json
 
 import pytest
 from http_types import HttpExchangeReader
-from openapi_typed_2 import convert_from_openapi, convert_to_openapi
 
 from meeshkan.nlp.entity_extractor import EntityExtractor
 from meeshkan.nlp.entity_normalizer import EntityNormalizer
 from meeshkan.nlp.path_analyzer import PathAnalyzer
 from meeshkan.nlp.spec_optimizer import SpecOptimizer
+from openapi_typed_2 import convert_from_openapi, convert_to_openapi
 
 
 @pytest.fixture()
