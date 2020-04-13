@@ -45,9 +45,6 @@ def test_by_values():
     id_cl = IdClassifier()
 
     res = id_cl.by_values(["1", "2", "123", "12455"])
-    assert res == IdType.UNKNOWN
-
-    res = id_cl.by_values(["1", "2", "123", "12455"])
     assert res == IdType.INT
 
     res = id_cl.by_values(["1", "2", "123", "12455", "outlier"])
@@ -58,6 +55,9 @@ def test_by_values():
 
     res = id_cl.by_values(["1", "2", "123", "12455", "8a6b"])
     assert res == IdType.HEX
+
+    res = id_cl.by_values(["1", "2", "hello", "world"])
+    assert res == IdType.UNKNOWN
 
 
 def test_by_name():
