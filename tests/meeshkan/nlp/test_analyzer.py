@@ -27,7 +27,7 @@ def test_opbank(analyzer):
 
 
 # TODO Maria fix the test
-@pytest.mark.ignore()
+@pytest.mark.skip()
 def test_transferwise(analyzer):
     path_item1 = analyzer.extract_values(
         "/v3/profiles/saf45gdrg4gsdf/transfers/sdfsr456ygh56ujhgf/payments"
