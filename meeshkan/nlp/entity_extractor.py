@@ -1,13 +1,12 @@
-import os
 import re
 import string
-from typing import Any, Dict, Sequence
+from typing import Sequence
 
 import spacy
-import yaml.scanner
+from openapi_typed_2 import OpenAPIObject
 
-from meeshkan.nlp.gib_detect import GibDetector
-from meeshkan.nlp.id_detector import IdClassifier
+from meeshkan.nlp.ids.gib_detect import GibberishDetector
+from meeshkan.nlp.ids.id_classifier import IdClassifier
 
 def _make_dict_from_2_lists(list1, list2):
     '''Make a dictionary from two lists
@@ -82,7 +81,7 @@ class EntityExtractorNLP:
 
     def __init__(self):
         self.nlp = spacy.load("en_core_web_lg")
-        self.gib_detector = GibDetector()
+        self.gib_detector = GibberishDetector()
         self._id_detector = IdClassifier()
 
     def tokenize2(self, path_list: list) -> Sequence[str]:
@@ -98,7 +97,7 @@ class EntityExtractorNLP:
             """
         res = list()
         for item in path_list:
-            if self._id_detector.id_classif(item) != None:
+            if self._id_detector.by_value(item) != None:
                 if len(item) > 3:
                     pass
             else:
@@ -122,7 +121,7 @@ class EntityExtractorNLP:
                                 except IndexError:
                                     pass
                         if len(word) == 3:
-                            if not self.gib_detector.gib_detector(word):
+                            if not self.gib_detector.is_gibberish(word):
                                 res.append(word)
         return res
 
@@ -253,7 +252,7 @@ class EntityExtractorNLP:
         """
         return (path, self.get_entity_from_url(path.split("/")[1:]))
 
-    def get_entity_from_spec(self, file):
+    def get_entity_from_spec(self, spec: OpenAPIObject):
         '''Extract pathes from the yaml file and make dictionary with entity and corresponding pathes
 
         Example:
@@ -269,19 +268,17 @@ class EntityExtractorNLP:
         '''
         ent=[]
         pathes1=[]
-        with open(file, 'r') as foo:
-            pathes = yaml.safe_load(foo.read())['paths'].keys()
-            for path in pathes:
-                item = path.split('/')[1:]
-                count = 0
-                for i in item:
-                    if i is not '':
-                        count += 1
-                if count > 1:
-                    path=re.sub(r'\{.*?\}', 'id', path)
-                    ent.append(self.get_entity_from_url(path.split('/')[1:]))
-                    pathes1.append(path)
-            return _make_dict_from_2_lists(ent, pathes1)
+        for path in spec.paths.keys():
+            item = path.split('/')[1:]
+            count = 0
+            for i in item:
+                if i is not '':
+                    count += 1
+            if count > 1:
+                check_path=re.sub(r'\{.*?\}', 'id', path)
+                ent.append(self.get_entity_from_url(check_path.split('/')[1:]))
+                pathes1.append(path)
+        return _make_dict_from_2_lists(ent, pathes1)
 
 
 

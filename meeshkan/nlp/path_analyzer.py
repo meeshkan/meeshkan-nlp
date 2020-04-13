@@ -1,11 +1,10 @@
 import re
 from dataclasses import dataclass
-from enum import Enum
 from typing import Optional
 
 from meeshkan.nlp.entity_extractor import EntityExtractor
-from meeshkan.nlp.gib_detect import GibDetector
-from meeshkan.nlp.id_detector import IdClassifier, IdType
+from meeshkan.nlp.ids.gib_detect import GibberishDetector
+from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
 
 
 @dataclass(frozen=True)
@@ -25,14 +24,14 @@ class PathItems:
 class PathAnalyzer:
     def __init__(self, entity_extractor: EntityExtractor):
         self._entity_extractor = entity_extractor
-        self._gib_detector = GibDetector()
+        self._gib_detector = GibberishDetector()
         self._id_classifier = IdClassifier()
 
     def extract_values(self, path):
         path_list = path.split("/")[1:]
         nopunc_string = []
         for i in path_list:
-            if self._id_classifier.id_classif(i) is not None:
+            if self._id_classifier.by_value(i) is not None:
                 nopunc_string.append(i)
             else:
                 i = re.sub("[^0-9a-z]+", " ", i.lower())
@@ -40,13 +39,13 @@ class PathAnalyzer:
                     nopunc_string.append(word)
         pos = {value: index for index, value in enumerate(nopunc_string)}
         maybe_entity = self._entity_extractor._split_pathes(path_list)[-1]
-        maybe_id = self._id_classifier.id_detector(path_list)
-        if maybe_id is not None:
-            if pos[maybe_id] == pos[maybe_entity] + 1:
+        id_value, id_type = self._get_last_id(path_list)
+        if id_value is not None:
+            if pos[id_value] == pos[maybe_entity] + 1:
                 return PathItems(
                     entity=self._entity_extractor.get_entity_from_url(path_list),
                     id=IdDesc(
-                        value=maybe_id, type=self._id_classifier.id_classif(maybe_id)
+                        value=id_value, type=id_type
                     ),
                     action=None,
                     group_id=None,
@@ -65,3 +64,11 @@ class PathAnalyzer:
                 action=None,
                 group_id=None,
             )
+
+    def _get_last_id(self, path_items):
+        for item in reversed(path_items):
+            id_type = self._id_classifier.by_value(item)
+            if id_type is not None:
+                return item, id_type
+
+        return None, None

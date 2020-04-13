@@ -13,6 +13,7 @@ from openapi_typed_2 import (
 from meeshkan.nlp.schema_normalizer.schema_relations.schema_distance import (
     calc_distance,
 )
+from meeshkan.nlp.schema_similarity.schema_distance import FieldsDiffSimilariaty
 
 
 def split_schema(schema):
@@ -38,6 +39,7 @@ class SpecPart:
     request: bool
     code: typing.Optional[str] = None
 
+
 @dataclass(frozen=True, eq=True)
 class DataPath(SpecPart):
     schema_path: typing.Any = "$"
@@ -60,10 +62,9 @@ def to_path(path_tuple):
 class EntityNormalizer:
     allowed_methods = ["get", "post", "put"]
     props_threshold = 3
-    score_threshold = 0.7
 
     def __init__(self, ):
-        pass
+        self._schema_similarity = FieldsDiffSimilariaty()
 
     def nearest_path(self, specs: OpenAPIObject):
         """Using NLP word embeddings the function will check the responses of different
@@ -105,7 +106,7 @@ class EntityNormalizer:
     #         return specs
 
     def normalize(
-            self, spec: OpenAPIObject, entity_config: typing.Dict[str, typing.Sequence]
+            self, spec: typing.Any, entity_config: typing.Dict[str, typing.Sequence]
     ) -> (typing.Sequence[DataPath], OpenAPIObject):
         """Builds the #ref components in an OpenAPI object by understanding similar nested
         sructures for a set of paths.
@@ -120,14 +121,12 @@ class EntityNormalizer:
             OpenAPIObject -- Old or updated schema if #ref is created
         """
         datapaths = []
-        spec_dict = convert_from_openapi(spec)
 
         for entity_name, paths in entity_config.items():
-            entity_datapaths, spec_dict = self._replace_entity(spec_dict, entity_name, paths)
+            entity_datapaths, spec = self._replace_entity(spec, entity_name, paths)
             datapaths.extend(entity_datapaths)
 
-        return datapaths, convert_to_openapi(spec_dict)
-
+        return datapaths, spec
 
     def _replace_entity(
             self, spec_dict: typing.Any, entity_name: str, paths: typing.Sequence
@@ -139,7 +138,6 @@ class EntityNormalizer:
         spec_dict = self._replace_refs(spec_dict, best_match, entity_name)
         datapaths = [DataPath(schema_path=to_path(match[1]), **asdict(match[0])) for match in best_match]
         return datapaths, spec_dict
-
 
     def _extract_schemas(self, spec, path_tuple):
         res = {}
@@ -189,23 +187,12 @@ class EntityNormalizer:
         best_match_score: typing.Optional[float] = None
 
         for i, match in enumerate(itertools.product(*schemas)):
-            score = self._calculate_score(match)
+            score = self._schema_similarity.group_similarity((m[2] for m in match))
             if best_match_score is None or score > best_match_score:
                 best_match_score = score
                 best_match = match
 
         return list(zip(http_parts, [match[0] for match in best_match], [match[1] for match in best_match]))
-
-    def _calculate_score(self, match):
-        total_score = 0.0
-        total_scores = 0
-        for a, b in itertools.combinations(match, r=2):
-            total_score += self._pairwise_distance(a, b)
-            total_scores += 1
-        avg = total_score/total_scores
-        if avg < self.score_threshold:
-            return 0
-        return avg
 
     def _merge_schemas(self, best_match):
         return best_match[0][2]
@@ -239,7 +226,6 @@ class EntityNormalizer:
 
         return spec_dict
 
-
     def _replace_ref_schema(self, top_schema, location, ref):
         schema = top_schema
         for idx in range(1, len(location) - 1):
@@ -255,16 +241,3 @@ class EntityNormalizer:
             else:
                 schema[key] = {"$ref": ref}
             return top_schema
-
-    def _pairwise_distance(self, a, b):
-        a_set = a[2]
-        b_set = b[2]
-        intersection = len(a_set.intersection(b_set))
-        if intersection == 0:
-            return 0
-
-
-        a_b_diff = len(a_set - b_set)
-        b_a_diff = len(b_set - a_set)
-
-        return max(0, 1 - (a_b_diff/intersection+b_a_diff/intersection)/2)

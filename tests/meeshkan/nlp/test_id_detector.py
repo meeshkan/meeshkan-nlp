@@ -1,6 +1,6 @@
 import uuid
 
-from meeshkan.nlp.id_detector import IdClassifier
+from meeshkan.nlp.ids.id_classifier import IdClassifier
 
 
 def test_id_detector():
@@ -33,8 +33,8 @@ def test_id_detector():
     id_cl = IdClassifier()
     id = []
     for i in string1:
-        if id_cl.id_classif(i):
-            id.append(id_cl.id_classif(i).name)
+        if id_cl.by_value(i):
+            id.append(id_cl.by_value(i).name)
         else:
             id.append(None)
     assert id == ids

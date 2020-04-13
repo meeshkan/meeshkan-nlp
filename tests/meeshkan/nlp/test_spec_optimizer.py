@@ -3,11 +3,11 @@ import pytest
 from meeshkan.nlp.spec_optimizer import SpecOptimizer
 
 
-@pytest.mark.skip
 def test_optimizer(optimizer, opbank_spec, opbank_recordings):
-    res = optimizer.optimize_spec(opbank_spec)
+    res = optimizer.optimize_spec(opbank_spec, opbank_recordings)
 
-    assert "accountId" == res.components.schemas["account"]._x["x-meeshkan-id-path"]
+    assert len(res.components.schemas["account"].properties) == 10
+    assert res.components.schemas["account"]._x["x-meeshkan-id-path"] == "accountId"
     assert "paymentId" == res.components.schemas["payment"]._x["x-meeshkan-id-path"]
 
     assert 5 == len(res._x["x-meeshkan-data"]["account"])

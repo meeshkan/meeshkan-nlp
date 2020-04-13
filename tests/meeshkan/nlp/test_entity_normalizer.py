@@ -3,8 +3,8 @@ import json
 import os
 
 from openapi_typed_2 import (
-    convert_to_openapi,
     convert_from_openapi,
+    convert_to_openapi
 )
 
 from meeshkan.nlp.entity_normalizer import EntityNormalizer, DataPath
@@ -12,12 +12,15 @@ from tests.utils import spec_dict, add_item
 
 
 def test_opbank(opbank_spec):
+    opbank_spec = convert_from_openapi(opbank_spec)
     entity_normalizer = EntityNormalizer()
 
     entity_config = {"account": ["/accounts/v3/accounts/{lrikubto}", "/accounts/v3/accounts"],
                      "payment": ["/v1/payments/{luawmujp}"]}
 
     datapaths, opbank_spec = entity_normalizer.normalize(opbank_spec, entity_config)
+
+    opbank_spec = convert_to_openapi(opbank_spec)
 
     account_schema = convert_from_openapi(
         opbank_spec.components.schemas["account"]
@@ -149,12 +152,12 @@ def test_responses_exact_match():
     add_item(
         spec, path="/payments", response_schema=schema_array, method="get",
     )
-    spec = convert_to_openapi(spec)
 
     entity_config = {"payment": ["/payments/{id}", "/payments"]}
 
     entity_normalizer = EntityNormalizer()
     datapaths, updated_specs = entity_normalizer.normalize(spec, entity_config)
+    updated_specs = convert_to_openapi(updated_specs)
 
     assert 2 == len(datapaths)
     assert DataPath(path="/payments", code="200", request=False, method="get",
@@ -252,12 +255,12 @@ def test_responses_diff_types():
     add_item(
         spec, path="/payments", response_schema=schema_array, method="get",
     )
-    spec = convert_to_openapi(spec)
 
     entity_config = {"payment": ["/payments/{id}", "/payments"]}
 
     entity_normalizer = EntityNormalizer()
     datapaths, updated_specs = entity_normalizer.normalize(spec, entity_config)
+    updated_specs = convert_to_openapi(updated_specs)
 
     assert 2 == len(datapaths)
     assert DataPath(path="/payments", code="200", request=False, method="get",
@@ -358,12 +361,12 @@ def test_responses_diff_fields():
     add_item(
         spec, path="/payments", response_schema=schema_array, method="get",
     )
-    spec = convert_to_openapi(spec)
 
     entity_config = {"payment": ["/payments/{id}", "/payments"]}
 
     entity_normalizer = EntityNormalizer()
     datapaths, updated_specs = entity_normalizer.normalize(spec, entity_config)
+    updated_specs = convert_to_openapi(updated_specs)
 
     assert 2 == len(datapaths)
     assert DataPath(path="/payments", code="200", request=False, method="get",
@@ -472,16 +475,15 @@ def test_request_response():
         spec,
         path="/payments",
         request_schema=schema_single_request,
-        response_schema=schema_single,
+        response_schema=copy.deepcopy(schema_single),
         method="post",
     )
-
-    spec = convert_to_openapi(spec)
 
     entity_config = {"payment": ["/payments/{id}", "/payments"]}
 
     entity_normalizer = EntityNormalizer()
     datapaths, updated_specs = entity_normalizer.normalize(spec, entity_config)
+    updated_specs = convert_to_openapi(updated_specs)
 
     assert 4 == len(datapaths)
     assert DataPath(path="/payments", code="200", request=False, method="get",
