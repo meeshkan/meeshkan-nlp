@@ -6,6 +6,8 @@ import numpy as np
 import spacy
 
 
+#TODO Nakul this class is nice!
+# It would be greate to merge it into the FieldsEmbeddingsSimilariaty
 class FeatureExtraction:
     def __init__(self, multiple_vector=False, min_length=1):
         self.nlp = spacy.load("en_core_web_lg")

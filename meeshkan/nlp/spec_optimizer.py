@@ -6,6 +6,7 @@ from openapi_typed_2 import OpenAPIObject, convert_from_openapi, convert_to_open
 
 from meeshkan.nlp.entity_extractor import EntityExtractor
 from meeshkan.nlp.entity_normalizer import EntityNormalizer
+from meeshkan.nlp.operation_classifier import OperationClassifier
 
 
 class SpecOptimizer:
@@ -15,6 +16,7 @@ class SpecOptimizer:
         self._extractor = extractor
         self._path_analyzer = path_analyzer
         self._normalizer = normalizer
+        self._operation_classifier = OperationClassifier()
 
     def optimize_spec(
         self, spec: OpenAPIObject, recordings: typing.List[HttpExchange]
@@ -23,6 +25,7 @@ class SpecOptimizer:
         spec_dict = convert_from_openapi(spec)
         spec_dict = self._replace_ids(spec_dict, recordings)
         datapaths, spec_dict = self._normalizer.normalize(spec_dict, entity_paths)
+        spec_dict = self._operation_classifier.fill_operations(spec_dict)
         spec_dict = self._add_data(spec_dict, datapaths, recordings)
 
         return convert_to_openapi(spec_dict)

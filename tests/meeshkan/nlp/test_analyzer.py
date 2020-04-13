@@ -1,22 +1,10 @@
-# from meeshkan.build.nlp.entity_extractor import EntityExtractor
-# from meeshkan.build.nlp.entity_extractor import EntityExtractor
-import pytest
-
-from meeshkan.nlp.path_analyzer import PathAnalyzer
-
-# from entity_extractor import EntityExtractor
-# from path_analyzer import PathItem
-
-
 def test_github(analyzer):
     path_item = analyzer.extract_values("/search/users")
     assert "user" == path_item.entity
     assert path_item.id is None
-    # assert path_item.id is None
 
 
 def test_opbank(analyzer):
-
     path_item1 = analyzer.extract_values("/v1/payments/confirm")
     assert "payment" == path_item1.entity
     assert path_item1.id is None
@@ -27,16 +15,15 @@ def test_opbank(analyzer):
     )
     assert "account" == path_item2.entity
     assert (
-        "GcfU8g0c_pxJXR8spP3uc4jMXRwalQyIDwj820w8-TY.8vlH6Nvrzd0fFiaSD6U4_Q.hR3Bjufb_ZzypZXU707zJg"
-        == path_item2.id.value
+            "GcfU8g0c_pxJXR8spP3uc4jMXRwalQyIDwj820w8-TY.8vlH6Nvrzd0fFiaSD6U4_Q.hR3Bjufb_ZzypZXU707zJg"
+            == path_item2.id.value
     )
     assert (
-        "RANDOM" == path_item2.id.type.name
+            "RANDOM" == path_item2.id.type.name
     )  # TODO Maria Compare enum values instead of strings
 
 
 def test_transferwise(analyzer):
-
     path_item1 = analyzer.extract_values(
         "/v3/profiles/saf45gdrg4gsdf/transfers/sdfsr456ygh56ujhgf/payments"
     )

@@ -1,13 +1,10 @@
 import itertools
 import typing
-from dataclasses import asdict
-from typing import Tuple
 
-import jsonpath_rw
+from dataclasses import asdict
 from openapi_typed_2 import (
     OpenAPIObject,
     convert_from_openapi,
-    convert_to_openapi,
     dataclass,
 )
 
@@ -15,6 +12,7 @@ from meeshkan.nlp.schema_normalizer.schema_relations.schema_distance import (
     calc_distance,
 )
 from meeshkan.nlp.schema_similarity.schema_distance import FieldsIOUSimilariaty
+from meeshkan.schema_merger import SchemaMerger
 
 
 def split_schema(schema):
@@ -64,8 +62,9 @@ class EntityNormalizer:
     allowed_methods = ["get", "post", "put"]
     props_threshold = 3
 
-    def __init__(self,):
+    def __init__(self, ):
         self._schema_similarity = FieldsIOUSimilariaty()
+        self._schema_merger = SchemaMerger()
 
     def nearest_path(self, specs: OpenAPIObject):
         """Using NLP word embeddings the function will check the responses of different
@@ -107,7 +106,7 @@ class EntityNormalizer:
     #         return specs
 
     def normalize(
-        self, spec: typing.Any, entity_config: typing.Dict[str, typing.Sequence]
+            self, spec: typing.Any, entity_config: typing.Dict[str, typing.Sequence]
     ) -> (typing.Sequence[DataPath], OpenAPIObject):
         """Builds the #ref components in an OpenAPI object by understanding similar nested
         sructures for a set of paths.
@@ -130,7 +129,7 @@ class EntityNormalizer:
         return datapaths, spec
 
     def _replace_entity(
-        self, spec_dict: typing.Any, entity_name: str, paths: typing.Sequence
+            self, spec_dict: typing.Any, entity_name: str, paths: typing.Sequence
     ) -> (typing.Sequence[DataPath], typing.Any):
         schemas = self._extract_schemas(spec_dict, paths)
         best_match = self._find_best_match(schemas)
@@ -172,9 +171,9 @@ class EntityNormalizer:
     def _get_request_schema(self, method):
         return (
             method.get("requestBody", {})
-            .get("content", {})
-            .get("application/json", {})
-            .get("schema")
+                .get("content", {})
+                .get("application/json", {})
+                .get("schema")
         )
 
     def _get_response_schema(self, response):
@@ -209,8 +208,8 @@ class EntityNormalizer:
             )
         )
 
-    def _merge_schemas(self, best_match):
-        return best_match[0][2]
+    def _merge_schemas(self, matchs):
+        return self._schema_merger.merge((match[2] for match in matchs))
 
     def _replace_refs(self, spec_dict, best_match, entity_name):
         ref_path = f"#/components/schemas/{entity_name}"

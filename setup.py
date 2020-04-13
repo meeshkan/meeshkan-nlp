@@ -24,11 +24,11 @@ REQUIRED = [
     "jsonpath-rw>=1.4.0",
     "spacy",
     "sklearn", #TODO Remove it later
-    "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz",
+    "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.2.5/en_core_web_lg-2.2.5.tar.gz",
 ]
 
 DEPENDENCY_LINKS = [
-    "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz"
+    "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.2.5/en_core_web_lg-2.2.5.tar.gz"
 ]
 
 BUNDLES = {}
