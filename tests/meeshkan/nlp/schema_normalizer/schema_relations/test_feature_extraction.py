@@ -1,6 +1,5 @@
-from meeshkan.nlp.schema_normalizer.schema_relations.feature_extraction import (
-    FeatureExtraction,
-)
+from meeshkan.nlp.schema_normalizer.schema_relations.feature_extraction import \
+    FeatureExtraction
 
 fe = FeatureExtraction()
 

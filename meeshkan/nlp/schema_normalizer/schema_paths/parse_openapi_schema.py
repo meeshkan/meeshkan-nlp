@@ -1,12 +1,7 @@
-from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import (
-    schema_remove_types,
-)
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import \
+    schema_remove_types
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import (
-    _array,
-    _object,
-    generate_schema_vectors,
-    split_level,
-)
+    _array, _object, generate_schema_vectors, split_level)
 
 
 def create_schema_levels(obj):

@@ -2,9 +2,8 @@ import itertools
 import typing
 from dataclasses import asdict
 
-from meeshkan.nlp.schema_normalizer.schema_relations.schema_distance import (
-    calc_distance,
-)
+from meeshkan.nlp.schema_normalizer.schema_relations.schema_distance import \
+    calc_distance
 from meeshkan.nlp.schema_similarity.schema_distance import FieldsIOUSimilariaty
 from meeshkan.schema_merger import SchemaMerger
 from openapi_typed_2 import OpenAPIObject, convert_from_openapi, dataclass

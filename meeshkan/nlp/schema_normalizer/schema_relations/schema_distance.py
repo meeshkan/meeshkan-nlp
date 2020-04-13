@@ -1,15 +1,12 @@
 import numpy as np
 from sklearn.metrics.pairwise import pairwise_distances
 
-from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import (
-    parse_schema_features,
-)
-from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import (
-    generate_schema_vectors,
-)
-from meeshkan.nlp.schema_normalizer.schema_relations.feature_extraction import (
-    FeatureExtraction,
-)
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import \
+    parse_schema_features
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import \
+    generate_schema_vectors
+from meeshkan.nlp.schema_normalizer.schema_relations.feature_extraction import \
+    FeatureExtraction
 
 
 def get_all_paths(specs_dict):

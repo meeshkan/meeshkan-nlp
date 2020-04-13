@@ -5,16 +5,8 @@ import re
 import string
 
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import (
-    _array,
-    _boolean,
-    _integer,
-    _number,
-    _object,
-    _string,
-    _unknown,
-    split_level,
-    split_type,
-)
+    _array, _boolean, _integer, _number, _object, _string, _unknown,
+    split_level, split_type)
 
 
 def split_by_type(obj):

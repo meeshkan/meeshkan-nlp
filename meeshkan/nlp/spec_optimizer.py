@@ -6,7 +6,8 @@ from http_types import HttpExchange
 from meeshkan.nlp.entity_extractor import EntityExtractor
 from meeshkan.nlp.entity_normalizer import EntityNormalizer
 from meeshkan.nlp.operation_classifier import OperationClassifier
-from openapi_typed_2 import OpenAPIObject, convert_from_openapi, convert_to_openapi
+from openapi_typed_2 import (OpenAPIObject, convert_from_openapi,
+                             convert_to_openapi)
 
 
 class SpecOptimizer:

@@ -2,16 +2,12 @@ import typing
 from collections import defaultdict
 from dataclasses import dataclass
 
-from meeshkan.nlp.schema_normalizer.schema_paths.parse_openapi_schema import (
-    parse_schema,
-)
-from meeshkan.nlp.schema_normalizer.schema_paths.schema_compare import (
-    compare_nested_schema,
-)
+from meeshkan.nlp.schema_normalizer.schema_paths.parse_openapi_schema import \
+    parse_schema
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_compare import \
+    compare_nested_schema
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import (
-    create_object_structure,
-    generate_nested_object,
-)
+    create_object_structure, generate_nested_object)
 
 
 def find_best_match(initial_schemas):

@@ -4,9 +4,7 @@ import os
 import pytest
 
 from meeshkan.nlp.schema_normalizer.schema_relations.schema_distance import (
-    calc_distance,
-    get_all_paths,
-)
+    calc_distance, get_all_paths)
 
 pytestmark = pytest.mark.skip()
 
