@@ -4,6 +4,7 @@ import typing
 from typing import Sequence
 
 import spacy
+from spacy.language import Language
 
 from meeshkan.nlp.ids.gib_detect import GibberishDetector
 from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
@@ -33,7 +34,7 @@ def _make_dict_from_2_lists(list1, list2):  # TODO Maria Use dict(zip) instead o
     return dict_1
 
 
-def _camel_case(example: str) -> bool:
+def _camel_case(example: str) -> bool: #TODO Maria move it into utils/global tokenize
     """This fubction recognize camel case.
 
     Example:
@@ -82,8 +83,8 @@ class EntityExtractorNLP:
     STOP_WORDS = [r"api.*", "json", "yaml", "html", "config"]
     STOP_TAGS = {"VB", "VBD", "VBG", "VBN", "VBP", "VBZ"}
 
-    def __init__(self):
-        self.nlp = spacy.load("en_core_web_lg")
+    def __init__(self, nlp: Language):
+        self.nlp = nlp #TODO Maria all private fields should start with _
         self.gib_detector = GibberishDetector()
         self._id_detector = IdClassifier()
 

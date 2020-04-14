@@ -8,11 +8,11 @@ from meeshkan.nlp.ids.gib_detect import GibberishDetector
 
 
 class IdType(Enum):
-    UNKNOWN = 0
-    INT = 1
-    UUID = 2
-    HEX = 3
-    RANDOM = 4
+    UNKNOWN = "unknown"
+    INT = "int"
+    UUID = "uuid"
+    HEX = "hex"
+    RANDOM = "random"
 
 
 class IdClassifier:

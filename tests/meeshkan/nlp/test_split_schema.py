@@ -1,6 +1,6 @@
 import pytest
 
-from meeshkan.nlp.entity_normalizer import split_schema
+from meeshkan.nlp.spec_normalizer import split_schema
 
 pytestmark = pytest.mark.skip()
 

@@ -52,7 +52,7 @@ def to_path(path_tuple):
     return "".join(res)
 
 
-class EntityNormalizer:
+class SpecNormalizer:
     allowed_methods = ["get", "post", "put"]
     props_threshold = 3
 
@@ -100,8 +100,8 @@ class EntityNormalizer:
     #         return specs
 
     def normalize(
-        self, spec: typing.Any, entity_config: typing.Dict[str, typing.Sequence]
-    ) -> typing.Tuple[typing.Sequence[DataPath], OpenAPIObject]:
+        self, spec: typing.Dict, entity_config: typing.Dict[str, typing.Sequence]
+    ) -> typing.Tuple[typing.Sequence[DataPath], typing.Dict]:
         """Builds the #ref components in an OpenAPI object by understanding similar nested
         sructures for a set of paths.
 
