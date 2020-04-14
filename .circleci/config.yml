@@ -14,30 +14,29 @@ jobs: # A basic unit of work in a run
       - image: circleci/python:3.6.4-stretch
         environment: # environment variables for primary container
           PIPENV_VENV_IN_PROJECT: "true"
+          PIP_PROCESS_DEPENDENCY_LINKS: 1
     steps: # steps that comprise the `build` job
       - checkout # check out source code to working directory
+#      - run:
+#          name: Install Node.js and yarn
+#          command: |
+#            curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -
+#            sudo apt-get install -y nodejs
+#            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+#            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+#            sudo apt update && sudo apt install yarn
       - run:
-          name: Install Node.js and yarn
+          name: Install pip
           command: |
-            curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -
-            sudo apt-get install -y nodejs
-            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-            sudo apt update && sudo apt install yarn
-      - run:
-          name: Install pipenv
-          command: |
-            sudo pip install pipenv
-            pipenv install -e .[dev]
-            pipenv update
-            echo 'export VENV_HOME_DIR=$(pipenv --venv)' >> $BASH_ENV
-            echo 'source $VENV_HOME_DIR/bin/activate' >> $BASH_ENV
+            python3 -m venv ../env
+            source ../env/bin/activate
+            pip install setuptools -U
+            pip install -e .[dev]
       - run:
           name: Install pyright and run all checks
           command: |
             set +e
-            echo 'export PATH=$(yarn global bin):$PATH' >> $BASH_ENV
-            source $BASH_ENV
+            source ../env/bin/activate
             yarn global add pyright
             python setup.py test
   test-3.7:

@@ -1,11 +1,6 @@
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import (
-    camel_case_split,
-    parse_schema_features,
-    schema_remove_types,
-    split_by_all,
-    split_by_level,
-    split_by_type,
-)
+    camel_case_split, parse_schema_features, schema_remove_types, split_by_all,
+    split_by_level, split_by_type)
 
 
 def test_split_by_type():

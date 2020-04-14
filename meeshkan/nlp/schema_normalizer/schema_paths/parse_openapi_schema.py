@@ -1,12 +1,7 @@
-from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import (
-    schema_remove_types,
-)
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import \
+    schema_remove_types
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import (
-    _array,
-    _object,
-    generate_schema_vectors,
-    split_level,
-)
+    _array, _object, generate_schema_vectors, split_level)
 
 
 def create_schema_levels(obj):
@@ -65,9 +60,6 @@ def parse_schema(obj):
     Return:
          list -- list of all levels of parsed structures in a schema
     """
-    if not isinstance(obj, dict):
-        raise TypeError("The input object passed is not a type dict")
-
     obj["$schema"] = "root"
     root_features = generate_schema_vectors(obj)
     return create_schema_levels(root_features)

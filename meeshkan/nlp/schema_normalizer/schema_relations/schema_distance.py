@@ -1,15 +1,12 @@
 import numpy as np
 from sklearn.metrics.pairwise import pairwise_distances
 
-from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import (
-    parse_schema_features,
-)
-from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import (
-    generate_schema_vectors,
-)
-from meeshkan.nlp.schema_normalizer.schema_relations.feature_extraction import (
-    FeatureExtraction,
-)
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_fields import \
+    parse_schema_features
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import \
+    generate_schema_vectors
+from meeshkan.nlp.schema_normalizer.schema_relations.feature_extraction import \
+    FeatureExtraction
 
 
 def get_all_paths(specs_dict):
@@ -58,6 +55,7 @@ def get_all_properties(specs_dict):
 
 
 def calc_distance(spes_dict):
+    # TODO Nakul calc distance function should return a distance. This funciton returns two closest paths so it should be named "find_best_match" or something
     """Creates the path tuples of similar schema within threshold = 0.1.
 
     Arguments:
@@ -74,7 +72,9 @@ def calc_distance(spes_dict):
         return []
     else:
         embedding_dict = {key: [] for key in all_paths}
-        fe = FeatureExtraction()
+        fe = (
+            FeatureExtraction()
+        )  # TODO Nakul. Each function call causes spacy initialization. FeatureExtraction object should be created once.
         for keys, values in all_paths_dict.items():
             for method in values[0].keys():
                 embedding_dict[keys] = fe.generate_nlp_vector(values[0][method])

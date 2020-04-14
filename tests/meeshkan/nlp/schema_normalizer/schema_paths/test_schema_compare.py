@@ -1,7 +1,5 @@
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_compare import (
-    compare_nested_schema,
-    exact_match,
-)
+    compare_nested_schema, exact_match)
 
 
 def test_exact_match():

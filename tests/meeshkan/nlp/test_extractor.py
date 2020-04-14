@@ -50,3 +50,14 @@ def test_transferwise(extractor):
             1:
         ]
     )
+
+
+def test_extract_from_spec(opbank_spec, extractor):
+    res = extractor.get_entity_from_spec(opbank_spec)
+
+    assert len(res) == 2
+    assert set(res["account"]) == {
+        "/accounts/v3/accounts/{lrikubto}",
+        "/accounts/v3/accounts",
+    }
+    assert set(res["payment"]) == {"/v1/payments/{luawmujp}"}

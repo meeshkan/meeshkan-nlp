@@ -1,8 +1,5 @@
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import (
-    create_object_structure,
-    generate_child_vectors,
-    generate_schema_vectors,
-)
+    create_object_structure, generate_child_vectors, generate_schema_vectors)
 
 
 def test_create_object_structure():

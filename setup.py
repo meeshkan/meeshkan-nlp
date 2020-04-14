@@ -5,9 +5,9 @@ from shutil import rmtree
 from setuptools import Command, errors, find_packages, setup
 
 # Package meta-data.
-NAME = "meeshkan"
-DESCRIPTION = "NLP tools for API analyzing"
-URL = "http://github.com/meeshkan/meeshkan-nl["
+NAME = "Mem NLP"
+DESCRIPTION = "Reverse engineer services with NLP"
+URL = "http://github.com/meeshkan/mem-nlp"
 EMAIL = "dev@meeshkan.com"
 AUTHOR = "Meeshkan Dev Team"
 REQUIRES_PYTHON = ">=3.6.0"
@@ -17,7 +17,19 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, "README.md"), encoding="utf-8") as f:
     long_description = "\n" + f.read()
 
-REQUIRED = []
+REQUIRED = [
+    'dataclasses;python_version<"3.7"',  # for 3.6, as it ships with 3.7
+    "openapi-typed_2>=0.0.4",
+    "http-types>=0.0.15,<0.1.0",
+    "jsonpath-rw>=1.4.0",
+    "spacy",
+    "sklearn",  # TODO Remove it later
+    "en_core_web_lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.2.5/en_core_web_lg-2.2.5.tar.gz",
+]
+
+DEPENDENCY_LINKS = [
+    "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.2.5/en_core_web_lg-2.2.5.tar.gz"
+]
 
 BUNDLES = {}
 
@@ -32,10 +44,15 @@ DEV = BUNDLE_REQUIREMENTS + [
     "pyhamcrest",
     "pylint",
     "pytest",
+    "pytest-testmon",
+    "pytest-watch",
+    "requests-mock",
     "setuptools",
+    "twine",
+    "wheel",
 ]
 
-VERSION = "0.2.19"
+VERSION = "0.0.1"
 
 ENTRY_POINTS = ["meeshkan = meeshkan.__main__:cli"]
 
@@ -84,14 +101,15 @@ BUILD_COMMAND = "{executable} setup.py sdist bdist_wheel --universal".format(
 
 TYPE_CHECK_COMMAND = "pyright --lib"
 
-TEST_COMMAND = "pytest"
+TEST_COMMAND = "pytest ./tests"
 
 LINT_COMMAND = "flake8 --exclude .git,.venv,__pycache__,build,dist"
 
 BLACK_FORMAT_COMMAND = "black ."
 ISORT_FORMAT_COMMAND = "isort -y"
+
 BLACK_CHECK_COMMAND = "black --check ."
-ISORT_CHECK_COMMAND = "isort --check-only"
+ISORT_CHECK_COMMAND = "pipenv run isort --check-only"
 
 
 def build():
@@ -156,18 +174,17 @@ class TestCommand(SetupCommand):
     description = "Run tests, formatting, type-checks, and linting"
 
     def run(self):
+        self.status("Running pytest...")
+        run_tests()
+
         self.status("Checking formatting...")
         check_formatting()
 
-        # FIXME
-        # self.status("Checking style...")
-        # check_style()
+        self.status("Checking style...")
+        check_style()
 
         self.status("Checking types...")
         type_check()
-
-        self.status("Running pytest...")
-        run_tests()
 
 
 class UploadCommand(SetupCommand):
@@ -207,6 +224,7 @@ setup(
     packages=find_packages(exclude=("tests",)),
     include_package_data=True,
     install_requires=REQUIRED,
+    dependency_links=DEPENDENCY_LINKS,
     extras_require=EXTRAS,
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -214,6 +232,7 @@ setup(
         "Operating System :: OS Independent",
     ],
     zip_safe=False,
+    entry_points={"console_scripts": ENTRY_POINTS},
     cmdclass={
         "dist": BuildDistCommand,
         "format": FormatCommand,

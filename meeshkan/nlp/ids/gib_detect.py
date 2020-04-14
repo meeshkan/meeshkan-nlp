@@ -20,24 +20,44 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
-#!/usr/bin/python
-
+# !/usr/bin/python
+import math
 import os
 import pickle
 
-import meeshkan.nlp.gib_detect_train as gib_detect_train
 
-# import gib_detect_train
+class GibberishDetector:
+    _accepted_chars = "abcdefghijklmnopqrstuvwxyz "
+    _char_positions = dict([(char, idx) for idx, char in enumerate(_accepted_chars)])
 
-
-class GibDetector:
     def __init__(self):
         with open(os.path.join(os.path.dirname(__file__), "gib_model.pki"), "rb") as f:
             self.model_data = pickle.load(f)
 
-    def gib_detector(self, item):
-
+    def is_gibberish(self, item):
         l = item
         model_mat = self.model_data["mat"]
         threshold = self.model_data["thresh"]
-        return gib_detect_train.avg_transition_prob(l, model_mat) <= threshold
+        return self._avg_transition_prob(l, model_mat) <= threshold
+
+    def _avg_transition_prob(self, l, log_prob_mat):
+        """ Return the average transition prob from l through log_prob_mat. """
+        log_prob = 0.0
+        transition_ct = 0
+        for a, b in self._ngram(2, l):
+            log_prob += log_prob_mat[self._char_positions[a]][self._char_positions[b]]
+            transition_ct += 1
+        # The exponentiation translates from log probs to probs.
+        return math.exp(log_prob / (transition_ct or 1))
+
+    def _ngram(self, n, l):
+        """ Return all n grams from l after normalizing """
+        filtered = self._normalize(l)
+        for start in range(0, len(filtered) - n + 1):
+            yield "".join(filtered[start : start + n])
+
+    def _normalize(self, line):
+        """ Return only the subset of chars from accepted_chars.
+        This helps keep the  model relatively small by ignoring punctuation,
+        infrequenty symbols, etc. """
+        return [c.lower() for c in line if c.lower() in self._accepted_chars]

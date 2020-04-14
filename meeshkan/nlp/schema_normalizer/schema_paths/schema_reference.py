@@ -1,13 +1,17 @@
-from meeshkan.nlp.schema_normalizer.schema_paths.parse_openapi_schema import (
-    parse_schema,
-)
-from meeshkan.nlp.schema_normalizer.schema_paths.schema_compare import (
-    compare_nested_schema,
-)
+import typing
+from collections import defaultdict
+from dataclasses import dataclass
+
+from meeshkan.nlp.schema_normalizer.schema_paths.parse_openapi_schema import \
+    parse_schema
+from meeshkan.nlp.schema_normalizer.schema_paths.schema_compare import \
+    compare_nested_schema
 from meeshkan.nlp.schema_normalizer.schema_paths.schema_to_vector import (
-    create_object_structure,
-    generate_nested_object,
-)
+    create_object_structure, generate_nested_object)
+
+
+def find_best_match(initial_schemas):
+    return initial_schemas
 
 
 def check_and_create_ref(specs, path_tuple, entity_name):
@@ -22,6 +26,21 @@ def check_and_create_ref(specs, path_tuple, entity_name):
     Returns:
          Tuple[bool, dict] -- old or modified specs, bool is True if modified
     """
+    all_paths_dict = defaultdict(dict)
+    nested_paths_dict = all_paths_dict.copy()
+    allowed_methods = {"get", "post"}
+
+    initial_schemas = []
+
+    # for path in path_tuple:
+    #     for method in specs["paths"][path].keys():
+    #         if method in allowed_methods:
+    #             initial_schemas.append(SchemaWithLocation(path=path, method=method, code="200", schema_path=(), schema=
+    #             specs["paths"][path][method]["responses"]["200"]["content"][
+    #                 # TODO need to fix that too
+    #                 "application/json"
+    #             ]["schema"]))
+
     all_paths_dict = {key: [] for key in path_tuple}
     nested_paths_dict = all_paths_dict.copy()
     methods = ["get", "post"]
@@ -33,9 +52,8 @@ def check_and_create_ref(specs, path_tuple, entity_name):
                     "application/json"
                 ]["schema"]
                 all_paths_dict[path].append({method: schema})
-                break  # To ensure that only single method is picked for any endpoint
-
-    # Now lets us get the nested structure for schema
+                break
+                # Now lets us get the nested structure for schema
     for keys, values in all_paths_dict.items():
         for method in values[0].keys():
             nested_paths_dict[keys] = parse_schema(values[0][method])
@@ -104,7 +122,7 @@ def check_and_replace(top_schema, structure_list, component_path):
         schema = schema[structure_list[idx]]
 
     key = structure_list[-1]
-    if schema[key]["type"] == "_array":
+    if schema[key]["type"] == "array":
         schema[key]["items"] = {"$ref": component_path}
     else:
         schema[key] = {"$ref": component_path}

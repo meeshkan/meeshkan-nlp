@@ -1,13 +1,20 @@
 import json
 
 import pytest
+import spacy
 from http_types import HttpExchangeReader
+from openapi_typed_2 import convert_from_openapi, convert_to_openapi
 
 from meeshkan.nlp.entity_extractor import EntityExtractor
-from meeshkan.nlp.entity_normalizer import EntityNormalizer
+from meeshkan.nlp.ids.id_classifier import IdClassifier
 from meeshkan.nlp.path_analyzer import PathAnalyzer
-from meeshkan.nlp.spec_optimizer import SpecOptimizer
-from openapi_typed_2 import convert_from_openapi, convert_to_openapi
+from meeshkan.nlp.spec_normalizer import SpecNormalizer
+from meeshkan.nlp.spec_transformer import SpecTransformer
+
+
+@pytest.fixture(scope="session")
+def nlp():
+    return spacy.load("en_core_web_lg")
 
 
 @pytest.fixture()
@@ -23,8 +30,8 @@ def opbank_recordings():
 
 
 @pytest.fixture(scope="session")
-def extractor():
-    return EntityExtractor()
+def extractor(nlp):
+    return EntityExtractor(nlp)
 
 
 @pytest.fixture(scope="session")
@@ -34,12 +41,13 @@ def analyzer(extractor):
 
 @pytest.fixture(scope="session")
 def normalizer():
-    return EntityNormalizer()
+    return SpecNormalizer()
+
 
 
 @pytest.fixture(scope="session")
-def optimizer(extractor, analyzer, normalizer):
-    return SpecOptimizer(extractor, analyzer, normalizer)
+def transformer(extractor, analyzer, normalizer):
+    return SpecTransformer(extractor, analyzer, normalizer, IdClassifier())
 
 
 @pytest.fixture()
