@@ -1,13 +1,13 @@
 import typing
 
 from http_types import HttpExchange
-from openapi_typed_2 import OpenAPIObject, convert_from_openapi, convert_to_openapi
 
 from meeshkan.nlp.entity_extractor import EntityExtractor
 from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
 from meeshkan.nlp.ids.paths import path_to_regex
 from meeshkan.nlp.operation_classifier import OperationClassifier
 from meeshkan.nlp.spec_normalizer import SpecNormalizer
+from openapi_typed_2 import OpenAPIObject, convert_from_openapi, convert_to_openapi
 
 
 class SpecTransformer:

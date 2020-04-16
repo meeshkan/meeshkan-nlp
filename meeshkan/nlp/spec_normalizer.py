@@ -2,10 +2,9 @@ import itertools
 import typing
 from dataclasses import asdict
 
-from openapi_typed_2 import convert_from_openapi, dataclass
-
-from meeshkan.nlp.schema_similarity.fields_similarity import FieldsIOUSimilariaty
 from meeshkan.nlp.schema_merger import SchemaMerger
+from meeshkan.nlp.schema_similarity.fields_similarity import FieldsIOUSimilariaty
+from openapi_typed_2 import convert_from_openapi, dataclass
 
 
 def split_schema(schema):

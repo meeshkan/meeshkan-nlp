@@ -1,8 +1,7 @@
 import copy
 
-from openapi_typed_2 import convert_from_openapi, convert_to_openapi
-
 from meeshkan.nlp.spec_normalizer import DataPath, SpecNormalizer
+from openapi_typed_2 import convert_from_openapi, convert_to_openapi
 from tests.utils import add_item, spec_dict
 
 
