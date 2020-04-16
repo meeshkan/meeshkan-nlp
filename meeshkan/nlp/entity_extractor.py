@@ -3,15 +3,16 @@ import string
 import typing
 from typing import Sequence
 
-import spacy
+from openapi_typed_2 import OpenAPIObject
 from spacy.language import Language
 
 from meeshkan.nlp.ids.gib_detect import GibberishDetector
 from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
-from openapi_typed_2 import OpenAPIObject
 
 
-def _make_dict_from_2_lists(list1, list2):  # TODO Maria Use dict(zip) instead of it
+def _make_dict_from_2_lists(
+    list1, list2
+):  # TODO Maria Use dict(zip(list1, list2)) instead of it
     """Make a dictionary from two lists
 
     Example:
@@ -34,7 +35,7 @@ def _make_dict_from_2_lists(list1, list2):  # TODO Maria Use dict(zip) instead o
     return dict_1
 
 
-def _camel_case(example: str) -> bool: #TODO Maria move it into utils/global tokenize
+def _camel_case(example: str) -> bool:  # TODO Maria move it into utils/global tokenize
     """This fubction recognize camel case.
 
     Example:
@@ -46,10 +47,10 @@ def _camel_case(example: str) -> bool: #TODO Maria move it into utils/global tok
         True or False
     """
     # for i in string.punctuation:
-    if any(x in example for x in string.punctuation) == True:
+    if any(x in example for x in string.punctuation):
         return False
     else:
-        if any(list(map(str.isupper, example[1:-1]))) == True:
+        if any(list(map(str.isupper, example[1:-1]))):
             return True
         else:
             return False
@@ -68,15 +69,15 @@ def _camel_case_split(s: str) -> Sequence[str]:
         """
     idx = list(map(str.isupper, s))
     # mark change of case
-    l = [0]
+    marks = [0]
     for (i, (x, y)) in enumerate(zip(idx, idx[1:])):
         if x and not y:  # "Ul"
-            l.append(i)
+            marks.append(i)
         elif not x and y:  # "lU"
-            l.append(i + 1)
-    l.append(len(s))
-    # for "lUl", index of "U" will pop twice, have to filer it
-    return [s[x:y] for x, y in zip(l, l[1:]) if x < y]
+            marks.append(i + 1)
+    marks.append(len(s))
+    # for "lUl", index of "U" will pop twice, have to filter it
+    return [s[x:y] for x, y in zip(marks, marks[1:]) if x < y]
 
 
 class EntityExtractorNLP:
@@ -84,7 +85,7 @@ class EntityExtractorNLP:
     STOP_TAGS = {"VB", "VBD", "VBG", "VBN", "VBP", "VBZ"}
 
     def __init__(self, nlp: Language):
-        self.nlp = nlp #TODO Maria all private fields should start with _
+        self.nlp = nlp  # TODO Maria all private fields should start with _
         self.gib_detector = GibberishDetector()
         self._id_detector = IdClassifier()
 
@@ -280,7 +281,7 @@ class EntityExtractorNLP:
             item = path.split("/")[1:]
             count = 0
             for i in item:
-                if i is not "":
+                if i != "":
                     count += 1
             if count > 1:
                 check_path = re.sub(r"\{.*?\}", "id", path)

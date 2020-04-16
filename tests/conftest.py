@@ -44,7 +44,6 @@ def normalizer():
     return SpecNormalizer()
 
 
-
 @pytest.fixture(scope="session")
 def transformer(extractor, analyzer, normalizer):
     return SpecTransformer(extractor, analyzer, normalizer, IdClassifier())
