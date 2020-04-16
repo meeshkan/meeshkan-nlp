@@ -9,74 +9,17 @@ from spacy.language import Language
 from meeshkan.nlp.ids.gib_detect import GibberishDetector
 from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
 from openapi_typed_2 import OpenAPIObject
+from meeshkan.nlp.utils.global_tokenize import camel_case, camel_case_split
 
 
-def _make_dict_from_2_lists(list1, list2):  # TODO Maria Use dict(zip) instead of it
+def _make_dict_from_2_lists(list1, list2):
     """Make a dictionary from two lists
 
-    Example:
-    >>>list1=['a','b','c']
-    >>>list2=[1,2,3]
-    >>> _make_dict_from_2_lists(list1, list2)
-    {'a':1,'b':2,'c':3}
-
-    Arguments:
-        two lists
-    Returns:
-        Dist[str/int]
     """
-    dict_1 = {}
-    for key, value in zip(list1, list2):
-        if key not in dict_1:
-            dict_1[key] = [value]
-        else:
-            dict_1[key].append(value)
-    return dict_1
+    return dict(zip(list1, list2))
 
 
-def _camel_case(example: str) -> bool: #TODO Maria move it into utils/global tokenize
-    """This fubction recognize camel case.
 
-    Example:
-
-    >>> _camel_case('BodyAsJson')
-    True
-
-    Return:
-        True or False
-    """
-    # for i in string.punctuation:
-    if any(x in example for x in string.punctuation) == True:
-        return False
-    else:
-        if any(list(map(str.isupper, example[1:-1]))) == True:
-            return True
-        else:
-            return False
-
-
-def _camel_case_split(s: str) -> Sequence[str]:
-    """This function split camel case words into pieces.
-
-        Example:
-
-        >>> _camel_case_split('BodyAsJson')
-        ['Body', 'As', 'Json']
-
-        Return:
-            List
-        """
-    idx = list(map(str.isupper, s))
-    # mark change of case
-    l = [0]
-    for (i, (x, y)) in enumerate(zip(idx, idx[1:])):
-        if x and not y:  # "Ul"
-            l.append(i)
-        elif not x and y:  # "lU"
-            l.append(i + 1)
-    l.append(len(s))
-    # for "lUl", index of "U" will pop twice, have to filer it
-    return [s[x:y] for x, y in zip(l, l[1:]) if x < y]
 
 
 class EntityExtractorNLP:
@@ -84,13 +27,13 @@ class EntityExtractorNLP:
     STOP_TAGS = {"VB", "VBD", "VBG", "VBN", "VBP", "VBZ"}
 
     def __init__(self, nlp: Language):
-        self.nlp = nlp #TODO Maria all private fields should start with _
-        self.gib_detector = GibberishDetector()
+        self._nlp = nlp
+        self._gib_detector = GibberishDetector()
         self._id_detector = IdClassifier()
 
     def tokenize2(
         self, path_list: list
-    ) -> Sequence[str]:  # TODO Maria Why is it tokenize<<2>>?
+    ) -> Sequence[str]:
         """This function tokenize list of words and remove potential ids .
 
             Example:
@@ -111,13 +54,13 @@ class EntityExtractorNLP:
                 item = re.sub("[0-9]+", "", item)
                 item = re.sub("-", " ", item)
                 for word in item.split(" "):
-                    if _camel_case(word):
-                        camel_list = _camel_case_split(word)
+                    if camel_case(word):
+                        camel_list = camel_case_split(word)
                         for cam in camel_list:
                             res.append(cam.lower())
                     else:
                         if len(word) > 3:
-                            if word in self.nlp.vocab:
+                            if word in self._nlp.vocab:
                                 res.append(word)
                             else:
                                 try:
@@ -127,7 +70,7 @@ class EntityExtractorNLP:
                                 except IndexError:
                                     pass
                         if len(word) == 3:
-                            if not self.gib_detector.is_gibberish(word):
+                            if not self._gib_detector.is_gibberish(word):
                                 res.append(word)
         return res
 
@@ -149,26 +92,26 @@ class EntityExtractorNLP:
         ]
         # print(path_list)
         path_list = [
-            word for word in path_list if self.nlp(word)[0].tag_ not in self.STOP_TAGS
+            word for word in path_list if self._nlp(word)[0].tag_ not in self.STOP_TAGS
         ]
         path_lists.append(path_list)
         return path_list
 
     def get_entity_from_url(
         self, p_list: list
-    ) -> str:  # TODO Maria. It's not an url. URL is http://google.com/something. It's a path.
+    ) -> str:
         """This function return lemmatized entity from the path.
 
         Example:
 
-        >>> get_entity_from_url('/analyzer/12abd345/archive-rule/12abd345')
+        >>> get_entity_from_path('/analyzer/12abd345/archive-rule/12abd345')
         'rule'
 
         Return:
             string or None
         """
         if len(self._split_pathes(p_list)) >= 1:
-            return self.nlp(self._split_pathes(p_list)[-1])[0].lemma_
+            return self._nlp(self._split_pathes(p_list)[-1])[0].lemma_
         else:
             return "None"
         # return self._mapping.get(path)
@@ -203,9 +146,9 @@ class EntityExtractorNLP:
         """
         kl: typing.List[int] = []
         for i in range(2, len(long_string) - 2):
-            if long_string[i:] in self.nlp.vocab:
+            if long_string[i:] in self._nlp.vocab:
                 kl.append(i)
-        if long_string[0 : kl[0]] in self.nlp.vocab:
+        if long_string[0 : kl[0]] in self._nlp.vocab:
             yield (kl[0])
         else:
             yield (kl[0])
