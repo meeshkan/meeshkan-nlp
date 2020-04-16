@@ -19,7 +19,7 @@ def test_opbank(opbank_spec):
     opbank_spec = convert_to_openapi(opbank_spec)
 
     account_schema = convert_from_openapi(opbank_spec.components.schemas["account"])
-    # payment_schema = convert_from_openapi(opbank_spec.components.schemas["payment"])
+    payment_schema = convert_from_openapi(opbank_spec.components.schemas["payment"])
 
     assert 4 == len(datapaths)
     assert (
@@ -60,7 +60,7 @@ def test_opbank(opbank_spec):
     )
 
     assert "accountId" in account_schema["properties"]
-    # assert "paymentId" in payment_schema["properties"] #TODO Nikolay fix this
+    assert "paymentId" in payment_schema["properties"] #TODO Nikolay fix this
 
     assert (
         "account" == opbank_spec.paths["/accounts/v3/accounts"]._x["x-meeshkan-entity"]
