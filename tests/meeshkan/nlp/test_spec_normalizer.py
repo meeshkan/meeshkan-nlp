@@ -60,7 +60,7 @@ def test_opbank(opbank_spec):
     )
 
     assert "accountId" in account_schema["properties"]
-    assert "paymentId" in payment_schema["properties"] #TODO Nikolay fix this
+    assert "paymentId" in payment_schema["properties"]  # TODO Nikolay fix this
 
     assert (
         "account" == opbank_spec.paths["/accounts/v3/accounts"]._x["x-meeshkan-entity"]
@@ -450,8 +450,7 @@ def test_responses_diff_fields():
         in datapaths
     )
 
-    actual_spec = convert_from_openapi(
-        updated_specs.components.schemas["payment"])
+    actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
 
     assert payment_spec_single["properties"] == actual_spec["properties"]
     assert set(payment_spec_single["required"]) == set(actual_spec["required"])
@@ -600,8 +599,7 @@ def test_request_response():
         in datapaths
     )
 
-    actual_spec = convert_from_openapi(
-        updated_specs.components.schemas["payment"])
+    actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
 
     assert payment_spec_single["properties"] == actual_spec["properties"]
     assert set(payment_spec_single["required"]) == set(actual_spec["required"])
