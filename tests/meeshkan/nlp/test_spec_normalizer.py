@@ -1,8 +1,7 @@
 import copy
 
-from openapi_typed_2 import convert_from_openapi, convert_to_openapi
-
 from meeshkan.nlp.spec_normalizer import DataPath, SpecNormalizer
+from openapi_typed_2 import convert_from_openapi, convert_to_openapi
 from tests.utils import add_item, spec_dict
 
 
@@ -20,7 +19,7 @@ def test_opbank(opbank_spec):
     opbank_spec = convert_to_openapi(opbank_spec)
 
     account_schema = convert_from_openapi(opbank_spec.components.schemas["account"])
-    # payment_schema = convert_from_openapi(opbank_spec.components.schemas["payment"])
+    payment_schema = convert_from_openapi(opbank_spec.components.schemas["payment"])
 
     assert 4 == len(datapaths)
     assert (
@@ -61,7 +60,7 @@ def test_opbank(opbank_spec):
     )
 
     assert "accountId" in account_schema["properties"]
-    # assert "paymentId" in payment_schema["properties"] #TODO Nikolay fix this
+    assert "paymentId" in payment_schema["properties"]  # TODO Nikolay fix this
 
     assert (
         "account" == opbank_spec.paths["/accounts/v3/accounts"]._x["x-meeshkan-entity"]
@@ -210,9 +209,11 @@ def test_responses_exact_match():
         in datapaths
     )
 
-    assert payment_spec == convert_from_openapi(
-        updated_specs.components.schemas["payment"]
-    )
+    actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
+
+    assert payment_spec["properties"] == actual_spec["properties"]
+    assert set(payment_spec["required"]) == set(actual_spec["required"])
+
     assert (
         "#/components/schemas/payment"
         == updated_specs.paths["/payments"]
@@ -329,9 +330,11 @@ def test_responses_diff_types():
         in datapaths
     )
 
-    assert payment_spec == convert_from_openapi(
-        updated_specs.components.schemas["payment"]
-    )
+    actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
+
+    assert payment_spec["properties"] == actual_spec["properties"]
+    assert set(payment_spec["required"]) == set(actual_spec["required"])
+
     assert (
         "#/components/schemas/payment"
         == updated_specs.paths["/payments"]
@@ -451,9 +454,11 @@ def test_responses_diff_fields():
         in datapaths
     )
 
-    assert payment_spec_single == convert_from_openapi(
-        updated_specs.components.schemas["payment"]
-    )
+    actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
+
+    assert payment_spec_single["properties"] == actual_spec["properties"]
+    assert set(payment_spec_single["required"]) == set(actual_spec["required"])
+
     assert (
         "#/components/schemas/payment"
         == updated_specs.paths["/payments"]
@@ -598,9 +603,11 @@ def test_request_response():
         in datapaths
     )
 
-    assert payment_spec_single == convert_from_openapi(
-        updated_specs.components.schemas["payment"]
-    )
+    actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
+
+    assert payment_spec_single["properties"] == actual_spec["properties"]
+    assert set(payment_spec_single["required"]) == set(actual_spec["required"])
+
     assert (
         "#/components/schemas/payment"
         == updated_specs.paths["/payments"]
