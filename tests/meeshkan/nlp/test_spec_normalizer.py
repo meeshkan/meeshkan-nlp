@@ -450,9 +450,12 @@ def test_responses_diff_fields():
         in datapaths
     )
 
-    assert payment_spec_single == convert_from_openapi(
-        updated_specs.components.schemas["payment"]
-    )
+    actual_spec = convert_from_openapi(
+        updated_specs.components.schemas["payment"])
+
+    assert payment_spec_single["properties"] == actual_spec["properties"]
+    assert set(payment_spec_single["required"]) == set(actual_spec["required"])
+
     assert (
         "#/components/schemas/payment"
         == updated_specs.paths["/payments"]
@@ -597,9 +600,12 @@ def test_request_response():
         in datapaths
     )
 
-    assert payment_spec_single == convert_from_openapi(
-        updated_specs.components.schemas["payment"]
-    )
+    actual_spec = convert_from_openapi(
+        updated_specs.components.schemas["payment"])
+
+    assert payment_spec_single["properties"] == actual_spec["properties"]
+    assert set(payment_spec_single["required"]) == set(actual_spec["required"])
+
     assert (
         "#/components/schemas/payment"
         == updated_specs.paths["/payments"]
