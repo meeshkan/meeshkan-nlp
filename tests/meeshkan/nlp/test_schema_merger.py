@@ -1,5 +1,5 @@
 from meeshkan.nlp.schema_merger import SchemaMerger
-from openapi_typed_2 import convert_to_openapi, convert_to_Schema
+from openapi_typed_2 import convert_to_Schema
 
 
 def test_merge():
