@@ -41,7 +41,7 @@ class FieldsIOUSimilariaty(FieldsSimilarityBase):
         return 0 if score < self.score_threshold else score
 
 
-class FieldsEmbeddingsSimilariaty(FieldsSimilarityBase):  # TODO  Nakul implement it
+class FieldsEmbeddingsSimilariaty(FieldsSimilarityBase):
     def __init__(self, nlp: Language):
         self._nlp = nlp
 
