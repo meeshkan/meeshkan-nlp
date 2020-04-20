@@ -1,6 +1,4 @@
-import re
 import string
-import typing
 from typing import Sequence
 
 def camel_case(example: str) -> bool:
@@ -14,7 +12,6 @@ def camel_case(example: str) -> bool:
     Return:
         True or False
     """
-    # for i in string.punctuation:
     if any(x in example for x in string.punctuation) == True:
         return False
     else:

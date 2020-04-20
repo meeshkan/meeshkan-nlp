@@ -32,50 +32,32 @@ class PathAnalyzer:
 
     def extract_values(self, path):
         path_list = path.split("/")[1:]
-        nopunc_string = []
-        for i in path_list:
-            if self._id_classifier.by_value(i) is not None:
-                nopunc_string.append(i)
-            else:
-                i = re.sub("[^0-9a-z]+", " ", i.lower())
-                for word in i.split(" "):
-                    nopunc_string.append(word)
-        pos = {
-            value: index for index, value in enumerate(nopunc_string)
-        }
-        print(pos)# TODO Maria You can avoid this if you return indexes from get_last_id instead of values
-        maybe_entity = self._entity_extractor._split_pathes(path_list)[
-            -1
-        ]  # TODO Maria a public method name can't start with an underscore. And it does something different from splitting paths.
-        id_value, id_type = self._get_last_id(path_list)
-        if id_type != IdType.UNKNOWN:
-            if pos[id_value] == pos[maybe_entity] + 1:
+        entity_name = self._entity_extractor.get_entity_from_path(path_list)
+        for word in path_list:
+            if entity_name in word:
+                entity_position=path_list.index(word)
+        id_position, id_value, id_type = self._get_last_id(path_list)
+        if id_type is not None:
+            if id_position > entity_position:
                 return PathItems(
-                    entity=self._entity_extractor.get_entity_from_url(path_list),
+                    entity=entity_name,
                     id=IdDesc(value=id_value, type=id_type),
                 )
             else:
                 return PathItems(
-                    entity=self._entity_extractor.get_entity_from_url(path_list),
+                    entity=entity_name,
+                    id=None
                 )
         else:
             return PathItems(
-                entity=self._entity_extractor.get_entity_from_url(path_list),
+                entity=entity_name,
                 id=None,
             )
 
     def _get_last_id(self, path_items):
         for item in reversed(path_items):
             id_type = self._id_classifier.by_value(item)
-            if id_type is not None:
-                return item, id_type
+            if id_type != IdType.UNKNOWN:
+                return path_items.index(item), item, id_type
+        return None, None, None
 
-        return None, None
-
-
-nlp=spacy.load('en_core_web_lg')
-analyzer= PathAnalyzer(nlp)
-path_item1 = analyzer.extract_values(
-        "/v3/profiles/saf45gdrg4gsdf/transfers/sdfsr456ygh56ujhgf/payments"
-    )
-print(path_item1)

@@ -1,9 +1,8 @@
 import re
-import string
 import typing
 from typing import Sequence
 
-import spacy
+
 from spacy.language import Language
 
 from meeshkan.nlp.ids.gib_detect import GibberishDetector
@@ -74,12 +73,12 @@ class EntityExtractorNLP:
                                 res.append(word)
         return res
 
-    def _split_pathes(self, p_list: list) -> Sequence[str]:
+    def split_pathes(self, p_list: list) -> Sequence[str]:
         """This function removes stop words and verbs from the list and tokenizes it.
 
         Example:
 
-        >>> _split_pathes(['libs', 'push', 'v1', 'content', 'login', '123ad8797'])
+        >>> split_pathes(['libs', 'push', 'v1', 'content', 'login', '123ad8797'])
         ['libs', 'content', 'login']
 
         Return:
@@ -97,7 +96,7 @@ class EntityExtractorNLP:
         path_lists.append(path_list)
         return path_list
 
-    def get_entity_from_url(
+    def get_entity_from_path(
         self, p_list: list
     ) -> str:
         """This function return lemmatized entity from the path.
@@ -110,8 +109,8 @@ class EntityExtractorNLP:
         Return:
             string or None
         """
-        if len(self._split_pathes(p_list)) >= 1:
-            return self._nlp(self._split_pathes(p_list)[-1])[0].lemma_
+        if len(self.split_pathes(p_list)) >= 1:
+            return self._nlp(self.split_pathes(p_list)[-1])[0].lemma_
         else:
             return "None"
         # return self._mapping.get(path)
@@ -201,7 +200,7 @@ class EntityExtractorNLP:
         Returns:
             tuple
         """
-        return (path, self.get_entity_from_url(path.split("/")[1:]))
+        return (path, self.get_entity_from_path(path.split("/")[1:]))
 
     def get_entity_from_spec(self, spec: OpenAPIObject):
         """Extract pathes from the yaml file and make dictionary with entity and corresponding pathes
@@ -227,7 +226,7 @@ class EntityExtractorNLP:
                     count += 1
             if count > 1:
                 check_path = re.sub(r"\{.*?\}", "id", path)
-                ent.append(self.get_entity_from_url(check_path.split("/")[1:]))
+                ent.append(self.get_entity_from_path(check_path.split("/")[1:]))
                 pathes1.append(path)
         return _make_dict_from_2_lists(ent, pathes1)
 
