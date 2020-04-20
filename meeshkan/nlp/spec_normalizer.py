@@ -1,5 +1,7 @@
 import itertools
 import typing
+from collections import defaultdict
+
 from dataclasses import asdict
 
 from meeshkan.nlp.schema_merger import SchemaMerger
@@ -60,15 +62,15 @@ class SpecNormalizer:
 
     def normalize(
         self, spec: typing.Dict, entity_config: typing.Dict[str, typing.Sequence]
-    ) -> typing.Tuple[typing.Sequence[DataPath], typing.Dict]:
+    ) -> typing.Tuple[typing.Dict[str, typing.Sequence[DataPath]], typing.Dict]:
         """Builds the #ref components in an OpenAPI object by understanding similar nested
         sructures for a set of paths.
         """
-        datapaths: typing.List[DataPath] = []
+        datapaths: typing.Dict[str, typing.List[DataPath]] = defaultdict(list)
 
         for entity_name, paths in entity_config.items():
             entity_datapaths, spec = self._replace_entity(spec, entity_name, paths)
-            datapaths.extend(entity_datapaths)
+            datapaths[entity_name].extend(entity_datapaths)
 
         return datapaths, spec
 

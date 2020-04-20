@@ -1,7 +1,9 @@
 import typing
+from collections import defaultdict
 
 from http_types import HttpExchange
 
+from meeshkan.nlp.data_extractor import DataExtractor
 from meeshkan.nlp.entity_extractor import EntityExtractor
 from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
 from meeshkan.nlp.ids.paths import path_to_regex
@@ -23,6 +25,7 @@ class SpecTransformer:
         self._normalizer = normalizer
         self._operation_classifier = OperationClassifier()
         self._id_classifier = id_classifier
+        self._data_extractor = DataExtractor()
 
     def optimize_spec(
         self, spec: OpenAPIObject, recordings: typing.List[HttpExchange]
@@ -31,22 +34,15 @@ class SpecTransformer:
         spec_dict = convert_from_openapi(spec)
         datapaths, spec_dict = self._normalizer.normalize(spec_dict, entity_paths)
 
-        grouped_paths = self._group_paths(spec_dict, recordings)
-        spec_dict = self._replace_path_ids(spec_dict, grouped_paths)
+        grouped_records = self._group_records(spec_dict, recordings)
+        spec_dict = self._replace_path_ids(spec_dict, grouped_records)
 
         spec_dict = self._operation_classifier.fill_operations(spec_dict)
-        spec_dict = self._add_data(spec_dict, datapaths, recordings)
+        data = self._data_extractor.extract_data(datapaths, ((pathname, val[1]) for pathname, val in grouped_records.items()))
 
         return convert_to_openapi(spec_dict)
 
-    def _add_data(self, normalized_spec, datapaths, recordings):
-        normalized_spec["x-meeshkan-data"] = self._extract_data(datapaths, recordings)
-        return normalized_spec
-
-    def _extract_data(self, datapaths, recordings):
-        return {}
-
-    def _group_paths(self, spec: typing.Dict, recordings: typing.List[HttpExchange]):
+    def _group_records(self, spec: typing.Dict, recordings: typing.List[HttpExchange]):
         path_regexs = [
             (pathname, *path_to_regex(pathname)) for pathname in spec["paths"].keys()
         ]
@@ -82,8 +78,8 @@ class SpecTransformer:
         captures = match.groups()
         return captures
 
-    def _replace_path_ids(self, spec, grouped_paths):
-        for pathname, (values, recs, parameter_names) in grouped_paths.items():
+    def _replace_path_ids(self, spec, grouped_records):
+        for pathname, (values, recs, parameter_names) in grouped_records.items():
             for param in reversed(parameter_names):
                 res = self._id_classifier.by_values(values[param])
                 if res != IdType.UNKNOWN:

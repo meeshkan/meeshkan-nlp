@@ -1,4 +1,4 @@
-def test_optimizer(transformer, opbank_spec, opbank_recordings):
+def test_opbank(transformer, opbank_spec, opbank_recordings):
     res = transformer.optimize_spec(opbank_spec, opbank_recordings)
 
     assert len(res.components.schemas["account"].properties) == 10
