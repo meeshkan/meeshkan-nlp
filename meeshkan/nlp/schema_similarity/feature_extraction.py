@@ -10,7 +10,7 @@ import spacy
 # It would be greate to merge it into the FieldsEmbeddingsSimilariaty
 class FeatureExtraction:
     def __init__(self, multiple_vector=False, min_length=1):
-        self.nlp = spacy.load("en_core_web_lg")
+        self.nlp = spacy.load("en_core_web_lg")  # TODO Nakul provide as an arguement
         self.multiple_vector = multiple_vector
         self.min_length = min_length
 
@@ -53,10 +53,10 @@ class FeatureExtraction:
             bool -- Either True or False
 
         """
-        if any(x in word for x in string.punctuation) == True:
+        if any(x in word for x in string.punctuation):
             return False
         else:
-            if any(list(map(str.isupper, word[1:-1]))) == True:
+            if any(list(map(str.isupper, word[1:-1]))):
                 return True
 
             else:
@@ -73,15 +73,15 @@ class FeatureExtraction:
         """
         idx = list(map(str.isupper, word))
         # mark change of case
-        l = [0]
+        marks = [0]
         for (i, (x, y)) in enumerate(zip(idx, idx[1:])):
             if x and not y:  # "Ul"
-                l.append(i)
+                marks.append(i)
             elif not x and y:  # "lU"
-                l.append(i + 1)
-        l.append(len(word))
+                marks.append(i + 1)
+        marks.append(len(word))
         # for "lUl", index of "U" will pop twice, have to filer it
-        return [word[x:y] for x, y in zip(l, l[1:]) if x < y]
+        return [word[x:y] for x, y in zip(marks, marks[1:]) if x < y]
 
     def camel_case_split_list(self, tokens_list):
         """Splits the list of words into more words if camcel casing is found.

@@ -1,6 +1,4 @@
 from http_types import HttpExchange
-from meeshkan.build.paths import    path_to_regex, find_matching_path
-
 
 
 class DataExtractor:

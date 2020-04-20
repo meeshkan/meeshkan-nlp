@@ -1,5 +1,7 @@
 import pytest
 
+from meeshkan.nlp.ids.id_classifier import IdType
+
 
 def test_github(analyzer):
     path_item = analyzer.extract_values("/search/users")
@@ -22,7 +24,7 @@ def test_opbank(analyzer):
         == path_item2.id.value
     )
     assert (
-        "RANDOM" == path_item2.id.type.name
+        IdType.RANDOM == path_item2.id.type
     )  # TODO Maria Compare enum values instead of strings
 
 

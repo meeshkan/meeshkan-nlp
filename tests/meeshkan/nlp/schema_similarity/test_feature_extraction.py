@@ -1,5 +1,4 @@
-from meeshkan.nlp.schema_normalizer.schema_relations.feature_extraction import \
-    FeatureExtraction
+from meeshkan.nlp.schema_similarity.feature_extraction import FeatureExtraction
 
 fe = FeatureExtraction()
 
@@ -11,10 +10,10 @@ def test_keep_only_alpha():
 
 
 def test_is_camel_case():
-    assert fe.is_camel_case("meeshkanRocks") == True
-    assert fe.is_camel_case("MeeshkanRocks") == True
-    assert fe.is_camel_case("Meeshkanrocks") == False
-    assert fe.is_camel_case("meeshkanrocks") == False
+    assert fe.is_camel_case("meeshkanRocks")
+    assert fe.is_camel_case("MeeshkanRocks")
+    assert not fe.is_camel_case("Meeshkanrocks")
+    assert not fe.is_camel_case("meeshkanrocks")
 
 
 def test_camel_case_split_word():

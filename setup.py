@@ -21,6 +21,7 @@ REQUIRED = [
     'dataclasses;python_version<"3.7"',  # for 3.6, as it ships with 3.7
     "openapi-typed_2>=0.0.4",
     "http-types>=0.0.15,<0.1.0",
+    "http-types>=0.0.15,<0.1.0",
     "jsonpath-rw>=1.4.0",
     "spacy",
     "sklearn",  # TODO Remove it later
@@ -109,7 +110,7 @@ BLACK_FORMAT_COMMAND = "black ."
 ISORT_FORMAT_COMMAND = "isort -y"
 
 BLACK_CHECK_COMMAND = "black --check ."
-ISORT_CHECK_COMMAND = "pipenv run isort --check-only"
+ISORT_CHECK_COMMAND = "pipenv run isort --check-only -v"
 
 
 def build():
