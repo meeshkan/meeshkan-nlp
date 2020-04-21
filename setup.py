@@ -24,7 +24,6 @@ REQUIRED = [
     "http-types>=0.0.15,<0.1.0",
     "jsonpath-rw>=1.4.0",
     "spacy",
-    "sklearn",  # TODO Remove it later
     "en_core_web_lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.2.5/en_core_web_lg-2.2.5.tar.gz",
 ]
 
@@ -55,7 +54,6 @@ DEV = BUNDLE_REQUIREMENTS + [
 
 VERSION = "0.0.1"
 
-ENTRY_POINTS = ["meeshkan = meeshkan.__main__:cli"]
 
 EXTRAS = dict(**BUNDLES, dev=DEV)
 
@@ -233,7 +231,6 @@ setup(
         "Operating System :: OS Independent",
     ],
     zip_safe=False,
-    entry_points={"console_scripts": ENTRY_POINTS},
     cmdclass={
         "dist": BuildDistCommand,
         "format": FormatCommand,

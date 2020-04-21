@@ -62,5 +62,5 @@ def test_by_values():
 def test_by_name():
     id_cl = IdClassifier()
 
-    assert id_cl.by_name("some_id_field")
-    assert not id_cl.by_name("some_field")
+    assert id_cl.by_name("entity", "some_id_field") > 0
+    assert id_cl.by_name("entity", "some_field_entity") == 0

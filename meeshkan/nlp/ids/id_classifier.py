@@ -36,8 +36,14 @@ class IdClassifier:
 
         return max_id_type if score > 0.7 else IdType.UNKNOWN
 
-    def by_name(self, name: str) -> bool:
-        return "id" in name.lower()
+    def by_name(self, entity: str, name: str) -> float:
+        name = name.lower()
+        if name == "id":
+            return 0.9
+        elif "id" in name:
+            return 0.8 if entity in name else 0.6
+        else:
+            return 0
 
     def by_value(self, value: str) -> IdType:
         if self._is_int(value):
