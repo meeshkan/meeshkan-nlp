@@ -3,13 +3,13 @@ import json
 import pytest
 import spacy
 from http_types import HttpExchangeReader
-from openapi_typed_2 import convert_from_openapi, convert_to_openapi
 
 from meeshkan.nlp.entity_extractor import EntityExtractor
 from meeshkan.nlp.ids.id_classifier import IdClassifier
 from meeshkan.nlp.path_analyzer import PathAnalyzer
 from meeshkan.nlp.spec_normalizer import SpecNormalizer
 from meeshkan.nlp.spec_transformer import SpecTransformer
+from openapi_typed_2 import convert_from_openapi, convert_to_openapi
 
 
 @pytest.fixture(scope="session")
