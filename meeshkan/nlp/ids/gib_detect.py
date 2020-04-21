@@ -35,10 +35,9 @@ class GibberishDetector:
             self.model_data = pickle.load(f)
 
     def is_gibberish(self, item):
-        l = item
         model_mat = self.model_data["mat"]
         threshold = self.model_data["thresh"]
-        return self._avg_transition_prob(l, model_mat) <= threshold
+        return self._avg_transition_prob(item, model_mat) <= threshold
 
     def _avg_transition_prob(self, l, log_prob_mat):
         """ Return the average transition prob from l through log_prob_mat. """

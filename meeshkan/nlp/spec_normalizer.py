@@ -1,12 +1,12 @@
 import itertools
 import typing
+from collections import defaultdict
 from dataclasses import asdict
 
-from meeshkan.nlp.schema_normalizer.schema_relations.schema_distance import \
-    calc_distance
-from meeshkan.nlp.schema_similarity.schema_distance import FieldsIOUSimilariaty
-from meeshkan.schema_merger import SchemaMerger
-from openapi_typed_2 import OpenAPIObject, convert_from_openapi, dataclass
+from openapi_typed_2 import convert_from_openapi, dataclass
+
+from meeshkan.nlp.schema_merger import SchemaMerger
+from meeshkan.nlp.schema_similarity.fields_similarity import FieldsIOUSimilariaty
 
 
 def split_schema(schema):
@@ -60,71 +60,23 @@ class SpecNormalizer:
         self._schema_similarity = FieldsIOUSimilariaty()
         self._schema_merger = SchemaMerger()
 
-    def nearest_path(self, specs: OpenAPIObject):
-        """Using NLP word embeddings the function will check the responses of different
-        paths and returns the list of pair of paths tuple which are having the
-        cosine distance less than a pre-defined threshold = 0.1
-
-        Arguments:
-            specs {OpenAPIObject} -- OpenAPI specification
-        Returns:
-                List -- List of tuple pairs which are having responses very near to each other
-        """
-        specs_dict = convert_from_openapi(specs)
-        paths_tuple_list = calc_distance(specs_dict)
-        return paths_tuple_list
-
-    # def normalize(
-    #     self, specs: OpenAPIObject, path_tuple: Tuple, entity_name: str
-    # ) -> OpenAPIObject:
-    #     """Builds the #ref components in an OpenAPI object by understanding similar nested
-    #     sructures for a set of paths.
-    #
-    #     Arguments:
-    #         specs {OpenAPIObject} -- The open API specification object
-    #         path_tuple {tuple} -- two different paths which have similar entity
-    #         entity_name {str} -- an derived entity name for the similar paths
-    #
-    #
-    #     Returns:
-    #         OpenAPIObject -- Old or updated schema if #ref is created
-    #     """
-    #     specs_dict = convert_from_openapi(specs)
-    #     is_updated, updated_specs = self._check_and_create_ref(
-    #         specs_dict, path_tuple, entity_name
-    #     )
-    #
-    #     if is_updated:
-    #         return convert_to_openapi(updated_specs)
-    #     else:
-    #         return specs
-
     def normalize(
         self, spec: typing.Dict, entity_config: typing.Dict[str, typing.Sequence]
-    ) -> typing.Tuple[typing.Sequence[DataPath], typing.Dict]:
+    ) -> typing.Tuple[typing.Dict[str, typing.List[DataPath]], typing.Dict]:
         """Builds the #ref components in an OpenAPI object by understanding similar nested
         sructures for a set of paths.
-
-        Arguments:
-            spec {OpenAPIObject} -- The open API specification object
-            path_tuple {tuple} -- two different paths which have similar entity
-            entity_name {str} -- an derived entity name for the similar paths
-
-
-        Returns:
-            OpenAPIObject -- Old or updated schema if #ref is created
         """
-        datapaths: typing.List[DataPath] = []
+        datapaths = defaultdict(list)
 
         for entity_name, paths in entity_config.items():
             entity_datapaths, spec = self._replace_entity(spec, entity_name, paths)
-            datapaths.extend(entity_datapaths)
+            datapaths[entity_name].extend(entity_datapaths)
 
         return datapaths, spec
 
     def _replace_entity(
         self, spec_dict: typing.Any, entity_name: str, paths: typing.Sequence
-    ) -> typing.Tuple[typing.Sequence[DataPath], OpenAPIObject]:
+    ) -> typing.Tuple[typing.Sequence[DataPath], typing.Any]:
         schemas = self._extract_schemas(spec_dict, paths)
         best_match = self._find_best_match(schemas)
         if best_match is not None:
@@ -133,7 +85,7 @@ class SpecNormalizer:
             spec_dict = self._replace_refs(spec_dict, best_match, entity_name)
             spec_dict = self._add_x(spec_dict, entity_name, paths)
             datapaths = [
-                DataPath(schema_path=to_path(match[1]), **asdict(match[0]))
+                DataPath(schema_path=to_path(match[1]), **asdict(match[0]))  # type: ignore
                 for match in best_match
             ]
             return datapaths, spec_dict
@@ -149,7 +101,7 @@ class SpecNormalizer:
                     request_schema = self._get_request_schema(method)
                     if request_schema is not None:
                         res[
-                            SpecPart(path=path, method=method_name, request=True)
+                            SpecPart(path=path, method=method_name, request=True)  # type: ignore
                         ] = self._get_schemas(request_schema)
 
                     for code, response in method["responses"].items():
@@ -161,7 +113,7 @@ class SpecNormalizer:
                                     method=method_name,
                                     request=False,
                                     code=code,
-                                )
+                                )  # type: ignore
                             ] = self._get_schemas(response_schema)
 
         return res

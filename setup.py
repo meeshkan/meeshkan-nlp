@@ -21,9 +21,9 @@ REQUIRED = [
     'dataclasses;python_version<"3.7"',  # for 3.6, as it ships with 3.7
     "openapi-typed_2>=0.0.4",
     "http-types>=0.0.15,<0.1.0",
+    "http-types>=0.0.15,<0.1.0",
     "jsonpath-rw>=1.4.0",
     "spacy",
-    "sklearn",  # TODO Remove it later
     "en_core_web_lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.2.5/en_core_web_lg-2.2.5.tar.gz",
 ]
 
@@ -54,7 +54,6 @@ DEV = BUNDLE_REQUIREMENTS + [
 
 VERSION = "0.0.1"
 
-ENTRY_POINTS = ["meeshkan = meeshkan.__main__:cli"]
 
 EXTRAS = dict(**BUNDLES, dev=DEV)
 
@@ -109,7 +108,7 @@ BLACK_FORMAT_COMMAND = "black ."
 ISORT_FORMAT_COMMAND = "isort -y"
 
 BLACK_CHECK_COMMAND = "black --check ."
-ISORT_CHECK_COMMAND = "pipenv run isort --check-only"
+ISORT_CHECK_COMMAND = "pipenv run isort --check-only -v"
 
 
 def build():
@@ -232,7 +231,6 @@ setup(
         "Operating System :: OS Independent",
     ],
     zip_safe=False,
-    entry_points={"console_scripts": ENTRY_POINTS},
     cmdclass={
         "dist": BuildDistCommand,
         "format": FormatCommand,

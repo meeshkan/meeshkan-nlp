@@ -22,87 +22,87 @@ def test_opbank(opbank_spec):
     account_schema = convert_from_openapi(opbank_spec.components.schemas["account"])
     payment_schema = convert_from_openapi(opbank_spec.components.schemas["payment"])
 
-    assert 4 == len(datapaths)
+    assert 2 == len(datapaths)
     assert (
-            DataPath(
-                path="/accounts/v3/accounts/{lrikubto}",
-                code="200",
-                request=False,
-                method="get",
-                schema_path="$",
-            )
-            in datapaths
+        DataPath(
+            path="/accounts/v3/accounts/{lrikubto}",
+            code="200",
+            request=False,
+            method="get",
+            schema_path="$",
+        )
+        in datapaths["account"]
     )
     assert (
-            DataPath(
-                path="/accounts/v3/accounts",
-                code="200",
-                request=False,
-                method="get",
-                schema_path="$.accounts[*]",
-            )
-            in datapaths
+        DataPath(
+            path="/accounts/v3/accounts",
+            code="200",
+            request=False,
+            method="get",
+            schema_path="$.accounts[*]",
+        )
+        in datapaths["account"]
     )
     assert (
-            DataPath(
-                path="/v1/payments/{luawmujp}",
-                code="200",
-                request=False,
-                method="post",
-                schema_path="$",
-            )
-            in datapaths
+        DataPath(
+            path="/v1/payments/{luawmujp}",
+            code="200",
+            request=False,
+            method="post",
+            schema_path="$",
+        )
+        in datapaths["payment"]
     )
     assert (
-            DataPath(
-                path="/v1/payments/{luawmujp}", request=True, method="post", schema_path="$"
-            )
-            in datapaths
+        DataPath(
+            path="/v1/payments/{luawmujp}", request=True, method="post", schema_path="$"
+        )
+        in datapaths["payment"]
     )
 
     assert "accountId" in account_schema["properties"]
-    # assert "paymentId" in payment_schema["properties"] #TODO Nikolay fix this
+    assert "paymentId" in payment_schema["properties"]  # TODO Nikolay fix this
 
     assert (
-            "account" == opbank_spec.paths["/accounts/v3/accounts"]._x["x-meeshkan-entity"]
+        "account" == opbank_spec.paths["/accounts/v3/accounts"]._x["x-meeshkan-entity"]
     )
     assert (
-            "account"
-            == opbank_spec.paths["/accounts/v3/accounts/{lrikubto}"]._x["x-meeshkan-entity"]
+        "account"
+        == opbank_spec.paths["/accounts/v3/accounts/{lrikubto}"]._x["x-meeshkan-entity"]
     )
     assert (
-            "payment"
-            == opbank_spec.paths["/v1/payments/{luawmujp}"]._x["x-meeshkan-entity"]
-    )
-
-    assert (
-            "#/components/schemas/account"
-            == opbank_spec.paths["/accounts/v3/accounts"]
-            .get.responses["200"]
-            .content["application/json"]
-            .schema.properties["accounts"]
-            .items._ref
-    )
-    assert (
-            "#/components/schemas/account"
-            == opbank_spec.paths["/accounts/v3/accounts/{lrikubto}"]
-            .get.responses["200"]
-            .content["application/json"]
-            .schema._ref
+        "payment"
+        == opbank_spec.paths["/v1/payments/{luawmujp}"]._x["x-meeshkan-entity"]
     )
 
     assert (
-            "#/components/schemas/payment"
-            == opbank_spec.paths["/v1/payments/{luawmujp}"]
-            .post.requestBody.content["application/json"]
-            .schema._ref
+        "#/components/schemas/account"
+        == opbank_spec.paths["/accounts/v3/accounts"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema.properties["accounts"]
+        .items._ref
     )
     assert (
-            "#/components/schemas/payment"
-            == opbank_spec.paths["/v1/payments/{luawmujp}"]
-            .post.responses["200"]
-            .content["application/json"]
-            .schema._ref
+        "#/components/schemas/account"
+        == opbank_spec.paths["/accounts/v3/accounts/{lrikubto}"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema._ref
+    )
+
+    assert (
+        "#/components/schemas/payment"
+        == opbank_spec.paths["/v1/payments/{luawmujp}"]
+        .post.requestBody.content["application/json"]
+        .schema._ref
+    )
+    assert (
+        "#/components/schemas/payment"
+        == opbank_spec.paths["/v1/payments/{luawmujp}"]
+        .post.responses["200"]
+        .content["application/json"]
+        .schema._ref
     )
 
 
@@ -188,48 +188,50 @@ def test_responses_exact_match():
     datapaths, updated_specs = spec_normalizer.normalize(spec, entity_config)
     updated_specs = convert_to_openapi(updated_specs)
 
-    assert 2 == len(datapaths)
+    assert 2 == len(datapaths["payment"])
     assert (
-            DataPath(
-                path="/payments",
-                code="200",
-                request=False,
-                method="get",
-                schema_path="$.results.payments[*]",
-            )
-            in datapaths
+        DataPath(
+            path="/payments",
+            code="200",
+            request=False,
+            method="get",
+            schema_path="$.results.payments[*]",
+        )
+        in datapaths["payment"]
     )
     assert (
-            DataPath(
-                path="/payments/{id}",
-                code="200",
-                request=False,
-                method="get",
-                schema_path="$.result.payment",
-            )
-            in datapaths
+        DataPath(
+            path="/payments/{id}",
+            code="200",
+            request=False,
+            method="get",
+            schema_path="$.result.payment",
+        )
+        in datapaths["payment"]
     )
 
-    assert payment_spec == convert_from_openapi(
-        updated_specs.components.schemas["payment"]
+    actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
+
+    assert payment_spec["properties"] == actual_spec["properties"]
+    assert set(payment_spec["required"]) == set(actual_spec["required"])
+
+    assert (
+        "#/components/schemas/payment"
+        == updated_specs.paths["/payments"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema.properties["results"]
+        .properties["payments"]
+        .items._ref
     )
     assert (
-            "#/components/schemas/payment"
-            == updated_specs.paths["/payments"]
-            .get.responses["200"]
-            .content["application/json"]
-            .schema.properties["results"]
-            .properties["payments"]
-            .items._ref
-    )
-    assert (
-            "#/components/schemas/payment"
-            == updated_specs.paths["/payments/{id}"]
-            .get.responses["200"]
-            .content["application/json"]
-            .schema.properties["result"]
-            .properties["payment"]
-            ._ref
+        "#/components/schemas/payment"
+        == updated_specs.paths["/payments/{id}"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema.properties["result"]
+        .properties["payment"]
+        ._ref
     )
 
 
@@ -307,48 +309,50 @@ def test_responses_diff_types():
     datapaths, updated_specs = spec_normalizer.normalize(spec, entity_config)
     updated_specs = convert_to_openapi(updated_specs)
 
-    assert 2 == len(datapaths)
+    assert 2 == len(datapaths["payment"])
     assert (
-            DataPath(
-                path="/payments",
-                code="200",
-                request=False,
-                method="get",
-                schema_path="$.results.payments[*]",
-            )
-            in datapaths
+        DataPath(
+            path="/payments",
+            code="200",
+            request=False,
+            method="get",
+            schema_path="$.results.payments[*]",
+        )
+        in datapaths["payment"]
     )
     assert (
-            DataPath(
-                path="/payments/{id}",
-                code="200",
-                request=False,
-                method="get",
-                schema_path="$.result.payment",
-            )
-            in datapaths
+        DataPath(
+            path="/payments/{id}",
+            code="200",
+            request=False,
+            method="get",
+            schema_path="$.result.payment",
+        )
+        in datapaths["payment"]
     )
 
-    assert payment_spec == convert_from_openapi(
-        updated_specs.components.schemas["payment"]
+    actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
+
+    assert payment_spec["properties"] == actual_spec["properties"]
+    assert set(payment_spec["required"]) == set(actual_spec["required"])
+
+    assert (
+        "#/components/schemas/payment"
+        == updated_specs.paths["/payments"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema.properties["results"]
+        .properties["payments"]
+        .items._ref
     )
     assert (
-            "#/components/schemas/payment"
-            == updated_specs.paths["/payments"]
-            .get.responses["200"]
-            .content["application/json"]
-            .schema.properties["results"]
-            .properties["payments"]
-            .items._ref
-    )
-    assert (
-            "#/components/schemas/payment"
-            == updated_specs.paths["/payments/{id}"]
-            .get.responses["200"]
-            .content["application/json"]
-            .schema.properties["result"]
-            .properties["payment"]
-            ._ref
+        "#/components/schemas/payment"
+        == updated_specs.paths["/payments/{id}"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema.properties["result"]
+        .properties["payment"]
+        ._ref
     )
 
 
@@ -429,48 +433,50 @@ def test_responses_diff_fields():
     datapaths, updated_specs = spec_normalizer.normalize(spec, entity_config)
     updated_specs = convert_to_openapi(updated_specs)
 
-    assert 2 == len(datapaths)
+    assert 2 == len(datapaths["payment"])
     assert (
-            DataPath(
-                path="/payments",
-                code="200",
-                request=False,
-                method="get",
-                schema_path="$.results.payments[*]",
-            )
-            in datapaths
+        DataPath(
+            path="/payments",
+            code="200",
+            request=False,
+            method="get",
+            schema_path="$.results.payments[*]",
+        )
+        in datapaths["payment"]
     )
     assert (
-            DataPath(
-                path="/payments/{id}",
-                code="200",
-                request=False,
-                method="get",
-                schema_path="$.result.payment",
-            )
-            in datapaths
+        DataPath(
+            path="/payments/{id}",
+            code="200",
+            request=False,
+            method="get",
+            schema_path="$.result.payment",
+        )
+        in datapaths["payment"]
     )
 
-    assert payment_spec_single == convert_from_openapi(
-        updated_specs.components.schemas["payment"]
+    actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
+
+    assert payment_spec_single["properties"] == actual_spec["properties"]
+    assert set(payment_spec_single["required"]) == set(actual_spec["required"])
+
+    assert (
+        "#/components/schemas/payment"
+        == updated_specs.paths["/payments"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema.properties["results"]
+        .properties["payments"]
+        .items._ref
     )
     assert (
-            "#/components/schemas/payment"
-            == updated_specs.paths["/payments"]
-            .get.responses["200"]
-            .content["application/json"]
-            .schema.properties["results"]
-            .properties["payments"]
-            .items._ref
-    )
-    assert (
-            "#/components/schemas/payment"
-            == updated_specs.paths["/payments/{id}"]
-            .get.responses["200"]
-            .content["application/json"]
-            .schema.properties["result"]
-            .properties["payment"]
-            ._ref
+        "#/components/schemas/payment"
+        == updated_specs.paths["/payments/{id}"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema.properties["result"]
+        .properties["payment"]
+        ._ref
     )
 
 
@@ -562,78 +568,80 @@ def test_request_response():
     datapaths, updated_specs = spec_normalizer.normalize(spec, entity_config)
     updated_specs = convert_to_openapi(updated_specs)
 
-    assert 4 == len(datapaths)
+    assert 4 == len(datapaths["payment"])
     assert (
-            DataPath(
-                path="/payments",
-                code="200",
-                request=False,
-                method="get",
-                schema_path="$.results.payments[*]",
-            )
-            in datapaths
+        DataPath(
+            path="/payments",
+            code="200",
+            request=False,
+            method="get",
+            schema_path="$.results.payments[*]",
+        )
+        in datapaths["payment"]
     )
     assert (
-            DataPath(
-                path="/payments/{id}",
-                code="200",
-                request=False,
-                method="get",
-                schema_path="$.result.payment",
-            )
-            in datapaths
+        DataPath(
+            path="/payments/{id}",
+            code="200",
+            request=False,
+            method="get",
+            schema_path="$.result.payment",
+        )
+        in datapaths["payment"]
     )
     assert (
-            DataPath(path="/payments", request=True, method="post", schema_path="$")
-            in datapaths
+        DataPath(path="/payments", request=True, method="post", schema_path="$")
+        in datapaths["payment"]
     )
     assert (
-            DataPath(
-                path="/payments",
-                code="200",
-                request=False,
-                method="post",
-                schema_path="$.result.payment",
-            )
-            in datapaths
-    )
-
-    assert payment_spec_single == convert_from_openapi(
-        updated_specs.components.schemas["payment"]
-    )
-    assert (
-            "#/components/schemas/payment"
-            == updated_specs.paths["/payments"]
-            .get.responses["200"]
-            .content["application/json"]
-            .schema.properties["results"]
-            .properties["payments"]
-            .items._ref
+        DataPath(
+            path="/payments",
+            code="200",
+            request=False,
+            method="post",
+            schema_path="$.result.payment",
+        )
+        in datapaths["payment"]
     )
 
+    actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
+
+    assert payment_spec_single["properties"] == actual_spec["properties"]
+    assert set(payment_spec_single["required"]) == set(actual_spec["required"])
+
     assert (
-            "#/components/schemas/payment"
-            == updated_specs.paths["/payments"]
-            .post.responses["200"]
-            .content["application/json"]
-            .schema.properties["result"]
-            .properties["payment"]
-            ._ref
+        "#/components/schemas/payment"
+        == updated_specs.paths["/payments"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema.properties["results"]
+        .properties["payments"]
+        .items._ref
     )
 
     assert (
-            "#/components/schemas/payment"
-            == updated_specs.paths["/payments"]
-            .post.requestBody.content["application/json"]
-            .schema._ref
+        "#/components/schemas/payment"
+        == updated_specs.paths["/payments"]
+        .post.responses["200"]
+        .content["application/json"]
+        .schema.properties["result"]
+        .properties["payment"]
+        ._ref
     )
 
     assert (
-            "#/components/schemas/payment"
-            == updated_specs.paths["/payments/{id}"]
-            .get.responses["200"]
-            .content["application/json"]
-            .schema.properties["result"]
-            .properties["payment"]
-            ._ref
+        "#/components/schemas/payment"
+        == updated_specs.paths["/payments"]
+        .post.requestBody.content["application/json"]
+        .schema._ref
+    )
+
+    assert (
+        "#/components/schemas/payment"
+        == updated_specs.paths["/payments/{id}"]
+        .get.responses["200"]
+        .content["application/json"]
+        .schema.properties["result"]
+        .properties["payment"]
+        ._ref
     )

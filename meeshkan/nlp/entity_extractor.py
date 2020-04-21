@@ -2,19 +2,23 @@ import re
 import typing
 from typing import Sequence
 
-
+from openapi_typed_2 import OpenAPIObject
 from spacy.language import Language
 
 from meeshkan.nlp.ids.gib_detect import GibberishDetector
 from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
+
 from openapi_typed_2 import OpenAPIObject
 from meeshkan.nlp.utils.global_tokenize import camel_case, camel_case_split
 
 
+
 def _make_dict_from_2_lists(list1, list2):
+
     """Make a dictionary from two lists
 
     """
+
     return dict(zip(list1, list2))
 
 
@@ -26,8 +30,10 @@ class EntityExtractorNLP:
     STOP_TAGS = {"VB", "VBD", "VBG", "VBN", "VBP", "VBZ"}
 
     def __init__(self, nlp: Language):
+
         self._nlp = nlp
         self._gib_detector = GibberishDetector()
+
         self._id_detector = IdClassifier()
 
     def tokenize2(
@@ -222,7 +228,7 @@ class EntityExtractorNLP:
             item = path.split("/")[1:]
             count = 0
             for i in item:
-                if i is not "":
+                if i != "":
                     count += 1
             if count > 1:
                 check_path = re.sub(r"\{.*?\}", "id", path)

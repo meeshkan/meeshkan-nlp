@@ -1,8 +1,3 @@
-import pytest
-
-from meeshkan.nlp.entity_extractor import EntityExtractor
-
-
 def test_github(extractor):
     # extractor.train(['/search/users', ])
     assert "user" == extractor.get_entity_from_path("/search/users".split("/")[1:])
