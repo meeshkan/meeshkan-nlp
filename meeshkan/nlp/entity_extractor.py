@@ -3,11 +3,11 @@ import string
 import typing
 from typing import Sequence
 
+from openapi_typed_2 import OpenAPIObject
 from spacy.language import Language
 
 from meeshkan.nlp.ids.gib_detect import GibberishDetector
 from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
-from openapi_typed_2 import OpenAPIObject
 
 
 def _make_dict_from_2_lists(
