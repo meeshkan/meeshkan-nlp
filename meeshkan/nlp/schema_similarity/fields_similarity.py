@@ -1,8 +1,9 @@
 import itertools
-import numpy as np
 import re
 import typing
 from abc import ABC, abstractmethod
+
+import numpy as np
 from spacy.language import Language
 
 
