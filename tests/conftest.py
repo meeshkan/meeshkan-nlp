@@ -54,6 +54,7 @@ def transformer(extractor, analyzer, normalizer):
 def fields_embeddings_similarity(nlp):
     return FieldsEmbeddingsSimilariaty(nlp)
 
+
 @pytest.fixture()
 def accounts_schema(opbank_spec):
     spec_dict = convert_from_openapi(opbank_spec)

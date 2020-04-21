@@ -78,13 +78,12 @@ class FieldsEmbeddingsSimilariaty(FieldsSimilarityBase):
 
     def generate_nlp_vector(self, tokens_list: typing.List):
         tokens_list = self.keep_only_alpha(tokens_list)
-        #tokens_list = self.camel_case_split_list(tokens_list)
+        # tokens_list = self.camel_case_split_list(tokens_list)
         tokens_list = self.convert_lower_list(tokens_list)
         tokens_list = self.find_lemma_list(tokens_list)
         tokens_list = self.remove_duplicate_and_sort(tokens_list)
 
         return self.sentence_vector(tokens_list)
-
 
     def similarity(self, a: typing.Set[str], b: typing.Set[str]) -> float:
         # raise NotImplementedError()
@@ -103,6 +102,6 @@ class FieldsEmbeddingsSimilariaty(FieldsSimilarityBase):
         vec_a = vec_a.reshape(1, a_rows)
         vec_b = vec_b.reshape(1, b_rows)
 
-        distance = pairwise_distances(X=vec_a, Y=vec_b, metric='cosine')
+        distance = pairwise_distances(X=vec_a, Y=vec_b, metric="cosine")
         f_distance = float(distance[0][0])
         return f_distance
