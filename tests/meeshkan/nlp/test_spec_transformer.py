@@ -3,11 +3,11 @@ def test_opbank(transformer, opbank_spec, opbank_recordings):
 
     assert len(res.components.schemas["account"].properties) == 10
 
-    # assert res.components.schemas["account"]._x["x-meeshkan-id-path"] == "accountId"
-    # assert res.components.schemas["payment"]._x["x-meeshkan-id-path"] == "paymentId"
-    #
-    # assert 5 == len(res._x["x-meeshkan-data"]["account"])
-    # assert 1 == len(res._x["x-meeshkan-data"]["payment"])
+    assert res.components.schemas["account"]._x["x-meeshkan-id-path"] == "accountId"
+    assert res.components.schemas["payment"]._x["x-meeshkan-id-path"] == "paymentId"
+
+    assert 18 == len(res._x["x-meeshkan-data"]["account"])
+    assert 1 == len(res._x["x-meeshkan-data"]["payment"])
 
     assert (
         "upsert" == res.paths["/v1/payments/{luawmujp}"].post._x["x-meeshkan-operation"]

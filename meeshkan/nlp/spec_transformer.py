@@ -1,15 +1,14 @@
 import typing
-from collections import defaultdict
 
 from http_types import HttpExchange
+from jsonpath_rw import parse
+from openapi_typed_2 import OpenAPIObject, convert_from_openapi, convert_to_openapi
 
 from meeshkan.nlp.data_extractor import DataExtractor
 from meeshkan.nlp.entity_extractor import EntityExtractor
 from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
-from meeshkan.nlp.ids.paths import path_to_regex
 from meeshkan.nlp.operation_classifier import OperationClassifier
 from meeshkan.nlp.spec_normalizer import SpecNormalizer
-from openapi_typed_2 import OpenAPIObject, convert_from_openapi, convert_to_openapi
 
 
 class SpecTransformer:
@@ -34,54 +33,19 @@ class SpecTransformer:
         spec_dict = convert_from_openapi(spec)
         datapaths, spec_dict = self._normalizer.normalize(spec_dict, entity_paths)
 
-        grouped_records = self._group_records(spec_dict, recordings)
+        grouped_records = self._data_extractor.group_records(spec_dict, recordings)
         spec_dict = self._replace_path_ids(spec_dict, grouped_records)
 
         spec_dict = self._operation_classifier.fill_operations(spec_dict)
-        data = self._data_extractor.extract_data(datapaths, ((pathname, val[1]) for pathname, val in grouped_records.items()))
-
+        data = self._data_extractor.extract_data(datapaths, grouped_records)
+        spec_dict = self._add_entity_ids(spec_dict, data)
+        spec_dict = self._inject_data(spec_dict, data)
         return convert_to_openapi(spec_dict)
 
-    def _group_records(self, spec: typing.Dict, recordings: typing.List[HttpExchange]):
-        path_regexs = [
-            (pathname, *path_to_regex(pathname)) for pathname in spec["paths"].keys()
-        ]
-
-        res = {
-            pathname: (
-                {param_name: [] for param_name in parameter_names},
-                list(),
-                parameter_names,
-            )
-            for pathname, path_regex, parameter_names in path_regexs
-        }
-
-        for rec in recordings:
-            for pathname, path_regex, parameter_names in path_regexs:
-                values = self._match_to_path(path_regex, rec.request.pathname)
-                if values is not None:
-                    res[pathname][1].append(rec)
-                    for name, value in zip(parameter_names, values):
-                        res[pathname][0][name].append(value)
-                    break
-
-        return res
-
-    def _match_to_path(
-        self, path_as_regex, request_path: str
-    ) -> typing.Optional[typing.Mapping[str, typing.Any]]:
-        match = path_as_regex.match(request_path)
-
-        if match is None:
-            return None
-
-        captures = match.groups()
-        return captures
-
     def _replace_path_ids(self, spec, grouped_records):
-        for pathname, (values, recs, parameter_names) in grouped_records.items():
-            for param in reversed(parameter_names):
-                res = self._id_classifier.by_values(values[param])
+        for pathname, path_record in grouped_records.items():
+            for param in reversed(path_record.path_args):
+                res = self._id_classifier.by_values(path_record.path_arg_values[param])
                 if res != IdType.UNKNOWN:
                     path_item = spec["paths"].pop(pathname)
 
@@ -96,3 +60,31 @@ class SpecTransformer:
                     break
 
         return spec
+
+    def _add_entity_ids(self, spec_dict, data):
+        for name, values in data.items():
+            schema = spec_dict["components"]["schemas"][name]
+            for property in schema["properties"]:
+                if self._id_classifier.by_name(property):
+                    res = self._id_classifier.by_values(
+                        (v[property] for v in values if property in v)
+                    )
+                    if res != IdType.UNKNOWN:
+                        schema["x-meeshkan-id-path"] = property
+                        break
+
+        return spec_dict
+
+    def _inject_data(self, spec_dict, data):
+        spec_dict["x-meeshkan-data"] = {}
+        for name, values in data.items():
+            expr = parse(spec_dict["components"]["schemas"][name]["x-meeshkan-id-path"])
+            injected_values = dict()
+            for val in values:
+                idx = expr.find(val)
+                if len(idx) > 0:
+                    injected_values[idx[0].value] = val
+
+            spec_dict["x-meeshkan-data"][name] = list(injected_values.values())
+
+        return spec_dict

@@ -1,12 +1,12 @@
 import itertools
 import typing
 from collections import defaultdict
-
 from dataclasses import asdict
+
+from openapi_typed_2 import convert_from_openapi, dataclass
 
 from meeshkan.nlp.schema_merger import SchemaMerger
 from meeshkan.nlp.schema_similarity.fields_similarity import FieldsIOUSimilariaty
-from openapi_typed_2 import convert_from_openapi, dataclass
 
 
 def split_schema(schema):
@@ -62,11 +62,11 @@ class SpecNormalizer:
 
     def normalize(
         self, spec: typing.Dict, entity_config: typing.Dict[str, typing.Sequence]
-    ) -> typing.Tuple[typing.Dict[str, typing.Sequence[DataPath]], typing.Dict]:
+    ) -> typing.Tuple[typing.Dict[str, typing.List[DataPath]], typing.Dict]:
         """Builds the #ref components in an OpenAPI object by understanding similar nested
         sructures for a set of paths.
         """
-        datapaths: typing.Dict[str, typing.List[DataPath]] = defaultdict(list)
+        datapaths = defaultdict(list)
 
         for entity_name, paths in entity_config.items():
             entity_datapaths, spec = self._replace_entity(spec, entity_name, paths)
