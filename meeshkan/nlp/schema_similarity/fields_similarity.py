@@ -1,11 +1,9 @@
 import itertools
+import numpy as np
+import re
 import typing
 from abc import ABC, abstractmethod
 from spacy.language import Language
-import typing
-import re
-import numpy as np
-from sklearn.metrics.pairwise import pairwise_distances
 
 
 class FieldsSimilarityBase(ABC):
@@ -85,6 +83,9 @@ class FieldsEmbeddingsSimilariaty(FieldsSimilarityBase):
 
         return self.sentence_vector(tokens_list)
 
+    def cosine_distance(self, a, b):
+        return 1 - a.dot(b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
     def similarity(self, a: typing.Set[str], b: typing.Set[str]) -> float:
         # raise NotImplementedError()
 
@@ -96,12 +97,6 @@ class FieldsEmbeddingsSimilariaty(FieldsSimilarityBase):
         vec_a = self.generate_nlp_vector(list(a))
         vec_b = self.generate_nlp_vector(list(b))
 
-        a_rows = vec_a.shape[0]
-        b_rows = vec_b.shape[0]
-
-        vec_a = vec_a.reshape(1, a_rows)
-        vec_b = vec_b.reshape(1, b_rows)
-
-        distance = pairwise_distances(X=vec_a, Y=vec_b, metric="cosine")
-        f_distance = float(distance[0][0])
+        distance = self.cosine_distance(vec_a, vec_b)
+        f_distance = float(distance)
         return f_distance
