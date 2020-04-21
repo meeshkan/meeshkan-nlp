@@ -1,4 +1,5 @@
 import typing
+from operator import itemgetter
 
 from http_types import HttpExchange
 from jsonpath_rw import parse
@@ -64,14 +65,20 @@ class SpecTransformer:
     def _add_entity_ids(self, spec_dict, data):
         for name, values in data.items():
             schema = spec_dict["components"]["schemas"][name]
+            potential_ids = []
             for property in schema["properties"]:
-                if self._id_classifier.by_name(property):
+                name_score = self._id_classifier.by_name(name, property)
+                if name_score > 0:
                     res = self._id_classifier.by_values(
                         (v[property] for v in values if property in v)
                     )
                     if res != IdType.UNKNOWN:
-                        schema["x-meeshkan-id-path"] = property
-                        break
+                        potential_ids.append((property, res, name_score))
+
+            if len(potential_ids) > 0:
+                idx = max(potential_ids, key=itemgetter(2))
+                schema["x-meeshkan-id-path"] = idx[0]
+                schema["x-meeshkan-id-type"] = idx[1].value
 
         return spec_dict
 
