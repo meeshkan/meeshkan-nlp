@@ -54,7 +54,6 @@ DEV = BUNDLE_REQUIREMENTS + [
 
 VERSION = "0.0.1"
 
-ENTRY_POINTS = ["meeshkan = meeshkan.__main__:cli"]
 
 EXTRAS = dict(**BUNDLES, dev=DEV)
 
@@ -232,7 +231,6 @@ setup(
         "Operating System :: OS Independent",
     ],
     zip_safe=False,
-    entry_points={"console_scripts": ENTRY_POINTS},
     cmdclass={
         "dist": BuildDistCommand,
         "format": FormatCommand,

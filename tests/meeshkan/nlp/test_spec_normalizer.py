@@ -22,7 +22,7 @@ def test_opbank(opbank_spec):
     account_schema = convert_from_openapi(opbank_spec.components.schemas["account"])
     payment_schema = convert_from_openapi(opbank_spec.components.schemas["payment"])
 
-    assert 4 == len(datapaths)
+    assert 2 == len(datapaths)
     assert (
         DataPath(
             path="/accounts/v3/accounts/{lrikubto}",
@@ -31,7 +31,7 @@ def test_opbank(opbank_spec):
             method="get",
             schema_path="$",
         )
-        in datapaths
+        in datapaths["account"]
     )
     assert (
         DataPath(
@@ -41,7 +41,7 @@ def test_opbank(opbank_spec):
             method="get",
             schema_path="$.accounts[*]",
         )
-        in datapaths
+        in datapaths["account"]
     )
     assert (
         DataPath(
@@ -51,13 +51,13 @@ def test_opbank(opbank_spec):
             method="post",
             schema_path="$",
         )
-        in datapaths
+        in datapaths["payment"]
     )
     assert (
         DataPath(
             path="/v1/payments/{luawmujp}", request=True, method="post", schema_path="$"
         )
-        in datapaths
+        in datapaths["payment"]
     )
 
     assert "accountId" in account_schema["properties"]
@@ -188,7 +188,7 @@ def test_responses_exact_match():
     datapaths, updated_specs = spec_normalizer.normalize(spec, entity_config)
     updated_specs = convert_to_openapi(updated_specs)
 
-    assert 2 == len(datapaths)
+    assert 2 == len(datapaths["payment"])
     assert (
         DataPath(
             path="/payments",
@@ -197,7 +197,7 @@ def test_responses_exact_match():
             method="get",
             schema_path="$.results.payments[*]",
         )
-        in datapaths
+        in datapaths["payment"]
     )
     assert (
         DataPath(
@@ -207,7 +207,7 @@ def test_responses_exact_match():
             method="get",
             schema_path="$.result.payment",
         )
-        in datapaths
+        in datapaths["payment"]
     )
 
     actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
@@ -309,7 +309,7 @@ def test_responses_diff_types():
     datapaths, updated_specs = spec_normalizer.normalize(spec, entity_config)
     updated_specs = convert_to_openapi(updated_specs)
 
-    assert 2 == len(datapaths)
+    assert 2 == len(datapaths["payment"])
     assert (
         DataPath(
             path="/payments",
@@ -318,7 +318,7 @@ def test_responses_diff_types():
             method="get",
             schema_path="$.results.payments[*]",
         )
-        in datapaths
+        in datapaths["payment"]
     )
     assert (
         DataPath(
@@ -328,7 +328,7 @@ def test_responses_diff_types():
             method="get",
             schema_path="$.result.payment",
         )
-        in datapaths
+        in datapaths["payment"]
     )
 
     actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
@@ -433,7 +433,7 @@ def test_responses_diff_fields():
     datapaths, updated_specs = spec_normalizer.normalize(spec, entity_config)
     updated_specs = convert_to_openapi(updated_specs)
 
-    assert 2 == len(datapaths)
+    assert 2 == len(datapaths["payment"])
     assert (
         DataPath(
             path="/payments",
@@ -442,7 +442,7 @@ def test_responses_diff_fields():
             method="get",
             schema_path="$.results.payments[*]",
         )
-        in datapaths
+        in datapaths["payment"]
     )
     assert (
         DataPath(
@@ -452,7 +452,7 @@ def test_responses_diff_fields():
             method="get",
             schema_path="$.result.payment",
         )
-        in datapaths
+        in datapaths["payment"]
     )
 
     actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
@@ -568,7 +568,7 @@ def test_request_response():
     datapaths, updated_specs = spec_normalizer.normalize(spec, entity_config)
     updated_specs = convert_to_openapi(updated_specs)
 
-    assert 4 == len(datapaths)
+    assert 4 == len(datapaths["payment"])
     assert (
         DataPath(
             path="/payments",
@@ -577,7 +577,7 @@ def test_request_response():
             method="get",
             schema_path="$.results.payments[*]",
         )
-        in datapaths
+        in datapaths["payment"]
     )
     assert (
         DataPath(
@@ -587,11 +587,11 @@ def test_request_response():
             method="get",
             schema_path="$.result.payment",
         )
-        in datapaths
+        in datapaths["payment"]
     )
     assert (
         DataPath(path="/payments", request=True, method="post", schema_path="$")
-        in datapaths
+        in datapaths["payment"]
     )
     assert (
         DataPath(
@@ -601,7 +601,7 @@ def test_request_response():
             method="post",
             schema_path="$.result.payment",
         )
-        in datapaths
+        in datapaths["payment"]
     )
 
     actual_spec = convert_from_openapi(updated_specs.components.schemas["payment"])
