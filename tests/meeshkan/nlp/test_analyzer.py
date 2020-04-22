@@ -1,4 +1,3 @@
-import pytest
 
 from meeshkan.nlp.ids.id_classifier import IdType
 

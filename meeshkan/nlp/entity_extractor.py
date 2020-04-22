@@ -2,7 +2,6 @@ import re
 import typing
 from typing import Sequence
 
-from openapi_typed_2 import OpenAPIObject
 from spacy.language import Language
 
 from meeshkan.nlp.ids.gib_detect import GibberishDetector

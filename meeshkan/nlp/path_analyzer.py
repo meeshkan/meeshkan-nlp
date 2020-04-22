@@ -1,7 +1,7 @@
-import re
+
 from dataclasses import dataclass
 from typing import Optional
-import spacy
+
 
 from meeshkan.nlp.entity_extractor import EntityExtractor
 from meeshkan.nlp.ids.gib_detect import GibberishDetector

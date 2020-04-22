@@ -13,10 +13,10 @@ def camel_case(example: str) -> bool:
     Return:
         True or False
     """
-    if any(x in example for x in string.punctuation) == True:
+    if any(x in example for x in string.punctuation):
         return False
     else:
-        if any(list(map(str.isupper, example[1:-1]))) == True:
+        if any(list(map(str.isupper, example[1:-1]))):
             return True
         else:
             return False
