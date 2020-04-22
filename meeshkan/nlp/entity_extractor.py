@@ -7,7 +7,7 @@ from spacy.language import Language
 from meeshkan.nlp.ids.gib_detect import GibberishDetector
 from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
 
-
+from collections import defaultdict
 from openapi_typed_2 import OpenAPIObject
 from meeshkan.nlp.utils.global_tokenize import camel_case, camel_case_split
 
@@ -17,15 +17,11 @@ def _make_dict_from_2_lists(list1, list2):
     """Make a dictionary from two lists
 
     """
+    dict = defaultdict(list)
+    for i in range(len(list1)):
+        dict[list1[i]].append(list2[i])
 
-    # return dict(zip(list1, list2))
-    dict_1 = {}
-    for key, value in zip(list1, list2):
-        if key not in dict_1:
-            dict_1[key] = [value]
-        else:
-            dict_1[key].append(value)
-    return dict_1
+    return dict
 
 
 class EntityExtractorNLP:
