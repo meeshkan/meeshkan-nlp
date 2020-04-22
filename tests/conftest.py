@@ -1,13 +1,14 @@
 import json
 
-import pytest
 import spacy
 from http_types import HttpExchangeReader
 from openapi_typed_2 import convert_from_openapi, convert_to_openapi
 
+import pytest
 from meeshkan.nlp.entity_extractor import EntityExtractor
 from meeshkan.nlp.ids.id_classifier import IdClassifier
 from meeshkan.nlp.path_analyzer import PathAnalyzer
+from meeshkan.nlp.schema_similarity.fields_similarity import FieldsEmbeddingsSimilariaty
 from meeshkan.nlp.spec_normalizer import SpecNormalizer
 from meeshkan.nlp.spec_transformer import SpecTransformer
 
@@ -47,6 +48,11 @@ def normalizer():
 @pytest.fixture(scope="session")
 def transformer(extractor, analyzer, normalizer):
     return SpecTransformer(extractor, analyzer, normalizer, IdClassifier())
+
+
+@pytest.fixture(scope="session")
+def fields_embeddings_similarity(nlp):
+    return FieldsEmbeddingsSimilariaty(nlp)
 
 
 @pytest.fixture()
