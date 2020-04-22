@@ -99,7 +99,7 @@ class SpecTransformer:
         return spec_dict
 
 
-def spec_transformer() -> SpecTransformer:
+def instance() -> SpecTransformer:
     nlp = spacy.load("en_core_web_lg")
     extractor = EntityExtractor(nlp)
     path_analyzer = PathAnalyzer(extractor)
