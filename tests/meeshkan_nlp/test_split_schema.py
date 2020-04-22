@@ -40,15 +40,15 @@ def test_split_schema():
         },
     }
 
-    res = split_schema(schema_array)
+    res = {path: (spec, fields) for path, spec, fields in split_schema(schema_array)}
 
     assert 4 == len(res)
 
-    assert {"results"} == res[("root",)]
-    assert {"metadata", "payments"} == res[("root", "properties", "results")]
+    assert {"results"} == res[("root",)][1]
+    assert {"metadata", "payments"} == res[("root", "properties", "results")][1]
     assert {"page_number", "more_results"} == res[
         ("root", "properties", "results", "properties", "metadata")
-    ]
+    ][1]
     assert 9 == len(
-        res[("root", "properties", "results", "properties", "payments", "items")]
+        res[("root", "properties", "results", "properties", "payments", "items")][1]
     )
