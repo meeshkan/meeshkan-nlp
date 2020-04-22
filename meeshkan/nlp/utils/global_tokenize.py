@@ -35,12 +35,12 @@ def camel_case_split(s: str) -> Sequence[str]:
         """
     idx = list(map(str.isupper, s))
     # mark change of case
-    l = [0]
+    change_of_case = [0]
     for (i, (x, y)) in enumerate(zip(idx, idx[1:])):
         if x and not y:  # "Ul"
-            l.append(i)
+            change_of_case.append(i)
         elif not x and y:  # "lU"
-            l.append(i + 1)
-    l.append(len(s))
+            change_of_case.append(i + 1)
+    change_of_case.append(len(s))
     # for "lUl", index of "U" will pop twice, have to filer it
-    return [s[x:y] for x, y in zip(l, l[1:]) if x < y]
+    return [s[x:y] for x, y in zip(change_of_case, change_of_case[1:]) if x < y]
