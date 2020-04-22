@@ -1,6 +1,7 @@
 import string
 from typing import Sequence
 
+
 def camel_case(example: str) -> bool:
     """This fubction recognize camel case.
 

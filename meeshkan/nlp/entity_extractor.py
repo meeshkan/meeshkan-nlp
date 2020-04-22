@@ -13,14 +13,13 @@ from openapi_typed_2 import OpenAPIObject
 from meeshkan.nlp.utils.global_tokenize import camel_case, camel_case_split
 
 
-
 def _make_dict_from_2_lists(list1, list2):
 
     """Make a dictionary from two lists
 
     """
 
-   # return dict(zip(list1, list2))
+    # return dict(zip(list1, list2))
     dict_1 = {}
     for key, value in zip(list1, list2):
         if key not in dict_1:
@@ -28,9 +27,6 @@ def _make_dict_from_2_lists(list1, list2):
         else:
             dict_1[key].append(value)
     return dict_1
-
-
-
 
 
 class EntityExtractorNLP:
@@ -44,9 +40,7 @@ class EntityExtractorNLP:
 
         self._id_detector = IdClassifier()
 
-    def tokenize2(
-        self, path_list: list
-    ) -> Sequence[str]:
+    def tokenize2(self, path_list: list) -> Sequence[str]:
         """This function tokenize list of words and remove potential ids .
 
             Example:
@@ -110,9 +104,7 @@ class EntityExtractorNLP:
         path_lists.append(path_list)
         return path_list
 
-    def get_entity_from_path(
-        self, p_list: list
-    ) -> str:
+    def get_entity_from_path(self, p_list: list) -> str:
         """This function return lemmatized entity from the path.
 
         Example:
@@ -246,4 +238,3 @@ class EntityExtractorNLP:
 
 
 EntityExtractor = EntityExtractorNLP
-
