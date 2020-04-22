@@ -61,7 +61,7 @@ class SpecNormalizer:
         self._schema_merger = SchemaMerger()
 
     def normalize(
-        self, spec: typing.Dict, entity_config: typing.Dict[str, typing.Sequence]
+        self, spec: typing.Dict, entity_config: typing.Mapping[str, typing.Sequence]
     ) -> typing.Tuple[typing.Dict[str, typing.List[DataPath]], typing.Dict]:
         """Builds the #ref components in an OpenAPI object by understanding similar nested
         sructures for a set of paths.
