@@ -1,6 +1,7 @@
 import typing
 from operator import itemgetter
 
+import spacy
 from http_types import HttpExchange
 from jsonpath_rw import parse
 from openapi_typed_2 import OpenAPIObject, convert_from_openapi, convert_to_openapi
@@ -9,16 +10,17 @@ from meeshkan_nlp.data_extractor import DataExtractor
 from meeshkan_nlp.entity_extractor import EntityExtractor
 from meeshkan_nlp.ids.id_classifier import IdClassifier, IdType
 from meeshkan_nlp.operation_classifier import OperationClassifier
+from meeshkan_nlp.path_analyzer import PathAnalyzer
 from meeshkan_nlp.spec_normalizer import SpecNormalizer
 
 
 class SpecTransformer:
     def __init__(
-        self,
-        extractor: EntityExtractor,
-        path_analyzer,
-        normalizer: SpecNormalizer,
-        id_classifier: IdClassifier,
+            self,
+            extractor: EntityExtractor,
+            path_analyzer: PathAnalyzer,
+            normalizer: SpecNormalizer,
+            id_classifier: IdClassifier,
     ):
         self._extractor = extractor
         self._path_analyzer = path_analyzer
@@ -28,7 +30,7 @@ class SpecTransformer:
         self._data_extractor = DataExtractor()
 
     def optimize_spec(
-        self, spec: OpenAPIObject, recordings: typing.List[HttpExchange]
+            self, spec: OpenAPIObject, recordings: typing.List[HttpExchange]
     ) -> OpenAPIObject:
         entity_paths = self._extractor.get_entity_from_spec(spec)
         spec_dict = convert_from_openapi(spec)
@@ -95,3 +97,12 @@ class SpecTransformer:
             spec_dict["x-meeshkan-data"][name] = list(injected_values.values())
 
         return spec_dict
+
+
+def spec_transformer() -> SpecTransformer:
+    nlp = spacy.load("en_core_web_lg")
+    extractor = EntityExtractor(nlp)
+    path_analyzer = PathAnalyzer(extractor)
+    normalizer = SpecNormalizer()
+    id_classifier = IdClassifier()
+    return SpecTransformer(extractor, path_analyzer, normalizer, id_classifier)
