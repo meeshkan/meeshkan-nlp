@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional
 
-
-from meeshkan.nlp.entity_extractor import EntityExtractor
-from meeshkan.nlp.ids.gib_detect import GibberishDetector
-from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
+from meeshkan_nlp.entity_extractor import EntityExtractor
+from meeshkan_nlp.ids.gib_detect import GibberishDetector
+from meeshkan_nlp.ids.id_classifier import IdClassifier, IdType
 
 
 @dataclass(frozen=True)

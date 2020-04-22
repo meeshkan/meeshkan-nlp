@@ -1,4 +1,4 @@
-from meeshkan.nlp.operation_classifier import OperationClassifier
+from meeshkan_nlp.operation_classifier import OperationClassifier
 from tests.utils import add_item, spec_dict
 
 

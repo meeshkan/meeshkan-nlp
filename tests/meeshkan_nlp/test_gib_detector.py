@@ -1,4 +1,4 @@
-from meeshkan.nlp.ids.gib_detect import GibberishDetector
+from meeshkan_nlp.ids.gib_detect import GibberishDetector
 
 
 def test_gib_detector():

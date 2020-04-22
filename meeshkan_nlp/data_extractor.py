@@ -5,8 +5,8 @@ from dataclasses import dataclass
 from http_types import HttpExchange
 from jsonpath_rw import parse
 
-from meeshkan.nlp.ids.paths import path_to_regex
-from meeshkan.nlp.spec_normalizer import DataPath
+from meeshkan_nlp.ids.paths import path_to_regex
+from meeshkan_nlp.spec_normalizer import DataPath
 
 
 @dataclass(frozen=True)

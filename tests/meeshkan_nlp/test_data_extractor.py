@@ -2,8 +2,8 @@ import json
 
 from http_types import HttpExchangeBuilder
 
-from meeshkan.nlp.data_extractor import DataExtractor
-from meeshkan.nlp.spec_normalizer import DataPath
+from meeshkan_nlp.data_extractor import DataExtractor
+from meeshkan_nlp.spec_normalizer import DataPath
 
 
 def test_group_records():

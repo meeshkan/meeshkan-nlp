@@ -5,11 +5,11 @@ from http_types import HttpExchange
 from jsonpath_rw import parse
 from openapi_typed_2 import OpenAPIObject, convert_from_openapi, convert_to_openapi
 
-from meeshkan.nlp.data_extractor import DataExtractor
-from meeshkan.nlp.entity_extractor import EntityExtractor
-from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
-from meeshkan.nlp.operation_classifier import OperationClassifier
-from meeshkan.nlp.spec_normalizer import SpecNormalizer
+from meeshkan_nlp.data_extractor import DataExtractor
+from meeshkan_nlp.entity_extractor import EntityExtractor
+from meeshkan_nlp.ids.id_classifier import IdClassifier, IdType
+from meeshkan_nlp.operation_classifier import OperationClassifier
+from meeshkan_nlp.spec_normalizer import SpecNormalizer
 
 
 class SpecTransformer:

@@ -5,8 +5,8 @@ from dataclasses import asdict
 
 from openapi_typed_2 import convert_from_openapi, dataclass
 
-from meeshkan.nlp.schema_merger import SchemaMerger
-from meeshkan.nlp.schema_similarity.fields_similarity import FieldsIOUSimilariaty
+from meeshkan_nlp.schema_merger import SchemaMerger
+from meeshkan_nlp.schema_similarity.fields_similarity import FieldsIOUSimilariaty
 
 
 def split_schema(schema):

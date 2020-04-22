@@ -1,6 +1,6 @@
 import math
 
-from meeshkan.nlp.schema_similarity.fields_similarity import FieldsIOUSimilariaty
+from meeshkan_nlp.schema_similarity.fields_similarity import FieldsIOUSimilariaty
 
 
 def test_iou_similarity_pair():

@@ -1,4 +1,4 @@
-from meeshkan.nlp.ids.id_classifier import IdType
+from meeshkan_nlp.ids.id_classifier import IdType
 
 
 def test_github(analyzer):

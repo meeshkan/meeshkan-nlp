@@ -3,7 +3,7 @@ import typing
 import uuid
 from enum import Enum
 
-from meeshkan.nlp.ids.gib_detect import GibberishDetector
+from meeshkan_nlp.ids.gib_detect import GibberishDetector
 
 
 class IdType(Enum):

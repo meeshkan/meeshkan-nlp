@@ -1,16 +1,14 @@
 import re
 import typing
+from collections import defaultdict
 from typing import Sequence
 
 from openapi_typed_2 import OpenAPIObject
 from spacy.language import Language
 
-from meeshkan.nlp.ids.gib_detect import GibberishDetector
-from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
-
-from collections import defaultdict
-from openapi_typed_2 import OpenAPIObject
-from meeshkan.nlp.utils.global_tokenize import camel_case, camel_case_split
+from meeshkan_nlp.global_tokenize import camel_case, camel_case_split
+from meeshkan_nlp.ids.gib_detect import GibberishDetector
+from meeshkan_nlp.ids.id_classifier import IdClassifier, IdType
 
 
 def _make_dict_from_2_lists(list1, list2):

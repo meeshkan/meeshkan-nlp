@@ -1,6 +1,6 @@
 import uuid
 
-from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
+from meeshkan_nlp.ids.id_classifier import IdClassifier, IdType
 
 
 def test_by_value():  # TODO Maria linearize it avoiding cycles

@@ -1,8 +1,4 @@
-import pytest
-
-from meeshkan.nlp.spec_normalizer import split_schema
-
-pytestmark = pytest.mark.skip()
+from meeshkan_nlp.spec_normalizer import split_schema
 
 
 def test_split_schema():

@@ -5,9 +5,9 @@ from shutil import rmtree
 from setuptools import Command, errors, find_packages, setup
 
 # Package meta-data.
-NAME = "Mem NLP"
+NAME = "meeshkan-nlp"
 DESCRIPTION = "Reverse engineer services with NLP"
-URL = "http://github.com/meeshkan/mem-nlp"
+URL = "http://github.com/meeshkan/meeshkan-nlp"
 EMAIL = "dev@meeshkan.com"
 AUTHOR = "Meeshkan Dev Team"
 REQUIRES_PYTHON = ">=3.6.0"
