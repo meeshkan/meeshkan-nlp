@@ -14,10 +14,7 @@ from meeshkan.nlp.utils.global_tokenize import camel_case, camel_case_split
 
 def _make_dict_from_2_lists(list1, list2):
 
-    """Make a dictionary from two lists
-
-    """
-    dict = defaultdict(list)
+    dict: typing.Dict[str, typing.Sequence[typing.Any]] = defaultdict(list)
     for i in range(len(list1)):
         dict[list1[i]].append(list2[i])
 
