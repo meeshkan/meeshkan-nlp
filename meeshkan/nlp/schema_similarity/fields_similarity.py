@@ -84,20 +84,14 @@ class FieldsEmbeddingsSimilariaty(FieldsSimilarityBase):
 
         return self.sentence_vector(tokens_list)
 
-    def cosine_distance(self, a, b):
-        return 1 - a.dot(b) / (np.linalg.norm(a) * np.linalg.norm(b))
+    def cosine_similarity(self, a, b):
+        return a.dot(b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
     def similarity(self, a: typing.Set[str], b: typing.Set[str]) -> float:
-        # raise NotImplementedError()
-
-        if len(a) == 0:
-            raise ValueError("Input set of fields 'a' is empty")
-        if len(b) == 0:
-            raise ValueError("Input set of fields 'b' is empty")
 
         vec_a = self.generate_nlp_vector(list(a))
         vec_b = self.generate_nlp_vector(list(b))
 
-        distance = self.cosine_distance(vec_a, vec_b)
-        f_distance = float(distance)
-        return f_distance
+        similarity = self.cosine_similarity(vec_a, vec_b)
+
+        return float(similarity)

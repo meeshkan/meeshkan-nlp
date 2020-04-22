@@ -20,7 +20,7 @@ def nlp():
 
 @pytest.fixture()
 def opbank_spec():
-    with open("tests/r" "esources/op_spec.json") as f:
+    with open("tests/resources/op_spec.json") as f:
         return convert_to_openapi(json.load(f))
 
 
