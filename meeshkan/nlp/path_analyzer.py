@@ -8,6 +8,7 @@ from meeshkan.nlp.ids.gib_detect import GibberishDetector
 from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
 
 
+
 @dataclass(frozen=True)
 class IdDesc:
     value: Optional[str]
