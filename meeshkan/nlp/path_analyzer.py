@@ -30,7 +30,7 @@ class PathAnalyzer:
     def extract_values(self, path):
         path_list = path.split("/")[1:]
         entity_name = self._entity_extractor.get_entity_from_path(path_list)
-        entity_position=0
+        entity_position = 0
         for word in path_list:
             if entity_name in word:
                 entity_position = path_list.index(word)
