@@ -1,5 +1,3 @@
-import pytest
-
 from meeshkan.nlp.ids.id_classifier import IdType
 
 
@@ -28,8 +26,6 @@ def test_opbank(analyzer):
     )  # TODO Maria Compare enum values instead of strings
 
 
-# TODO Maria fix the test
-@pytest.mark.skip()
 def test_transferwise(analyzer):
     path_item1 = analyzer.extract_values(
         "/v3/profiles/saf45gdrg4gsdf/transfers/sdfsr456ygh56ujhgf/payments"
@@ -43,7 +39,7 @@ def test_transferwise(analyzer):
     )
     assert "estimate" == path_item2.entity
     assert "GcfU8g0c_pxJXR8spP3uc4jMX" == path_item2.id.value
-    assert "gib" == path_item2.id.type.name
+    assert "RANDOM" == path_item2.id.type.name
 
     path_item3 = analyzer.extract_values("/v1/borderless-accounts")
     assert "account" == path_item3.entity
