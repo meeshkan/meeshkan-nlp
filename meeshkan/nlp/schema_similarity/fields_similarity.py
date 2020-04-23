@@ -4,6 +4,7 @@ import typing
 from abc import ABC, abstractmethod
 
 import numpy as np
+from meeshkan.nlp.tokenize import camel_case_split_list
 from spacy.language import Language
 
 
@@ -77,7 +78,7 @@ class FieldsEmbeddingsSimilariaty(FieldsSimilarityBase):
 
     def generate_nlp_vector(self, tokens_list: typing.List):
         tokens_list = self.keep_only_alpha(tokens_list)
-        # tokens_list = self.camel_case_split_list(tokens_list)
+        tokens_list = camel_case_split_list(tokens_list)
         tokens_list = self.convert_lower_list(tokens_list)
         tokens_list = self.find_lemma_list(tokens_list)
         tokens_list = self.remove_duplicate_and_sort(tokens_list)

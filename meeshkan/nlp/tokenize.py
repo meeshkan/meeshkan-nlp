@@ -1,5 +1,5 @@
 import string
-from typing import Sequence
+from typing import List, Sequence
 
 
 def camel_case(example: str) -> bool:
@@ -44,3 +44,24 @@ def camel_case_split(s: str) -> Sequence[str]:
     change_of_case.append(len(s))
     # for "lUl", index of "U" will pop twice, have to filer it
     return [s[x:y] for x, y in zip(change_of_case, change_of_case[1:]) if x < y]
+
+
+def camel_case_split_list(tokens_list: List[str]) -> List[str]:
+    """This function split list of camel case words into pieces.
+
+        Example:
+
+        >>> _camel_case_split_list(['BodyAsJson', 'isBody'])
+        ['Body', 'As', 'Json', 'is', 'Body']
+
+        Return:
+            List
+        """
+    list_of_words = []
+    for word in tokens_list:
+        if camel_case(word):
+            list_of_words += camel_case_split(word)
+        else:
+            list_of_words.append(word)
+
+    return list_of_words
