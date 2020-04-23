@@ -4,7 +4,7 @@ import typing
 from abc import ABC, abstractmethod
 
 import numpy as np
-from meeshkan.nlp.utils.global_tokenize import camel_case_split_list
+from meeshkan.nlp.tokenize import camel_case_split_list
 from spacy.language import Language
 
 
