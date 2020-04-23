@@ -9,7 +9,7 @@ from meeshkan.nlp.ids.id_classifier import IdClassifier, IdType
 
 from collections import defaultdict
 from openapi_typed_2 import OpenAPIObject
-from meeshkan.nlp.utils.global_tokenize import camel_case, camel_case_split
+from meeshkan.nlp.tokenize import camel_case, camel_case_split
 
 
 def _make_dict_from_2_lists(list1, list2):
