@@ -11,7 +11,7 @@ def test_opbank(analyzer):
     path_item1 = analyzer.extract_values("/v1/payments/confirm")
     assert "payment" == path_item1.entity
     assert path_item1.id is None
-    # assert path_item1.id is None
+  
 
     path_item2 = analyzer.extract_values(
         "/accounts/v3/accounts/GcfU8g0c_pxJXR8spP3uc4jMXRwalQyIDwj820w8-TY.8vlH6Nvrzd0fFiaSD6U4_Q.hR3Bjufb_ZzypZXU707zJg"
@@ -23,7 +23,7 @@ def test_opbank(analyzer):
     )
     assert (
         IdType.RANDOM == path_item2.id.type
-    )  # TODO Maria Compare enum values instead of strings
+    )  
 
 
 def test_transferwise(analyzer):
@@ -44,11 +44,11 @@ def test_transferwise(analyzer):
     path_item3 = analyzer.extract_values("/v1/borderless-accounts")
     assert "account" == path_item3.entity
     assert path_item3.id is None
-    # assert path_item3.id.type.name is None
+    
 
     path_item4 = analyzer.extract_values(
         "/v3/profiles/QyIDwj820w8-TY.8vlH6Nvrzd0fFiaS/borderless-accounts/QyIDwj820w8-TY.8vlH6Nvrzd0fFiaS/statement.json"
     )
     assert "statement" == path_item4.entity
     assert path_item4.id is None
-    # assert path_item4.id.type.name is None
+   
